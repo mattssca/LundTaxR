@@ -68,6 +68,11 @@ library(LundTaxR)
 data("sjodahl_2017")  # Example dataset
 
 # Classify samples
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE)
 
 ```
 
@@ -102,17 +107,14 @@ help(package = "LundTaxR")
 
 ### Basic Classification
 ```r
-# Classify samples using the 5-class system
-results_5c <- lundtax_predict_sub(expression_data, classifier = "lundtax_5c")
-
-# Classify with 7-class system (includes Uro subclasses)
-results_7c <- lundtax_predict_sub(expression_data, classifier = "lundtax_7c")
+# Classify samples
+my_predicted = classify_samples(this_data = expression_data)
 ```
 
 ### Advanced Analysis
 ```r
 # Calculate signature scores
-signatures <- lundtax_calc_sigscore(expression_data, results_5c)
+signatures <- classify_samples(expression_data, results_5c)
 
 # Generate comprehensive heatmap
 plot_hm_signatures(
@@ -121,8 +123,22 @@ plot_hm_signatures(
   expression_data = expression_data
 )
 
+# Signature Heatmap
+
 # Survival analysis (if clinical data available)
-survival_data <- get_survival(predictions = results_5c, clinical_data = clinical_df)
+
+# Forest Plot
+
+# Plot Subtype Scores
+
+# Plot Ranked Scores
+
+# Get Sample Order
+
+# Get Sample Metrics
+
+# Subset Predictions
+
 ```
 
 ## Citation
