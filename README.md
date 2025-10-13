@@ -1,6 +1,6 @@
 # LundTaxR
 
-<img src="man/figures/logo.png" align="right" height="270" alt="LundTaxR logo" />
+<img src="man/figures/logo.png" align="right" height="280" alt="LundTaxR logo" />
 
 <!-- R Package Badges -->
 ![R](https://img.shields.io/badge/R-%E2%89%A54.0.0-blue)
