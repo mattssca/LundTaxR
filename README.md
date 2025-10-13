@@ -1,7 +1,6 @@
-# LundTaxR <img src="man/figures/logo.png" align="right" height="139" alt="LundTaxR logo" />
+# LundTaxR <img src="man/figures/logo.png" align="left" height="139" alt="LundTaxR logo" />
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/mattssca/LundTaxR/workflows/R-CMD-check/badge.svg)](https://github.com/mattssca/LundTaxR/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/LundTaxR)](https://CRAN.R-project.org/package=LundTaxR)
 <!-- badges: end -->
 
@@ -23,13 +22,11 @@ The Lund Taxonomy is a molecular classification system that divides bladder canc
 ### 🎯 **Accurate Classification**
 - Random Forest-based predictors trained on extensive bladder cancer datasets
 - Confidence scores and prediction reliability metrics
-- Supports both HGNC symbols and Ensembl gene IDs
 
 ### 📊 **Molecular Signatures**
 - Immune infiltration scores (CD8+ T cells, NK cells, macrophages)
 - Stromal content assessment
 - Cell proliferation and progression risk markers
-- Pathway activity profiling
 
 ### 📈 **Visualization Tools**
 - Classification result heatmaps
@@ -68,35 +65,16 @@ library(LundTaxR)
 data("sjodahl_2017")  # Example dataset
 
 # Classify samples
-predictions <- lundtax_predict_sub(
-  expression_data = sjodahl_2017,
-  classifier = "lundtax_5c"  # Use 5-class classifier
-)
 
-# View results
-head(predictions)
-
-# Calculate molecular signature scores
-signatures <- lundtax_calc_sigscore(
-  expression_data = sjodahl_2017,
-  predictions = predictions
-)
-
-# Create visualization
-plot_hm_scores(
-  predictions = predictions,
-  signatures = signatures,
-  title = "Lund Taxonomy Classification Results"
-)
 ```
 
 ## Classification System
 
 ### Main Subtypes (5-class)
-- **Uro** (Urothelial-like): Resembles normal urothelium, better prognosis
-- **GU** (Genomically Unstable): High mutation burden, good immunotherapy response
-- **BaSq** (Basal/Squamous): Aggressive, potential for targeted therapy
-- **Mes** (Mesenchymal): Stromal-rich, poor prognosis
+- **Uro** (Urothelial-like): Resembles normal urothelium
+- **GU** (Genomically Unstable): High mutation burden
+- **BaSq** (Basal/Squamous): Aggressive
+- **Mes** (Mesenchymal): Stromal-rich
 - **ScNE** (Small cell/Neuroendocrine): Rare, very aggressive subtype
 
 ### Uro Subclasses (7-class)
@@ -108,7 +86,6 @@ plot_hm_scores(
 
 - **Package Documentation**: Access help files with `?function_name`
 - **Vignettes**: Comprehensive tutorials and examples
-- **Website**: [Package website](https://mattssca.github.io/LundTaxR/) (if available)
 
 ```r
 # View main tutorial
@@ -157,7 +134,7 @@ R package version 2.0.0.
 
 ## Contributing
 
-We welcome contributions! Please see our [contribution guidelines](CONTRIBUTING.md) for details on:
+We welcome contributions!
 - Reporting bugs
 - Suggesting enhancements  
 - Submitting pull requests
