@@ -1,0 +1,46 @@
+Package: LundTaxR
+Title: Lund Taxonomy molecular subtype classifier for bladder cancer.
+Version: 2.0.0
+Date: 2026-10-10
+Maintainer: Adam Mattsson <adam.mattsson@med.lu.se>
+Authors@R: c(
+    person("Elena", "Aramendía", , "elena.aramendia_cotillas@med.lu.se", role = c("aut", "cre")),
+    person("Pontus", "Eriksson", , "pontus.eriksson@med.lu.se", role = c("aut")),
+    person("Adam", "Mattsson", , "adam.mattsson@med.lu.se", role = c("aut", "cre")))
+Description: LundTaxR implements a robust Random Forest-based classifier for molecular subtyping of 
+    bladder cancer samples using gene expression data. The package provides a two-stage classification 
+    system that first assigns samples to one of five main Lund Taxonomy subtypes (Uro, GU, BaSq, Mes, 
+    or ScNE), followed by sub-classification of Uro samples into UroA, UroB, or UroC subtypes. Beyond 
+    classification, the package calculates comprehensive molecular signature scores including immune 
+    infiltration, stromal content, cell proliferation, and progression risk markers. Advanced 
+    visualization functions generate publication-ready heatmaps displaying classification results 
+    alongside molecular signatures, pathway activities, and clinical risk assessments. The classifier 
+    supports both HGNC symbols and Ensembl gene IDs, includes robust imputation methods for missing 
+    data, and provides confidence scores for all predictions. Originally developed for the Lund 
+    Taxonomy molecular classification system, this package enables researchers and clinicians to 
+    perform standardized, reproducible molecular subtyping of bladder cancer samples for precision 
+    medicine applications. 
+Depends: 
+    R (>= 2.10)
+Imports: 
+    circlize,
+    ComplexHeatmap,
+    dplyr,
+    ggplot2,
+    ggpubr,
+    grDevices,
+    grid,
+    gridExtra,
+    multiclassPairs,
+    openxlsx,
+    reshape2,
+    survival,
+    tibble
+Suggests: 
+    lifecycle
+License: GPL (>= 2) + file LICENSE
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: xz
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
