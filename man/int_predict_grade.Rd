@@ -49,7 +49,7 @@ A data frame with grade results.
 Function for predicting grade using random forest and the bundled classifiers.
 }
 \details{
-Internal function called by \code{\link[=lundtax_calc_sigscore]{lundtax_calc_sigscore()}}.
+Internal function called by \code{\link[LundTax2023Classifier:lundtax_calc_sigscore]{LundTax2023Classifier::lundtax_calc_sigscore()}}.
 Not meant for out of package use. This function is internally calling
 \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}} to run a random forest prediction using one of the two bundled
 classifiers for grade prediction.

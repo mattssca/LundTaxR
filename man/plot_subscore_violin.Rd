@@ -20,7 +20,7 @@ plot_subscore_violin(
 }
 \arguments{
 \item{these_predictions}{Required parameter, should be the output from
-\code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}.}
+\code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{this_subtype}{Required parameter. Should be one of the set subtype classes from the
 LundTax nomenclature.}
@@ -59,7 +59,7 @@ Nothing.
 Visualize subtype prediction score for a set subtype in a violin plot.
 }
 \details{
-Take the output from \code{lundtax_predict_sub} and return a violin plot where each violin
+Take the output from \code{classify_samples} and return a violin plot where each violin
 represent the distribution of the, for that class, subtype prediction score. Set the subtype of
 desire with \code{this_subtype}. The subtype can be one of the subtypes included in the LundTax subtype
 classification nomenclature. Parameters starting with the plot prefix are available for the user
@@ -67,10 +67,10 @@ to gain more control of the returned plot. The user can also return the wrangled
 plot by setting \code{return_data = TRUE}.
 }
 \examples{
-my_predictions = lundtax_predict_sub(these_predictions = sjodahl_2017, 
-                                     gene_id = "hgnc_symbol", 
-                                     impute = TRUE, 
-                                     adjust = TRUE)
+my_predictions = classify_samples(these_predictions = sjodahl_2017, 
+                                  gene_id = "hgnc_symbol", 
+                                  impute = TRUE, 
+                                  adjust = TRUE)
                                      
 uro_scores = plot_subscore_violin(these_predictions = my_predictions, 
                                   this_subtype = "Uro")

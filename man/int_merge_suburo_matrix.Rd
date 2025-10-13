@@ -24,7 +24,7 @@ GU, BaSq, Mes, ScNE)
 \description{
 Merge prediction score matrices from two classifiers.
 
-Internal function called by \code{\link[=lundtax_calc_sigscore]{lundtax_calc_sigscore()}}.
+Internal function called by \code{\link[LundTax2023Classifier:lundtax_calc_sigscore]{LundTax2023Classifier::lundtax_calc_sigscore()}}.
 Not meant for out of package use. This function merges the prediction score matrices from the
 5-class and 7-class (UroA,UroB,UroC) classifiers into 1 unique score matrix.
 }

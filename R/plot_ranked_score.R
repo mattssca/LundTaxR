@@ -2,19 +2,19 @@
 #'
 #' @description Return a point plot with ranked scores for a set variable.
 #'
-#' @details This function takes predictions returned with [LundTax2023Classifier::lundtax_predict_sub()],
+#' @details This function takes predictions returned with [LundTaxR::classify_samples()],
 #' together with a score variable, subtype class and returns a point plot (grob) with ranked scores 
 #' along the x axis and scores along the y axis. The returned plot will also color fill the points 
 #' based on subtype classification.
 #'
 #' @param these_predictions Required parameter, if no data provided with `this_data`.
-#' Predictions returned with [LundTax2023Classifier::lundtax_predict_sub()].
+#' Predictions returned with [LundTaxR::classify_samples()].
 #' @param this_data Optional parameter, makes it possible for the user to give the plotting function 
 #' their own data, preferably retrieved with this function with return_data = TRUE. If provided, 
 #' the plotting function will disregard any other parameters and only draw the plot using the data 
 #' provided.
 #' @param this_score Required parameter, should be one of the numeric columns in the scores data 
-#' frame from the list returned with [LundTax2023Classifier::lundtax_predict_sub()].
+#' frame from the list returned with [LundTaxR::classify_samples()].
 #' @param this_subtype Optional parameter, lets the user subset the return to a specific subtype.
 #' If nopt provided, all subtypes within the selected class will be returned.
 #' @param subtype_class Required, one of the following; 5_class or 7_class. Needed for coloring the 
@@ -41,8 +41,7 @@
 #' @export
 #'
 #' @examples
-#' sjodahl_2017_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-#'                                              impute = TRUE)
+#' sjodahl_2017_predicted = classify_samples(this_data = sjodahl_2017)
 #'
 #' plot_ranked_score(these_predictions = sjodahl_2017_predicted, 
 #'                   this_score = "proliferation_score", 

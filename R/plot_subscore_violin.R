@@ -2,7 +2,7 @@
 #'
 #' @description Visualize subtype prediction score for a set subtype in a violin plot.
 #'
-#' @details Take the output from `lundtax_predict_sub` and return a violin plot where each violin 
+#' @details Take the output from `classify_samples` and return a violin plot where each violin 
 #' represent the distribution of the, for that class, subtype prediction score. Set the subtype of 
 #' desire with `this_subtype`. The subtype can be one of the subtypes included in the LundTax subtype 
 #' classification nomenclature. Parameters starting with the plot prefix are available for the user 
@@ -10,7 +10,7 @@
 #' plot by setting `return_data = TRUE`.
 #'
 #' @param these_predictions Required parameter, should be the output from 
-#' [LundTax2023Classifier::lundtax_predict_sub()].
+#' [LundTaxR::classify_samples()].
 #' @param this_subtype Required parameter. Should be one of the set subtype classes from the
 #'  LundTax nomenclature.
 #' @param plot_title Required parameter, if `out_path` is specified. plot title, will also be pasted to 
@@ -40,10 +40,10 @@
 #' @export
 #'
 #' @examples
-#' my_predictions = lundtax_predict_sub(these_predictions = sjodahl_2017, 
-#'                                      gene_id = "hgnc_symbol", 
-#'                                      impute = TRUE, 
-#'                                      adjust = TRUE)
+#' my_predictions = classify_samples(these_predictions = sjodahl_2017, 
+#'                                   gene_id = "hgnc_symbol", 
+#'                                   impute = TRUE, 
+#'                                   adjust = TRUE)
 #'                                      
 #' uro_scores = plot_subscore_violin(these_predictions = my_predictions, 
 #'                                   this_subtype = "Uro")

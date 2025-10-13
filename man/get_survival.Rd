@@ -69,7 +69,7 @@ Run a Cox model to calculate hazard ratio with confidence intervalls.
 This function takes a data frame with prediction data \code{these_predictions} and executes
 a cox model to retrieve hazard ratio with confidence intervals based on a categorical variable (i.e response,
 tumor grade, etc.) from a provided metadata table. The function expects the incoming
-data to be the output from \code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}, together with metadata
+data to be the output from \code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}, together with metadata
 information of interest (e.g two level categorical) and subtype classification information. The user
 have the option to point the function to the categorical variables with \code{predictor_columns}. The return
 can be further subset by subtype by using the \code{this_subtype} variable, should be one of the valid

@@ -8,7 +8,7 @@ int_calc_immune_proportions(immune_results)
 }
 \arguments{
 \item{immune_results}{Required parameter. Data frame with immune scores from
-\code{\link[=int_calc_score]{int_calc_score()}}.}
+\code{\link[LundTax2023Classifier:int_calc_score]{LundTax2023Classifier::int_calc_score()}}.}
 }
 \value{
 A data frame with scores as percentages.
@@ -17,6 +17,6 @@ A data frame with scores as percentages.
 Calculate immune score proportions.
 }
 \details{
-Internal function called by \code{\link[=int_calc_score]{int_calc_score()}}, if variable is
+Internal function called by \code{\link[LundTax2023Classifier:int_calc_score]{LundTax2023Classifier::int_calc_score()}}, if variable is
 set to immune. Not meant for out-of-package use.
 }

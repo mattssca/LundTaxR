@@ -7,7 +7,6 @@
 int_calc_score(
   this_data = NULL,
   variable = NULL,
-  log_transform = TRUE,
   gene_id = "hgnc_symbol",
   adjust = TRUE,
   adj_factor = 5.1431,
@@ -19,9 +18,6 @@ int_calc_score(
 
 \item{variable}{Required parameter. Input should be one of the following; immune,
 score141up, proliferation, or progression.}
-
-\item{log_transform}{Boolean parameter. If TRUE (default), the function log transforms
-the incoming expression values.}
 
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}.
 Accepted values are; hgnc_symbol (default) or ensembl_gene_id.}
@@ -48,7 +44,7 @@ genes for signature calculations.
 Calculate immune and infiltration scores.
 }
 \details{
-Internal function called by \code{\link[=lundtax_calc_sigscore]{lundtax_calc_sigscore()}}.
+Internal function called by \code{\link[LundTax2023Classifier:lundtax_calc_sigscore]{LundTax2023Classifier::lundtax_calc_sigscore()}}.
 Not meant for out of package use. Takes a data frame of matrix with expression values and
 calculates scores based on gene expression.
 }

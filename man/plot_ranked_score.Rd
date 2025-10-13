@@ -24,7 +24,7 @@ plot_ranked_score(
 }
 \arguments{
 \item{these_predictions}{Required parameter, if no data provided with \code{this_data}.
-Predictions returned with \code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}.}
+Predictions returned with \code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{this_data}{Optional parameter, makes it possible for the user to give the plotting function
 their own data, preferably retrieved with this function with return_data = TRUE. If provided,
@@ -32,7 +32,7 @@ the plotting function will disregard any other parameters and only draw the plot
 provided.}
 
 \item{this_score}{Required parameter, should be one of the numeric columns in the scores data
-frame from the list returned with \code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}.}
+frame from the list returned with \code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{this_subtype}{Optional parameter, lets the user subset the return to a specific subtype.
 If nopt provided, all subtypes within the selected class will be returned.}
@@ -67,14 +67,13 @@ Nothing.
 Return a point plot with ranked scores for a set variable.
 }
 \details{
-This function takes predictions returned with \code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}},
+This function takes predictions returned with \code{\link[=classify_samples]{classify_samples()}},
 together with a score variable, subtype class and returns a point plot (grob) with ranked scores
 along the x axis and scores along the y axis. The returned plot will also color fill the points
 based on subtype classification.
 }
 \examples{
-sjodahl_2017_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-                                             impute = TRUE)
+sjodahl_2017_predicted = classify_samples(this_data = sjodahl_2017)
 
 plot_ranked_score(these_predictions = sjodahl_2017_predicted, 
                   this_score = "proliferation_score", 

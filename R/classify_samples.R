@@ -6,7 +6,7 @@
 #' classifier first  classifies samples into Uro, GU, BaSq, Mes or ScNE.
 #' Samples classified as Uro receive a second classification as UroA, B or C by 
 #' the second classifier. This function internally calls 
-#' [LundTax2023Classifier::lundtax_calc_sigscore()] for retrieving signature scores.
+#' [LundTaxR::int_calc_signatures()] for retrieving signature scores.
 #'
 #' @param this_data Required parameter. Data frame or matrix with expression values.
 #' @param gene_id Specify the type of gene identifier used in `this_data`. Accepted values are; 
@@ -14,15 +14,15 @@
 #' @param threshold_progression Threshold to flag a sample as high risk of progression, default is 0.58.
 #' @param log_transform Boolean parameter. If TRUE, the function log transforms the incoming expression
 #' values. Default is FALSE.
-#' @param adjust Boolean parameter. If TRUE, the function will proceed with adjusting the scores based
-#' on stable genes. If FALSE (default), no adjustment will be made and the original score values will be retained. 
+#' @param adjust Boolean parameter. If TRUE (default), the function will proceed with adjusting the scores based
+#' on stable genes. If FALSE, no adjustment will be made and the original score values will be retained. 
 #' @param adj_factor Only applicable if adjust is set to TRUE. Allows users to apply a proportional 
 #' adjustment to the normalized scores, enabling finer control over the final output values. 
 #' After dividing each score by the mean expression of stable genes, the result is multiplied by this factor. 
 #' @param impute From [multiclassPairs::predict_RF()]. Boolean. To determine if missed genes and NA 
 #' values should be imputed or not. The non missed rules will be used to determine the closest samples
 #' in the training binary matrix (i.e. which is stored in the classifier object). For each sample, 
-#' the mode value for nearest samples in the training data will be assigned to the missed rules. Default is FALSE.
+#' the mode value for nearest samples in the training data will be assigned to the missed rules. Default is TRUE
 #' @param impute_kNN From [multiclassPairs::predict_RF()]. Integer determines the number of the nearest
 #' samples in the training data to be used in the imputation. Default is 5. It is not recommended to
 #'  use large number (i.e. >10).
@@ -56,9 +56,9 @@ classify_samples = function(this_data = NULL,
                             gene_id = "hgnc_symbol",
                             threshold_progression = 0.58,
                             log_transform = FALSE,
-                            adjust = FALSE,
+                            adjust = TRUE,
                             adj_factor = 5.1431,
-                            impute = FALSE, 
+                            impute = TRUE, 
                             impute_reject = 0.67, 
                             impute_kNN = 5,
                             subtype_only = FALSE,
@@ -73,10 +73,17 @@ classify_samples = function(this_data = NULL,
 
   #check if data is log2 transformed
   #use the internal function from int_check_log2_transformation.R
-  log_check = int_check_log2_transformation = function(expression_df = this_data, 
-                                                       print_histogram = TRUE)
+  log_check = int_check_log2_transformation(expression_df = this_data)
 
-  print(log_check$message)
+  if(verbose){
+    print(log_check$message) 
+  }
+  
+  if(log_transform){
+    if(log_check$log2_transformed){
+      message("WARNING, data appears to already be log2 transformd.\nPlease ensure data type and evaluate `log_transform` arguemnt accordingly...")
+    }
+  }
 
   #check the incoming data
   if(!class(this_data)[1] %in% c("data.frame","matrix")){
@@ -100,7 +107,6 @@ classify_samples = function(this_data = NULL,
   
   #log transform
   if(log_transform){
-    message("CAUTION: log_transform is set to TRUE, log2 transformation will be applied!")
     this_data = log2(this_data + 1)
   }
   
@@ -164,15 +170,15 @@ classify_samples = function(this_data = NULL,
   
   #calculate additional scores
   if(!subtype_only){
-  all_scores = lundtax_calc_sigscore(this_data = this_data,
-                                     gene_id = gene_id,
-                                     threshold_progression = threshold_progression,
-                                     adjust = adjust,
-                                     adj_factor = adj_factor,
-                                     impute = impute, 
-                                     impute_reject = impute_reject, 
-                                     impute_kNN = impute_kNN,
-                                     verbose = verbose)
+  all_scores = int_calc_signatures(this_data = this_data,
+                                   gene_id = gene_id,
+                                   threshold_progression = threshold_progression,
+                                   adjust = adjust,
+                                   adj_factor = adj_factor,
+                                   impute = impute, 
+                                   impute_reject = impute_reject, 
+                                   impute_kNN = impute_kNN,
+                                   verbose = verbose)
   }else{
     if(verbose){
       message("Signature scores will be skipped, set subtype_only = FALSE to return scores...")
@@ -186,6 +192,28 @@ classify_samples = function(this_data = NULL,
   
   #missing genes information
   results_suburo$na_genes = all_scores$na_genes
+  
+  #calculate prediction_delta (highest score - second highest score)
+  prediction_delta = apply(score_matrix, 1, function(row) {
+    
+    #remove NAs and sort in descending order
+    valid_scores = sort(row[!is.na(row)], decreasing = TRUE)
+    
+    #if we have at least 2 scores, calculate delta
+    if(length(valid_scores) >= 2){
+      return(valid_scores[1] - valid_scores[2])
+    }else if(length(valid_scores) == 1){
+      
+      #if only one valid score, delta is that score (assuming others are 0)
+      return(valid_scores[1])
+    }else{
+      #if no valid scores, return NA
+      return(NA)
+    }
+  })
+  
+  # Add prediction_delta as a column to score_matrix
+  score_matrix = cbind(score_matrix, prediction_delta = prediction_delta)
   
   #score matrices
   results_suburo$subtype_scores = score_matrix

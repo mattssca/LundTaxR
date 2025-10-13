@@ -18,7 +18,7 @@ Nothing.
 Check score ties between predictions scores.
 }
 \details{
-Internal function called by \code{\link[=lundtax_calc_sigscore]{lundtax_calc_sigscore()}}.
+Internal function called by \code{\link[LundTax2023Classifier:lundtax_calc_sigscore]{LundTax2023Classifier::lundtax_calc_sigscore()}}.
 Not meant for out of package use. Checks score ties in the prediction scores and prints a message
 indicating the sample where the tie occurred, the two subtypes with the tied scores and the
 subtype that is reported in the output object.

@@ -1,4 +1,4 @@
-#' @title Subset Predictions Data
+#' @title Get Prediction Subsets
 #'
 #' @description This function subsets the data frames and named vectors in a list based on a set of sample IDs.
 #' 
@@ -23,17 +23,13 @@
 #'
 #' @examples
 #  sample_ids <- c("X18KFU0001", "X18KFU0002", "X18KFU0003")
-#' subsetted_data <- subset_predictions(these_predictions = pred_uroscanseq_high_low, 
-#'                                        these_sample_ids = sample_ids)
-#'   
-#' # Using metadata to extract sample IDs
-#' subsetted_data <- subset_predictions(these_predictions = pred_uroscanseq_high_low, 
-#'                                      these_samples_metadata = uc_high)
+#' subsetted_data <- get_prediction_subset(these_predictions = pred_uroscanseq_high_low, 
+#'                                         these_sample_ids = sample_ids)
 #'
-subset_predictions <- function(these_predictions = NULL,
-                               these_sample_ids = NULL,
-                               these_samples_metadata = NULL,
-                               samples_rownames = TRUE){
+get_prediction_subset <- function(these_predictions = NULL,
+                                  these_sample_ids = NULL,
+                                  these_samples_metadata = NULL,
+                                  samples_rownames = TRUE){
   
   if(!is.null(these_samples_metadata) && is.null(these_sample_ids)){
     message("Metadata provided, the function will subset to the sample IDs in this object...")

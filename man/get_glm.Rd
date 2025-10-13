@@ -65,7 +65,7 @@ prediction scores.
 This function takes a data frame with prediction data \code{these_predictions} and executes
 statistical tests to find significant prediction scores based on a categorical variable (i.e response,
 tumour grade, etc.) from a provided metadata table. Currently, the function expects the incoming
-data to be the score output from \code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}, together with metadata
+data to be the score output from \code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}, together with metadata
 information of interest (e.g two level categorical) and subtype classification information. The user
 have the option to point the function to the categorical variable with \code{categorical_factor}. The return
 can be further subset by subtype by using the \code{this_subtype} variable, should be one of the valid

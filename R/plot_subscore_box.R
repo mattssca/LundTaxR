@@ -2,13 +2,13 @@
 #'
 #' @description Visualize subtype prediction score within a set subtype in a stacked barplot.
 #'
-#' @details Take the output from `lundtax_predict_sub` and return a stacked barplot plot representing 
+#' @details Take the output from `classify_samples` and return a stacked barplot plot representing 
 #' the distribution of the, for that class, subtype prediction score. Set the subtype of 
 #' desire with `this_subtype`. The subtype can be one of the subtypes included in the LundTax subtype 
 #' classification nomenclature.
 #'
 #' @param these_predictions Required parameter, should be the output from 
-#' [LundTax2023Classifier::lundtax_predict_sub()].
+#' [LundTaxR::classify_samples()].
 #' @param this_subtype Required parameter. Should be one of the set subtype classes from the
 #'  LundTax nomenclature.
 #' @param plot_title Required parameter, if `out_path` is specified. plot title, will also be pasted to 
@@ -30,10 +30,10 @@
 #' @export
 #'
 #' @examples
-#' #' my_predictions = lundtax_predict_sub(these_predictions = sjodahl_2017, 
-#'                                      gene_id = "hgnc_symbol", 
-#'                                      impute = TRUE, 
-#'                                      adjust = TRUE)
+#' my_predictions = classify_samples(these_predictions = sjodahl_2017, 
+#'                                   gene_id = "hgnc_symbol", 
+#'                                   impute = TRUE, 
+#'                                   adjust = TRUE)
 #'                                      
 #' uro_scores = plot_subscore_box(these_predictions = my_predictions, 
 #'                                this_subtype = "Uro")

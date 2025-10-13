@@ -6,9 +6,9 @@
 #' interest, with prediction results and scores on top.
 #' 
 #' @param these_predictions Required parameter, should be the output from 
-#' [LundTax2023Classifier::lundtax_predict_sub()].
+#' [LundTaxR::classify_samples()].
 #' @param this_data Expression data used for predictions. 
-#' Required if the output from [LundTax2023Classifier::lundtax_predict_sub()] is run with 
+#' Required if the output from [LundTaxR::classify_samples()] is run with 
 #' include_data = FALSE (default).
 #' @param gene_id Specify the type of gene identifier used in `this_data`. Accepted values are; 
 #' hgnc_symbol (default) or ensembl_gene_id.
@@ -50,11 +50,8 @@
 #' \dontrun{ 
 #' #example 1 including data in results object
 #' #run predictor on the bundled expression data
-#' sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017,
-#'                                         include_data = TRUE, 
-#'                                         impute = TRUE)
-#'
-#'
+#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017,
+#'                                         include_data = TRUE)
 #'
 #' #example 2 - 5 class annotation and Without prediction scores
 #' plot_classification_heatmap(these_predictions = sjodahl_predicted, 
@@ -179,15 +176,15 @@ plot_classification_heatmap = function(these_predictions = NULL,
   ##### DRAW HEATMAPS #####
   #################################### SUBTYPE SCORES ##############################################
   
-  #get subtype colors
-  col = list(`Predicted Subtype` = lund_colors$lund_colors)
-  
+  #get subtype colors - reorder for desired legend sequence
+  # Create ordered color mapping for 5-class system
+  ordered_colors_5class = lund_colors$lund_colors[c("Uro", "GU", "BaSq", "Mes", "ScNE")]
+  col = list(`Predicted Subtype` = ordered_colors_5class)
+
   #predictions
   pred_lab = pred_labels5
-  
-  split = factor(pred_lab, levels = c("Uro", "GU", "BaSq", "Mes", "ScNE"))
-  
-  #score plots
+
+  split = factor(pred_lab, levels = c("Uro", "GU", "BaSq", "Mes", "ScNE"))  #score plots
   bar1 = bar_anno(plot_scores = plot_scores, subtype = "Uro")
   bar2 = bar_anno(plot_scores = plot_scores, subtype = "GU")
   bar3 = bar_anno(plot_scores = plot_scores, subtype = "BaSq")
@@ -204,7 +201,11 @@ plot_classification_heatmap = function(these_predictions = NULL,
     pred_lab = pred_labels7
     
     #overwrite predictions
-    split = factor(pred_lab ,levels = c("UroA" ,"UroB", "UroC", "GU", "BaSq", "Mes", "ScNE"))
+    split = factor(pred_lab ,levels = c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE"))
+    
+    # Create ordered color mapping for 7-class system
+    ordered_colors_7class = lund_colors$lund_colors[c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE")]
+    col = list(`Predicted Subtype` = ordered_colors_7class)
     
     #add score plots for Uro subtypes
     bar6 = bar_anno(plot_scores = plot_scores, subtype = "UroA")
@@ -235,7 +236,11 @@ plot_classification_heatmap = function(these_predictions = NULL,
                                        show_legend = show_ann_legend,
                                        border = TRUE,
                                        height = unit(ann_height, "cm"), 
-                                       annotation_name_gp = gpar(fontsize = plot_font_size))
+                                       annotation_name_gp = gpar(fontsize = plot_font_size),
+                                       annotation_legend_param = list(`Predicted Subtype` = list(
+                                         at = if(subtype_annotation == "7_class") c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE") else c("Uro", "GU", "BaSq", "Mes", "ScNE"),
+                                         labels = if(subtype_annotation == "7_class") c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE") else c("Uro", "GU", "BaSq", "Mes", "ScNE")
+                                       )))
   
   
   
@@ -271,7 +276,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     col_fun_cc = circlize::colorRamp2(c(quantile(late_early_ratio, 0.05),
                                         median(late_early_ratio),
                                         quantile(late_early_ratio, 0.95)),
-                                      c("blue","white", "red"))
+                                      c("#2166AC","white", "#B2182B"))
     
     if(is.null(this_sample_order)){
       #order samples by late_early cell cycle
@@ -320,7 +325,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   }
   
   #heatmap colors
-  col_fun = circlize::colorRamp2(c(-2, 0, 2), c("green", "black", "red"))
+  col_fun = circlize::colorRamp2(c(-2, 0, 2), c("#4DF76F", "black", "#F74D4D"))
   
   #draw heatmap- late/early
   hm_pred_lateearly = Heatmap(this_data[genes_cc,, drop = FALSE],
@@ -419,7 +424,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     col_fun_circ = circlize::colorRamp2(c(quantile(circuit_score, 0.10),
                                           median(circuit_score),
                                           quantile(circuit_score, 0.90)),
-                                        c("blue","white", "red"))
+                                        c("#2166AC","white", "#B2182B"))
     
     col = list(`Circuit Score` = col_fun_circ)
     
@@ -573,7 +578,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     col_fun_basq = circlize::colorRamp2(c(quantile(basq_ratio, 0.10),
                                           median(basq_ratio),
                                           quantile(basq_ratio, 0.90)),
-                                        c("blue", "white", "red"))
+                                        c("#2166AC","white", "#B2182B"))
     
     col = list(`Ba/Sq Ratio` = col_fun_basq)
     
@@ -698,7 +703,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     col_fun_erbb = circlize::colorRamp2(c(quantile(erbb_score, 0.10),
                                           median(erbb_score),
                                           quantile(erbb_score, 0.90)),
-                                        c("blue", "white", "red"))
+                                        c("#2166AC","white", "#B2182B"))
     
     col = list(`ERBB Score` = col_fun_erbb)
     
@@ -846,7 +851,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     col_fun_immune = circlize::colorRamp2(c(quantile(immune_score, 0.10),
                                             median(immune_score),
                                             quantile(immune_score, 0.90)),
-                                          c("blue", "white", "red"))
+                                          c("#2166AC","white", "#B2182B"))
   }else{
     message("Genes involved in the Immune141_UP score are missing.
             \nImmune score will not be calculated.")
@@ -867,7 +872,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     col_fun_stromal = circlize::colorRamp2(c(quantile(stromal_score, 0.10),
                                              median(stromal_score),
                                              quantile(stromal_score, 0.90)),
-                                           c("blue", "white", "red"))
+                                           c("#2166AC","white", "#B2182B"))
   }else{
     message("Genes involved in the Stromal141_UP score are missing.
             \nStromal score will not be calculated.")
@@ -919,7 +924,10 @@ plot_classification_heatmap = function(these_predictions = NULL,
                         show_heatmap_legend = show_hm_legend,
                         row_title_rot = 0)
   
-  if(!is.null(out_path)){
+  # Set up output device if path is provided
+  save_to_file <- !is.null(out_path)
+  
+  if(save_to_file){
     #set PDF outputs
     if(out_format == "pdf"){
       pdf(paste0(out_path, plot_title, "_heatmap_scores.pdf"),
@@ -938,7 +946,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
       stop("Enter a valid output format (pdf or png)...")
     }
   }else{
-    message("No out_path provided, the function will return the heatmap within your R session...")
+    message("No out_path provided, displaying heatmap in R session...")
   }
   
   ################################ COMBINE ALL HEATMAP OBJECTS #####################################
@@ -955,7 +963,15 @@ plot_classification_heatmap = function(these_predictions = NULL,
                     hm_myc %v%
                     hm_neuronal,
                   column_title_gp = gpar("fontface", fontsize = 24),
-                  column_title = plot_title); hm_sample_order <- column_order(final_hm@ht_list$hm_early_late)
+                  column_title = plot_title)
+  
+  hm_sample_order <- column_order(final_hm@ht_list$hm_early_late)
+  
+  # Only close graphics device if we opened one for file output
+  if(save_to_file){
+    dev.off()
+    message("Heatmap saved to: ", paste0(out_path, plot_title, "_heatmap_scores.", out_format))
+  }
+  
   invisible(hm_sample_order)
-  dev.off()
 }

@@ -21,7 +21,7 @@ int_prediction_wrangler(
 )
 }
 \arguments{
-\item{these_predictions}{Required. Output from \code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}.}
+\item{these_predictions}{Required. Output from \code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}.}
 
 \item{these_samples_metadata}{Required. Metadata associated with he prediction output. Also possible
 for the user to provide a metadata subset with samples of interest, the return will be restricted
@@ -64,7 +64,7 @@ Internal function called by \code{get_glm_scores}.
 Not meant for out-of-package usage.
 }
 \details{
-Takes an output from \code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}} together with
+Takes an output from \code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}} together with
 associated metadata and pre-processing it so that statistical tests can be executed on this data.
 For more info, see the documentation of \code{get_glm_scores}.
 }

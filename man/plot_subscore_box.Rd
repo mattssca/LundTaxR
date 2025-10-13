@@ -17,7 +17,7 @@ plot_subscore_box(
 }
 \arguments{
 \item{these_predictions}{Required parameter, should be the output from
-\code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}.}
+\code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{this_subtype}{Required parameter. Should be one of the set subtype classes from the
 LundTax nomenclature.}
@@ -45,16 +45,16 @@ Nothing.
 Visualize subtype prediction score within a set subtype in a stacked barplot.
 }
 \details{
-Take the output from \code{lundtax_predict_sub} and return a stacked barplot plot representing
+Take the output from \code{classify_samples} and return a stacked barplot plot representing
 the distribution of the, for that class, subtype prediction score. Set the subtype of
 desire with \code{this_subtype}. The subtype can be one of the subtypes included in the LundTax subtype
 classification nomenclature.
 }
 \examples{
-#' my_predictions = lundtax_predict_sub(these_predictions = sjodahl_2017, 
-                                     gene_id = "hgnc_symbol", 
-                                     impute = TRUE, 
-                                     adjust = TRUE)
+my_predictions = classify_samples(these_predictions = sjodahl_2017, 
+                                  gene_id = "hgnc_symbol", 
+                                  impute = TRUE, 
+                                  adjust = TRUE)
                                      
 uro_scores = plot_subscore_box(these_predictions = my_predictions, 
                                this_subtype = "Uro")

@@ -38,7 +38,7 @@ plot_ratio_forest(
 }
 \arguments{
 \item{these_predictions}{Required parameter if \code{this_data} is not provided. Should be output from
-\code{\link[=lundtax_predict_sub]{lundtax_predict_sub()}}.}
+\code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}.}
 
 \item{these_samples_metadata}{Required parameter if \code{this_data}is not provided. Metadata associated
 with he prediction output. Also possible for the user to provide a metadata subset with samples
