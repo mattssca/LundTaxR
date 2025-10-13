@@ -5,17 +5,14 @@
 <!-- R Package Badges -->
 ![R](https://img.shields.io/badge/R-%E2%89%A54.0.0-blue)
 ![License](https://img.shields.io/badge/license-GPL%20(%E2%89%A5%202)-blue)
-![GitHub release](https://img.shields.io/github/v/release/mattssca/LundTaxR)
-![GitHub issues](https://img.shields.io/github/issues/mattssca/LundTaxR)
-![GitHub stars](https://img.shields.io/github/stars/mattssca/LundTaxR)
-
-<!-- Development Status -->
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen)
-![R-CMD-check](https://github.com/mattssca/LundTaxR/workflows/R-CMD-check/badge.svg)
 
-<!-- Package Stats -->
-![GitHub last commit](https://img.shields.io/github/last-commit/mattssca/LundTaxR)
-![GitHub code size](https://img.shields.io/github/languages/code-size/mattssca/LundTaxR)
+<!-- Domain Badges -->
+![Bioinformatics](https://img.shields.io/badge/domain-bioinformatics-purple)
+![Cancer Research](https://img.shields.io/badge/application-cancer%20research-red)
+![Classification](https://img.shields.io/badge/method-machine%20learning-orange)
+
 
 
 > **Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
