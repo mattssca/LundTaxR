@@ -1,11 +1,14 @@
-# LundTaxR <img src="man/figures/logo.png" align="left" height="300" alt="LundTaxR logo" />
+# LundTaxR 
+<img src="man/figures/logo.png" align="left" height="200" alt="LundTaxR logo" />
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/LundTaxR)](https://CRAN.R-project.org/package=LundTaxR)
 <!-- badges: end -->
 
 
-> **Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
+
+
+**Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
 
 LundTaxR implements a comprehensive Random Forest-based classifier for molecular subtyping of bladder cancer samples using gene expression data. The package provides a two-stage classification system based on the established Lund Taxonomy, enabling precise molecular characterization for precision medicine applications.
 
