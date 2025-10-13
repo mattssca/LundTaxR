@@ -1,4 +1,4 @@
-<img src="man/figures/logo.png" align="left" height="200" alt="LundTaxR logo" />
+<img src="man/figures/logo.png" align="right" height="200" alt="LundTaxR logo" />
 
 
 **Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
