@@ -1,8 +1,9 @@
-# LundTaxR <img src="man/figures/logo.png" align="left" height="139" alt="LundTaxR logo" />
+# LundTaxR <img src="man/figures/logo.png" align="left" height="300" alt="LundTaxR logo" />
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/LundTaxR)](https://CRAN.R-project.org/package=LundTaxR)
 <!-- badges: end -->
+
 
 > **Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
 
