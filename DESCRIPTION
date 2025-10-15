@@ -4,9 +4,9 @@ Version: 2.0.0
 Date: 2026-10-10
 Maintainer: Adam Mattsson <adam.mattsson@med.lu.se>
 Authors@R: c(
+    person("Adam", "Mattsson", , "adam.mattsson@med.lu.se", role = c("aut", "cre")),
     person("Elena", "Aramendía", , "elena.aramendia_cotillas@med.lu.se", role = c("aut")),
-    person("Pontus", "Eriksson", , "pontus.eriksson@med.lu.se", role = c("aut")),
-    person("Adam", "Mattsson", , "adam.mattsson@med.lu.se", role = c("aut", "cre")))
+    person("Pontus", "Eriksson", , "pontus.eriksson@med.lu.se", role = c("aut")))
 Description: LundTaxR implements a robust Random Forest-based classifier for molecular subtyping of 
     bladder cancer samples using gene expression data. The package provides a two-stage classification 
     system that first assigns samples to one of five main Lund Taxonomy subtypes (Uro, GU, BaSq, Mes, 

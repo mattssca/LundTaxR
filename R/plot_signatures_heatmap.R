@@ -313,13 +313,13 @@ plot_signatures_heatmap = function(these_predictions = NULL,
   if(proportional_scores){
     #combine heatmaps
     hm_combined = draw(hm_immune_stromal %v% hm_immune_scores %v% hm_stroma_scores,
-                       column_title = plot_title,     heatmap_legend_side = "bottom",
+                       column_title = plot_title,     heatmap_legend_side = "right",
                        annotation_legend_side = "right",
                        column_title_gp = gpar("fontface", fontsize = (plot_font_size*2))); 
   }else{
     #combine heatmaps
     hm_combined = draw(hm_immune_scores %v% hm_stroma_scores,
-                       column_title = plot_title,     heatmap_legend_side = "bottom",
+                       column_title = plot_title,     heatmap_legend_side = "right",
                        annotation_legend_side = "right",
                        column_title_gp = gpar("fontface", fontsize = (plot_font_size*2)));
   }

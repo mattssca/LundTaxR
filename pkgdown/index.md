@@ -1,23 +1,4 @@
-# LundTaxR
-
-<img src="man/figures/logo.png" align="right" height="280" alt="LundTaxR logo" />
-
-<!-- R Package Badges -->
-![R](https://img.shields.io/badge/R-%E2%89%A54.0.0-blue)
-![License](https://img.shields.io/badge/license-GPL%20(%E2%89%A5%202)-blue)
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
-![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen)
-
-<!-- Domain Badges -->
-![Bioinformatics](https://img.shields.io/badge/domain-bioinformatics-purple)
-![Cancer Research](https://img.shields.io/badge/application-cancer%20research-red)
-![Classification](https://img.shields.io/badge/method-machine%20learning-orange)
-
-
-
-> **Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
-
-LundTaxR implements a comprehensive Random Forest-based classifier for molecular subtyping of bladder cancer samples using gene expression data. The package provides a two-stage classification system based on the established Lund Taxonomy, enabling precise molecular characterization.
+<img src="man/figures/logo.png" align="right" style="max-height: 170px; max-width: 170px;" alt="LundTaxR logo" />
 
 ## Overview
 

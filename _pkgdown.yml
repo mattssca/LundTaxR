@@ -21,6 +21,12 @@ navbar:
       icon: fab-github-alt
       href: https://github.com/mattssca/LundTaxR
 
+articles:
+  - title: "Getting Started"
+    desc: "Introduction and basic usage"
+    contents:
+    - getting_started_with_LundTaxR
+
 reference:
   - title: "Package Overview"
     desc: "Package documentation and information"
