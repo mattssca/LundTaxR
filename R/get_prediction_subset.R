@@ -7,7 +7,7 @@
 #' sample IDs from `these_samples_metadata`. The function handles different structures within the 
 #' list, including data frames and named vectors, ensuring that only the specified samples are retained.
 #'
-#' @param these_predictions A list containing data frames and named vectors to be subsetted.
+#' @param these_predictions A list containing data frames and named vectors to be subset.
 #' @param these_sample_ids A vector of sample IDs to subset the data. If NULL, sample IDs will be 
 #' extracted from `these_samples_metadata`.
 #' @param these_samples_metadata A data frame containing sample metadata. If provided and 
@@ -22,17 +22,26 @@
 #' @export
 #'
 #' @examples
-#  sample_ids <- c("X18KFU0001", "X18KFU0002", "X18KFU0003")
-#' subsetted_data <- get_prediction_subset(these_predictions = pred_uroscanseq_high_low, 
-#'                                         these_sample_ids = sample_ids)
+#' my_samples = head(sjodahl_2017_meta$sample_id)
+#' my_meta = head(sjodahl_2017_meta)
+#'
+#' subsetted_data <- get_prediction_subset(these_predictions = sjodahl_classes, 
+#'                                         these_sample_ids = my_samples)
+#'
+#' subsetted_data <- get_prediction_subset(these_predictions = sjodahl_classes, 
+#'                                         these_samples_metadata = my_meta,
+#'                                         samples_rownames = FALSE)
 #'
 get_prediction_subset <- function(these_predictions = NULL,
                                   these_sample_ids = NULL,
                                   these_samples_metadata = NULL,
-                                  samples_rownames = TRUE){
-  
+                                  samples_rownames = FALSE){
+
   if(!is.null(these_samples_metadata) && is.null(these_sample_ids)){
     message("Metadata provided, the function will subset to the sample IDs in this object...")
+    if(!samples_rownames){
+      message("CAUTION: sample_rownames = FALSE, the funciton expects a column in the metadata called `sample_id`")
+    }
     if(samples_rownames){
       these_sample_ids = these_samples_metadata %>% 
         rownames_to_column("sample_id") %>% 

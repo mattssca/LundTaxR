@@ -6,14 +6,13 @@
 #' @details This function takes a data frame with prediction data `these_predictions` and executes 
 #' statistical tests to find significant prediction scores based on a categorical variable (i.e response,
 #' tumour grade, etc.) from a provided metadata table. Currently, the function expects the incoming 
-#' data to be the score output from [LundTax2023Classifier::lundtax_predict_sub()], together with metadata
+#' data to be the score output from [LundTaxR::classify_samples()], together with metadata
 #' information of interest (e.g two level categorical) and subtype classification information. The user
 #' have the option to point the function to the categorical variable with `categorical_factor`. The return
 #' can be further subset by subtype by using the `this_subtype` variable, should be one of the valid
 #' subtypes within the specified class.
 #'
-#' @param these_predictions Required parameter. A data frame with predictions scores, subtype and 
-#' metadata information.
+#' @param these_predictions Required parameter. A data frame with predictions scores from `classify_samples`.
 #' @param these_samples_metadata Required, a data frame with metadata associated with the prediction 
 #' calls, Note, the function will subset the return to samples are included in this object.
 #' @param subtype_class Can be one of the following; 5_class or 7_class. Default is 5_class.
@@ -22,12 +21,12 @@
 #' information for all the subtypes within the specified class.
 #' @param scale Optional parameter. A numeric value to scale the numeric scores. If provided, all 
 #' numeric scores will be multiplied by this value.
-#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is FALSE.
+#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is TRUE
 #' @param n_bins Optional parameter. The number of bins to use when binning numeric scores. Default is 10.
 #' @param categorical_factor Required parameter. Specify the two level categorical variable you want to test for.
 #' @param predictor_columns Optional, should be a vector with column names, either from the provided 
 #' metadata or signature score object, to be tested for. If not provided, the function will subset 
-#' data to the signature scores returned with `lundtax_predict_sub`.
+#' data to the signature scores returned with `classify_samples`.
 #' @param exclude_columns Optional argument, specify columns you wish to exclude from the standard 
 #' predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).
 #' @param row_to_col Boolean parameter. Set to TRUE to transform row names of the metadata to a new 
@@ -47,8 +46,8 @@
 #' library(dplyr, stats)
 #' 
 #' #get prediction calls
-#' sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-#'                                         impute = TRUE)
+#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
+#'                                      impute = TRUE)
 #'
 #' #run general linear models
 #' sjodahl_glm = get_glm(these_predictions = sjodahl_predicted,
@@ -61,7 +60,7 @@ get_glm = function(these_predictions = NULL,
                    these_samples_metadata = NULL,
                    subtype_class = "5_class",
                    scale = NULL,
-                   bin_scores = FALSE,
+                   bin_scores = TRUE,
                    n_bins = 10,
                    this_subtype = NULL,
                    categorical_factor = NULL,

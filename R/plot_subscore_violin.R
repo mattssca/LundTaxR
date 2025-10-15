@@ -13,8 +13,6 @@
 #' [LundTaxR::classify_samples()].
 #' @param this_subtype Required parameter. Should be one of the set subtype classes from the
 #'  LundTax nomenclature.
-#' @param plot_title Required parameter, if `out_path` is specified. plot title, will also be pasted to 
-#' the exported file.
 #' @param out_path Optional, set path to export plot.
 #' @param out_format Required parameter if `out_path` is specified. Can be "png" (default) or "pdf".
 #' The user can further specify the dimensions of the returned plot with `plot_width` and `plot_height`.
@@ -50,7 +48,6 @@
 #'                                   
 plot_subscore_violin = function(these_predictions, 
                                 this_subtype,
-                                plot_title = NULL,
                                 out_path = NULL,
                                 out_format = "png",
                                 plot_width = 4,
@@ -120,37 +117,27 @@ plot_subscore_violin = function(these_predictions,
   my_plot = this_melted %>% 
     arrange(value) %>%    
     mutate(subtype = factor(subtype, levels = c("Uro", "GU", "BaSq", "Mes", "ScNE", "UroA", "UroB", "UroC"))) %>% 
-    ggplot(aes(x = subtype, y = value, fill = subtype), show.legend = TRUE) + 
+    ggplot(aes(x = subtype, y = value, fill = subtype), show.legend = FALSE) + 
     geom_violin(scale = plot_scale, trim = plot_trim, color = NA, adjust = plot_adjust) +
     scale_fill_manual(values = lund_colors$lund_colors, drop = FALSE) +
     theme_bw() +
     coord_cartesian(clip = "off") +
-    ggtitle(label = plot_title) +
-    ylab(this_subtype) +
-    scale_y_continuous(expand = c(0, 0), limits = c(0,1), breaks = seq(0, 1, by = 0.5)) +
+    ggtitle(label = paste0("Samples classified as: ", this_subtype)) +
+    ylab("Prediction Score") +
+    xlab("Subtype") +
+    scale_y_continuous(expand = c(0, 0), limits = c(0,1), breaks = seq(0, 1, by = 0.25)) +
     theme(legend.position = "none", 
-          axis.text.x = element_blank(),
-          axis.text.y = element_text(color = "black", size = 7),
-          axis.ticks.x = element_blank(),
-          axis.ticks.y = element_line(colour = "black", linewidth = 0.4),
-          axis.title.x = element_blank(),
-          panel.background = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          plot.background = element_blank(), 
-          panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.4),
-          axis.line.x = element_blank(), 
-          axis.title.y = element_blank())
+          axis.line.x = element_blank())
   
   if(!is.null(out_path)){
     #set PDF outputs
     if(out_format == "pdf"){
-      pdf(paste0(out_path, plot_title, "_subscore_viol.pdf"),
+      pdf(paste0(out_path, this_subtype, "_subscore_viol.pdf"),
           width = plot_width,
           height = plot_height)
       #set PNG outputs
     }else if(out_format == "png"){
-      png(paste0(out_path, plot_title, "_subscore_viol.png"),
+      png(paste0(out_path, this_subtype, "_subscore_viol.png"),
           width = plot_width,
           height = plot_height,
           units = "in",
@@ -162,7 +149,7 @@ plot_subscore_violin = function(these_predictions,
     }
     print(my_plot)
     dev.off()
-    message(paste0("Plot exported to ", out_path, plot_title, "_subscore_viol.", out_format))
+    message(paste0("Plot exported to ", out_path, this_subtype, "_subscore_viol.", out_format))
   }else{
     return(my_plot) 
   }

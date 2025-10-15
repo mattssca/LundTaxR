@@ -19,7 +19,7 @@
 #' to provide the plot data directly with `this_data`.
 #'
 #' @param these_predictions Required parameter if `this_data` is not provided. Should be output from 
-#' [LundTax2023Classifier::lundtax_predict_sub()].
+#' [LundTaxR::classify_samples()].
 #' @param these_samples_metadata Required parameter if `this_data`is not provided. Metadata associated
 #' with he prediction output. Also possible for the user to provide a metadata subset with samples 
 #' of interest, the return will be restricted to the samples within the specified group
@@ -31,7 +31,7 @@
 #' @param subtype_class Can be one of the following; 5_class or 7_class. Default is 5_class.
 #' @param scale Optional parameter. A numeric value to scale the numeric scores. If provided, all 
 #' numeric scores will be multiplied by this value.
-#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is FALSE.
+#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is TRUE
 #' @param n_bins Optional parameter. The number of bins to use when binning numeric scores. Default is 10.
 #' @param surv_time Required parameter if `stat_plot` is set to `hazard_ratio`, should be the name 
 #' of the column in the metadata with survival time. Should be of value numeric.
@@ -42,7 +42,7 @@
 #' with exactly 2 levels.
 #' @param predictor_columns Optional, should be a vector with column names, either from the provided 
 #' metadata or signature score object, to be tested for. If not provided, the function will subset 
-#' data to the signature scores returned with `lundtax_predict_sub`.
+#' data to the signature scores returned with `classify_samples`.
 #' @param exclude_columns Optional argument, specify columns you wish to exclude from the standard 
 #' predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).
 #' @param significant_p Numeric parameter for flagging significant p values. Default is 0.05.
@@ -76,32 +76,40 @@
 #' library(dplyr, ggplot2)
 #' 
 #' #get prediction calls
-#' sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-#'                                         impute = TRUE)
+#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
+#'                                      impute = TRUE)
 #' 
 #' #hazard ratio                                      
-#' plot_ratio_forest(these_predictions = sjodahl_predicted,
+#' plot_ratio_forest(these_predictions = sjodahl_classes,
 #'                   these_samples_metadata = sjodahl_2017_meta,
 #'                   stat_plot = "hazard_ratio",
+#'                   bin_scores = TRUE, 
+#'                   sig_color = "salmon",
+#'                   col_bon = FALSE,
 #'                   plot_subtitle = "n Samples: 267",
 #'                   plot_title = "All 7 class samples",
 #'                   subtype_class = "7_class", 
-#'                   this_subtype = NULL,
+#'                   this_subtype = "GU",
+#'                   return_data = FALSE,
+#'                   plot_arrange = FALSE,
 #'                   surv_time = "surv_css_time",
 #'                   surv_event = "surv_css_event")
 #'
 #' #odds ratio
-#' plot_ratio_forest(these_predictions = sjodahl_predicted,
+#' plot_ratio_forest(these_predictions = sjodahl_classes,
 #'                   these_samples_metadata = sjodahl_2017_meta,
 #'                   stat_plot = "odds_ratio",
 #'                   plot_title = "Uro Samples - Adjuvant Chemo",
 #'                   plot_subtitle = "n Samples: 121",
-#'                   subtype_class = "5_class", 
+#'                   subtype_class = "5_class",
+#'                   col_bon = TRUE,
+#'                   return_data = FALSE, 
+#'                   sig_color = "forestgreen",
 #'                   this_subtype = "Uro",
+#'                   categorical_factor = "adj_chemo",
 #'                   predictor_columns = c("progression_score", 
 #'                                         "proliferation_score", 
-#'                                         "monocytic_lineage"),
-#'                   categorical_factor = "adj_chemo")
+#'                                         "monocytic_lineage"))
 #' 
 plot_ratio_forest = function(these_predictions = NULL,
                              these_samples_metadata = NULL,
@@ -111,7 +119,7 @@ plot_ratio_forest = function(these_predictions = NULL,
                              this_subtype = NULL,
                              subtype_class = "5_class",
                              scale = NULL,
-                             bin_scores = FALSE,
+                             bin_scores = TRUE,
                              n_bins = 10,
                              surv_time = NULL,
                              surv_event = NULL,
@@ -119,6 +127,8 @@ plot_ratio_forest = function(these_predictions = NULL,
                              predictor_columns = NULL,
                              exclude_columns = NULL,
                              significant_p = 0.05,
+                             col_bon = FALSE,
+                             sig_color = "red",
                              sample_id_col = NULL, 
                              row_to_col = FALSE,
                              out_path = NULL,
@@ -132,6 +142,7 @@ plot_ratio_forest = function(these_predictions = NULL,
                              plot_order = NULL,
                              plot_arrange = TRUE,
                              return_data = FALSE){
+  
   #checks
   if(missing(stat_plot)){
     stop("User must specify stat_plot, can be one of the following; hazard_ratio or odds_ratio...")
@@ -145,6 +156,18 @@ plot_ratio_forest = function(these_predictions = NULL,
     if(!this_subtype %in% names(lund_colors$lund_colors)){
       stop("Please check spelling of subtype...")
     }
+  }
+  
+  if(is.null(predictor_columns)){
+    predictor_columns = c("proliferation_score", "progression_score", 
+                          "stromal141_up", "immune141_up", "b_cells", 
+                          "t_cells", "t_cells_cd8", "nk_cells", 
+                          "cytotoxicity_score", "neutrophils", 
+                          "monocytic_lineage", "macrophages", 
+                          "m2_macrophage", "myeloid_dendritic_cells", 
+                          "endothelial_cells", "fibroblasts", 
+                          "smooth_muscle", "molecular_grade_who_1999_score", 
+                          "molecular_grade_who_2022_score")
   }
   
   #run get_survival if user has provided prediction data and not survival object
@@ -190,14 +213,17 @@ plot_ratio_forest = function(these_predictions = NULL,
     
   }
   
-  if(return_data){
-    message("No plot generated, returning plot data instead...")
-    return(this_data)
-  }
+  #calculate bonferroni
+  n_tests <- nrow(this_data)
+  this_data <- this_data %>%
+    mutate(bonferroni_p_value = pmin(p_value * n_tests, 1))
   
   #annotate significance of p value
-  this_data$significant = ifelse(this_data$p_value < significant_p, "significant", "not significant")
-  
+  if(col_bon){
+    this_data$significant = ifelse(this_data$bonferroni_p_value < significant_p, "significant", "not significant")
+  }else{
+    this_data$significant = ifelse(this_data$p_value < significant_p, "significant", "not significant") 
+  }
   #rename column names for generalization
   names(this_data)[3] = "ratio"
   names(this_data)[4] = "conf_2.5"
@@ -240,8 +266,13 @@ plot_ratio_forest = function(these_predictions = NULL,
       desired_order = plot_order
     }
     
-    # Convert the score column to a factor with the specified levels
+    #convert the score column to a factor with the specified levels
     this_data$score <- factor(this_data$score, levels = rev(desired_order))
+  }
+  
+  if(return_data){
+    message("No plot generated, returning plot data instead...")
+    return(this_data)
   }
   
   #build plot
@@ -250,20 +281,9 @@ plot_ratio_forest = function(these_predictions = NULL,
     geom_errorbarh(aes(xmin = conf_2.5, xmax = conf_97.5, color = significant), height = 0.2) +
     geom_vline(xintercept = 1, linetype = "dashed", color = "red") +
     labs(title = plot_title, subtitle = plot_subtitle,  caption = plot_caption, x = stat_plot, y = "") +
-    scale_color_manual(values = c("significant" = "red", "not significant" = "black")) +
-    theme(legend.position = "none",
-          axis.text.y = element_text(color = "black", size = 10),
-          axis.text.x = element_text(color = "black", size = 10),
-          axis.ticks.x = element_line(linewidth = 0.4),
-          axis.ticks.y = element_line(linewidth = 0.4),
-          plot.title = element_text(),
-          plot.caption = element_text(),
-          panel.background = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          plot.background = element_blank(), 
-          panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.4),
-          axis.line.x = element_blank())
+    scale_color_manual(values = c("significant" = sig_color, "not significant" = "black")) +
+    theme_bw() +
+    theme(legend.position = "bottom")
   
   if(!is.null(out_path)){
     #set PDF outputs

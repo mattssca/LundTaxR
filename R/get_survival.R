@@ -1,12 +1,12 @@
 #' @title Get Survival.
 #'
-#' @description Run a Cox model to calculate hazard ratio with confidence intervalls.
+#' @description Run a Cox model to calculate hazard ratio with confidence intervals.
 #'
 #' @details This function takes a data frame with prediction data `these_predictions` and executes 
-#' a cox model to retrieve hazard ratio with confidence intervals based on a categorical variable (i.e response,
+#' a cox model to retrieve hazard ratio with confidence intervals based on a categorical variable (e.g response,
 #' tumor grade, etc.) from a provided metadata table. The function expects the incoming 
-#' data to be the output from [LundTax2023Classifier::lundtax_predict_sub()], together with metadata
-#' information of interest (e.g two level categorical) and subtype classification information. The user
+#' data to be the output from [LundTaxR::classify_samples()], together with metadata
+#' information of interest (i.e two level categorical) and subtype classification information. The user
 #' have the option to point the function to the categorical variables with `predictor_columns`. The return
 #' can be further subset by subtype by using the `this_subtype` variable, should be one of the valid
 #' subtypes within the specified class. The user is required to provide the funciton with correct 
@@ -22,11 +22,11 @@
 #' information for all the subtypes within the specified class.
 #' @param scale Optional parameter. A numeric value to scale the numeric scores. If provided, all 
 #' numeric scores will be multiplied by this value.
-#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is FALSE.
+#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is TRUE
 #' @param n_bins Optional parameter. The number of bins to use when binning numeric scores. Default is 10.
 #' @param predictor_columns Optional, should be a vector with column names, either from the provided 
 #' metadata or signature score object, to be tested for. If not provided, the function will subset 
-#' data to the signature scores returned with `lundtax_predict_sub`.
+#' data to the signature scores returned with `classify_samples`.
 #' @param exclude_columns Optional argument, specify columns you wish to exclude from the standard 
 #' predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).
 #' @param surv_time Required parameter, should be the name of the column in the metadata with survival 
@@ -50,8 +50,8 @@
 #' library(dplyr, stats survival)
 #' 
 #' #get prediction calls
-#' sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-#'                                         impute = TRUE)
+#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
+#'                                      impute = TRUE)
 #'
 #' #run general linear models
 #' sjodahl_surv = get_survival(these_predictions = sjodahl_predicted,
@@ -65,7 +65,7 @@ get_survival = function(these_predictions = NULL,
                         these_samples_metadata = NULL,
                         subtype_class = "5_class",
                         scale = NULL,
-                        bin_scores = FALSE,
+                        bin_scores = TRUE,
                         n_bins = 10,
                         this_subtype = NULL,
                         predictor_columns = NULL,

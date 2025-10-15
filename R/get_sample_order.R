@@ -6,8 +6,8 @@
 #' order of samples to be used for downstream plotting functions. The order is dictated by the early 
 #' late ratio. and the sample order can readily be sued elsewhere, if needed.
 #' 
-#' @param these_predictions Required parameter, should be the output from 
-#' [LundTax2023Classifier::lundtax_predict_sub()]. Note, this function required the `lundtax_predict_sub` 
+#' @param expr_data Required parameter, should be the output from 
+#' [LundTaxR::classify_samples()]. Note, this function required the `classify_samples` 
 #' to be run with `include_data = TRUE` argument.
 #' @param return_this Set to "late_early" to return late/early ratio. Set to "sample_order" to 
 #' return the sample order based on late/early ratio (default).
@@ -20,14 +20,14 @@
 #'
 #' @examples
 #' #get predictions with data
-#' my_predictions = lundtax_predict_sub(this_data = sjodahl_2017,
-#'                                      include_data = TRUE, 
-#'                                      gene_id = "hgnc_symbol", 
-#'                                      impute = TRUE, 
-#'                                      adjust = TRUE)
+#' my_predictions = classify_samples(this_data = sjodahl_2017,
+#'                                   include_data = TRUE, 
+#'                                   gene_id = "hgnc_symbol", 
+#'                                   impute = TRUE, 
+#'                                   adjust = TRUE)
 #'                                      
 #' #run function                                    
-#' get_sample_order(these_predictions = my_predictions)
+#' get_sample_order(expr_data = my_predictions$data)
 #'
 get_sample_order = function(expr_data = NULL,
                             return_this = "sample_order"){

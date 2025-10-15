@@ -24,7 +24,8 @@ create_deprecated_function <- function(old_name, new_name, package_name, when = 
 # Define all deprecated function mappings
 deprecated_functions <- list(
   lundtax_predict_sub = "classify_samples",
-  predict_LundTax2023 = "classify_samples"
+  predict_LundTax2023 = "classify_samples",
+  get_sample_metrics = "get_subtype_metrics"
 )
 
 # Create all deprecated functions programmatically

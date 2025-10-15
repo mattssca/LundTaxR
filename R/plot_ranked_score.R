@@ -59,8 +59,8 @@ plot_ranked_score = function(these_predictions = NULL,
                              title = NULL,
                              out_path = NULL,
                              out_format = "png",
-                             plot_width = 4,
-                             plot_height = 4,
+                             plot_width = 8,
+                             plot_height = 5,
                              plot_title = NULL,
                              return_data = FALSE){
   
@@ -118,6 +118,15 @@ plot_ranked_score = function(these_predictions = NULL,
       dplyr::mutate_at(vars(subtype), factor) %>%
       mutate(rank = as.numeric(as.factor(score)))
     
+    if(subtype_class == "5_class"){
+      this_data = this_data %>% 
+        mutate(subtype = factor(subtype, levels = c("Uro", "GU", "BaSq", "Mes", "ScNE")))
+    }else if(subtype_class == "7_class"){
+      this_data = this_data %>% 
+        mutate(subtype = factor(subtype, levels = c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE")))
+      
+    }
+    
     if(return_data){
       message("No plot generated, returning plot data instead...")
       return(this_data)
@@ -132,6 +141,9 @@ plot_ranked_score = function(these_predictions = NULL,
       stop("You must specify the type of score with `this_score` in your provided dataset...")
     }
   }
+  
+  #get subtitle
+  formatted_subtitle <- tools::toTitleCase(gsub("_", " ", this_score))
   
   if(seg_plot){
     #get segment data for each subtype
@@ -200,6 +212,29 @@ plot_ranked_score = function(these_predictions = NULL,
       this_data$subtype = factor(this_data$subtype, levels = c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE"))
     }
     
+    #add subtype labels
+    if(subtype_class == "5_class"){
+      subtype_labels <- data.frame(
+        subtype = c("Uro", "GU", "BaSq", "Mes", "ScNE"),
+        y_pos = c(1.5, 2.5, 3.5, 4.5, 5.5),
+        x_pos = rep(-30, 5)
+      ) 
+    }else if(subtype_class == "7_class"){
+      subtype_labels <- data.frame(
+        subtype = c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE"),
+        y_pos = c(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5),
+        x_pos = rep(-30, 7)
+      ) 
+    }
+    
+    #set the minor grid line color based on subtype_class
+    if(subtype_class == "5_class") {
+      minor_grid_color <- "white"
+    } else if(subtype_class == "7_class") {
+      minor_grid_color <- "black"
+    }
+    
+    
     #segment plot
     my_plot = ggplot() +
       {if(subtype_class == "5_class") geom_segment(data = uro_lines, aes(x = x_start, xend = x_end, y = 1, yend = 1.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
@@ -216,59 +251,68 @@ plot_ranked_score = function(these_predictions = NULL,
       {if(subtype_class == "7_class") geom_segment(data = scne_lines, aes(x = x_start, xend = x_end, y = 7, yend = 7.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
       scale_color_manual(values = lund_colors$lund_colors) + 
       xlab("Index") + 
-      ggtitle(label = plot_title, subtitle = this_score) +
+      geom_text(data = subtype_labels, 
+                aes(x = x_pos, y = y_pos, label = subtype),
+                hjust = 0, vjust = 0.5, size = 4) +
+      ggtitle(label = "Segments Plot", subtitle = formatted_subtitle) +
       guides(colour = guide_legend(nrow = 1)) +
-      coord_cartesian(expand = FALSE) +
-      scale_x_continuous(limits = c(1, max(this_data$rank))) +
+      coord_cartesian(xlim = c(-30, max(this_data$rank)), expand = FALSE) +
+      scale_x_continuous(limits = c(-30, max(this_data$rank))) +
       {if(subtype_class == "5_class") scale_y_continuous(limits = c(1, 6))} +
       {if(subtype_class == "7_class") scale_y_continuous(limits = c(1, 8))} +
       theme(legend.position = "none", 
             legend.title = element_blank(),
             panel.grid.major.x = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.major.y = element_line( size = 0.1, color = "black"),
-            panel.grid.minor.y = element_line( size = 0.1, color = "black"),
-            plot.background = element_blank(), 
+            panel.grid.major.y = element_line( size = 0.2, color = "black"),
+            panel.grid.minor.y = element_line(size = 0.1, color = minor_grid_color),
+            plot.background = element_rect(fill = "white", color = NA),
+            panel.background = element_rect(fill = "white", color = NA),
             panel.border = element_blank(),
+            axis.title.y = element_blank(),
             axis.text.x = element_text(size = 10), 
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5),
             axis.ticks.y = element_blank(), 
             axis.line.x = element_line(),
-            axis.text.y = element_blank(),
-            axis.title.y = element_blank(),
-            axis.title.x = element_text(angle = 0, colour = "black", size = 10))
+            axis.text.y = element_blank())
   }else{
     #draw default plot
     my_plot = ggplot(data = this_data, aes(x = rank, y = score, color = subtype)) +
       geom_point(size = 2, shape = 16) +
-      {if(add_stat) geom_smooth(method = lm, se = FALSE)} +
-      {if(add_stat) stat_cor(method = "pearson", label.x = 20)} +
+      {if(add_stat) geom_smooth(method = lm, se = FALSE, linewidth = 0.5)} +
+      {if(add_stat) stat_cor(method = "pearson", label.x = 10)} +
       scale_color_manual(values = lund_colors$lund_colors) + 
       xlab("Index") + 
-      ylab(this_score) +
-      theme(legend.position = "none", 
-            axis.text.y = element_text(color = "black", size = 7),
-            axis.ticks.x = element_line(linewidth = 0.4),
-            axis.ticks.y = element_line(linewidth = 0.4),
-            panel.background = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            plot.background = element_blank(), 
-            panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.4),
-            axis.line.x = element_blank(), 
-            axis.title.y = element_text(angle = 90, colour = "black", size = 10, vjust = 2))
+      labs(color = "Subtype") +
+      ylab(formatted_subtitle) +
+      ggtitle(label = paste0("Ranked Signature Score")) +
+      theme_bw() +
+      theme(legend.position = "right", 
+            axis.line.x = element_blank())
+  }
+  
+  if(is.null(this_subtype)){
+    file_name = paste0(subtype_class, "_", this_score)
+  }else{
+    file_name = paste0(this_subtype, "_", this_score)
+  }
+  
+  if(seg_plot){
+    file_name = paste0(file_name, "_seg_plot")
+  }else{
+    file_name = paste0(file_name, "_ranked_score")
   }
   
   if(!is.null(out_path)){
     #set PDF outputs
     if(out_format == "pdf"){
-      pdf(paste0(out_path, title, "_ranked_score.pdf"),
+      pdf(paste0(out_path, file_name, ".pdf"),
           width = plot_width,
           height = plot_height)
       #set PNG outputs
     }else if(out_format == "png"){
-      png(paste0(out_path, title, "_ranked_score.png"),
+      png(paste0(out_path, file_name, ".png"),
           width = plot_width,
           height = plot_height,
           units = "in",
@@ -280,7 +324,6 @@ plot_ranked_score = function(these_predictions = NULL,
     }
     print(my_plot)
     dev.off()
-    message(paste0("Plot exported to ", out_path, title, "_ranked_score.", out_format))
   }else{
     return(my_plot) 
   }

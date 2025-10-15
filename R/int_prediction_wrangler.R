@@ -3,11 +3,11 @@
 #' @description Internal function called by `get_glm_scores`. 
 #' Not meant for out-of-package usage.
 #'
-#' @details Takes an output from [LundTax2023Classifier::lundtax_predict_sub()] together with 
+#' @details Takes an output from [LundTaxR::classify_samples()] together with 
 #' associated metadata and pre-processing it so that statistical tests can be executed on this data.
 #' For more info, see the documentation of `get_glm_scores`.
 #'
-#' @param these_predictions Required. Output from [LundTax2023Classifier::lundtax_predict_sub()].
+#' @param these_predictions Required. Output from [LundTaxR::classify_samples()].
 #' @param these_samples_metadata Required. Metadata associated with he prediction output. Also possible
 #' for the user to provide a metadata subset with samples of interest, the return will be restricted
 #'  to the samples within the specified group.
@@ -39,8 +39,8 @@
 #' library(dplyr)
 #' 
 #' #get prediction calls
-#' sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-#'                                         impute = TRUE)
+#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
+#'                                      impute = TRUE)
 #'   
 #' #run helper                                  
 #' my_out = int_prediction_wrangler(these_predictions = sjodahl_predicted, 
@@ -221,6 +221,5 @@ int_prediction_wrangler = function(these_predictions = NULL,
       my_object$UroB = relevel(my_object$UroB, ref = "0")
       my_object$UroC = relevel(my_object$UroC, ref = "0")
     }
-    
     return(my_object)
 }
