@@ -13,7 +13,7 @@ plot_ratio_forest(
   this_subtype = NULL,
   subtype_class = "5_class",
   scale = NULL,
-  bin_scores = FALSE,
+  bin_scores = TRUE,
   n_bins = 10,
   surv_time = NULL,
   surv_event = NULL,
@@ -21,6 +21,8 @@ plot_ratio_forest(
   predictor_columns = NULL,
   exclude_columns = NULL,
   significant_p = 0.05,
+  col_bon = FALSE,
+  sig_color = "red",
   sample_id_col = NULL,
   row_to_col = FALSE,
   out_path = NULL,
@@ -38,7 +40,7 @@ plot_ratio_forest(
 }
 \arguments{
 \item{these_predictions}{Required parameter if \code{this_data} is not provided. Should be output from
-\code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}.}
+\code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{these_samples_metadata}{Required parameter if \code{this_data}is not provided. Metadata associated
 with he prediction output. Also possible for the user to provide a metadata subset with samples
@@ -57,7 +59,7 @@ For odds ratio, set to \code{odds_ratio}.}
 \item{scale}{Optional parameter. A numeric value to scale the numeric scores. If provided, all
 numeric scores will be multiplied by this value.}
 
-\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is FALSE.}
+\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is TRUE}
 
 \item{n_bins}{Optional parameter. The number of bins to use when binning numeric scores. Default is 10.}
 
@@ -73,7 +75,7 @@ with exactly 2 levels.}
 
 \item{predictor_columns}{Optional, should be a vector with column names, either from the provided
 metadata or signature score object, to be tested for. If not provided, the function will subset
-data to the signature scores returned with \code{lundtax_predict_sub}.}
+data to the signature scores returned with \code{classify_samples}.}
 
 \item{exclude_columns}{Optional argument, specify columns you wish to exclude from the standard
 predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).}
@@ -137,31 +139,39 @@ to provide the plot data directly with \code{this_data}.
 library(dplyr, ggplot2)
 
 #get prediction calls
-sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-                                        impute = TRUE)
+sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
+                                     impute = TRUE)
 
 #hazard ratio                                      
-plot_ratio_forest(these_predictions = sjodahl_predicted,
+plot_ratio_forest(these_predictions = sjodahl_classes,
                   these_samples_metadata = sjodahl_2017_meta,
                   stat_plot = "hazard_ratio",
+                  bin_scores = TRUE, 
+                  sig_color = "salmon",
+                  col_bon = FALSE,
                   plot_subtitle = "n Samples: 267",
                   plot_title = "All 7 class samples",
                   subtype_class = "7_class", 
-                  this_subtype = NULL,
+                  this_subtype = "GU",
+                  return_data = FALSE,
+                  plot_arrange = FALSE,
                   surv_time = "surv_css_time",
                   surv_event = "surv_css_event")
 
 #odds ratio
-plot_ratio_forest(these_predictions = sjodahl_predicted,
+plot_ratio_forest(these_predictions = sjodahl_classes,
                   these_samples_metadata = sjodahl_2017_meta,
                   stat_plot = "odds_ratio",
                   plot_title = "Uro Samples - Adjuvant Chemo",
                   plot_subtitle = "n Samples: 121",
-                  subtype_class = "5_class", 
+                  subtype_class = "5_class",
+                  col_bon = TRUE,
+                  return_data = FALSE, 
+                  sig_color = "forestgreen",
                   this_subtype = "Uro",
+                  categorical_factor = "adj_chemo",
                   predictor_columns = c("progression_score", 
                                         "proliferation_score", 
-                                        "monocytic_lineage"),
-                  categorical_factor = "adj_chemo")
+                                        "monocytic_lineage"))
 
 }

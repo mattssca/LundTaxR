@@ -8,11 +8,11 @@ get_prediction_subset(
   these_predictions = NULL,
   these_sample_ids = NULL,
   these_samples_metadata = NULL,
-  samples_rownames = TRUE
+  samples_rownames = FALSE
 )
 }
 \arguments{
-\item{these_predictions}{A list containing data frames and named vectors to be subsetted.}
+\item{these_predictions}{A list containing data frames and named vectors to be subset.}
 
 \item{these_sample_ids}{A vector of sample IDs to subset the data. If NULL, sample IDs will be
 extracted from \code{these_samples_metadata}.}
@@ -36,7 +36,14 @@ sample IDs from \code{these_samples_metadata}. The function handles different st
 list, including data frames and named vectors, ensuring that only the specified samples are retained.
 }
 \examples{
-subsetted_data <- get_prediction_subset(these_predictions = pred_uroscanseq_high_low, 
-                                        these_sample_ids = sample_ids)
+my_samples = head(sjodahl_2017_meta$sample_id)
+my_meta = head(sjodahl_2017_meta)
+
+subsetted_data <- get_prediction_subset(these_predictions = sjodahl_classes, 
+                                        these_sample_ids = my_samples)
+
+subsetted_data <- get_prediction_subset(these_predictions = sjodahl_classes, 
+                                        these_samples_metadata = my_meta,
+                                        samples_rownames = FALSE)
 
 }

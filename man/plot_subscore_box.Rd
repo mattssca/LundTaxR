@@ -7,7 +7,6 @@
 plot_subscore_box(
   these_predictions,
   this_subtype,
-  plot_title = NULL,
   out_path = NULL,
   out_format = "png",
   plot_width = 4,
@@ -21,9 +20,6 @@ plot_subscore_box(
 
 \item{this_subtype}{Required parameter. Should be one of the set subtype classes from the
 LundTax nomenclature.}
-
-\item{plot_title}{Required parameter, if \code{out_path} is specified. plot title, will also be pasted to
-the exported file.}
 
 \item{out_path}{Optional, set path to export plot.}
 

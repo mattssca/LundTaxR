@@ -16,8 +16,8 @@ plot_ranked_score(
   title = NULL,
   out_path = NULL,
   out_format = "png",
-  plot_width = 4,
-  plot_height = 4,
+  plot_width = 8,
+  plot_height = 5,
   plot_title = NULL,
   return_data = FALSE
 )

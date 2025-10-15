@@ -22,7 +22,8 @@
 #' 
 #' @return A combined plot object if `out_path` is NULL. Otherwise, the plot is saved to the specified path.
 #' 
-#' @import dplyr survival ggplot2 cowplot patchwork
+#' @import dplyr survival ggplot2 patchwork
+#' @importFrom cowplot plot_grid
 #' @export
 #' 
 #' @examples
@@ -282,7 +283,7 @@ plot_subtype_forest = function(these_predictions = NULL,
     ) +
     xlim(1, 2)
   
-  combined_plot <- plot_grid(
+  combined_plot <- cowplot::plot_grid(
     my_plot,
     numbers_plot,
     ncol = 2,

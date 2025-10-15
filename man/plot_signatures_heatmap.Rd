@@ -15,7 +15,7 @@ plot_signatures_heatmap(
   hm_split = NULL,
   subtype_annotation = "5_class",
   hm_cluster = FALSE,
-  plot_anno_legend = NULL,
+  plot_anno_legend = c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE),
   plot_hm_legend = FALSE,
   plot_width = 14,
   plot_height = 6,
@@ -25,7 +25,7 @@ plot_signatures_heatmap(
 }
 \arguments{
 \item{these_predictions}{A list with a data frame object called scores. Returned with
-\code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}.}
+\code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{proportional_scores}{Set to TRUE to transform signature scores into proportions, default is FALSE.}
 
@@ -74,11 +74,11 @@ Otherwise, nothing.
 }
 \description{
 Build a heatmap with signature scores retrieved with the
-\code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}} function.
+\code{\link[=classify_samples]{classify_samples()}} function.
 }
 \details{
 Construct and export (pdf or png) a highly customizable heatmap visualizing prediction
-scores for each sample and class, predicted with \code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}.
+scores for each sample and class, predicted with \code{\link[=classify_samples]{classify_samples()}}.
 This function depends on Complexheatmap. It is also possible to return a data frame with
 prediction scores in a tidy format. To do so, set \code{return_scores = TRUE}. For a greater explanation
 on how to use the function, see parameter descriptions and examples.

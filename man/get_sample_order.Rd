@@ -7,12 +7,12 @@
 get_sample_order(expr_data = NULL, return_this = "sample_order")
 }
 \arguments{
+\item{expr_data}{Required parameter, should be the output from
+\code{\link[=classify_samples]{classify_samples()}}. Note, this function required the \code{classify_samples}
+to be run with \code{include_data = TRUE} argument.}
+
 \item{return_this}{Set to "late_early" to return late/early ratio. Set to "sample_order" to
 return the sample order based on late/early ratio (default).}
-
-\item{these_predictions}{Required parameter, should be the output from
-\code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}. Note, this function required the \code{lundtax_predict_sub}
-to be run with \code{include_data = TRUE} argument.}
 }
 \value{
 Rreturns the sample order.
@@ -27,13 +27,13 @@ late ratio. and the sample order can readily be sued elsewhere, if needed.
 }
 \examples{
 #get predictions with data
-my_predictions = lundtax_predict_sub(this_data = sjodahl_2017,
-                                     include_data = TRUE, 
-                                     gene_id = "hgnc_symbol", 
-                                     impute = TRUE, 
-                                     adjust = TRUE)
+my_predictions = classify_samples(this_data = sjodahl_2017,
+                                  include_data = TRUE, 
+                                  gene_id = "hgnc_symbol", 
+                                  impute = TRUE, 
+                                  adjust = TRUE)
                                      
 #run function                                    
-get_sample_order(these_predictions = my_predictions)
+get_sample_order(expr_data = my_predictions$data)
 
 }

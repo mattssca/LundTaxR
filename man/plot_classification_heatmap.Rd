@@ -26,10 +26,10 @@ plot_classification_heatmap(
 }
 \arguments{
 \item{these_predictions}{Required parameter, should be the output from
-\code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}}.}
+\code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{this_data}{Expression data used for predictions.
-Required if the output from \code{\link[LundTax2023Classifier:lundtax_predict_sub]{LundTax2023Classifier::lundtax_predict_sub()}} is run with
+Required if the output from \code{\link[=classify_samples]{classify_samples()}} is run with
 include_data = FALSE (default).}
 
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}. Accepted values are;
@@ -88,11 +88,8 @@ interest, with prediction results and scores on top.
 \dontrun{ 
 #example 1 including data in results object
 #run predictor on the bundled expression data
-sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017,
-                                        include_data = TRUE, 
-                                        impute = TRUE)
-
-
+sjodahl_predicted = classify_samples(this_data = sjodahl_2017,
+                                        include_data = TRUE)
 
 #example 2 - 5 class annotation and Without prediction scores
 plot_classification_heatmap(these_predictions = sjodahl_predicted, 

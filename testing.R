@@ -219,9 +219,3 @@ forest_data = plot_subtype_forest(these_samples_metadata = sjodahl_2017_meta,
                                   surv_event = "surv_css_event",
                                   surv_time = "surv_css_time")
 
-########################################################################
-plot_cumulative_incidence(these_predictions = sjodahl_classes, these_samples_metadata = sjodahl_2017_meta, 
-                          this_progression_event = "surv_css_event", 
-                          this_time_to_progression = "surv_css_time", 
-                          subtype_annotation = "5_class", 
-                          truncate = TRUE)
