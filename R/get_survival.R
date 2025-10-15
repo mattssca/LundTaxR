@@ -1,4 +1,4 @@
-#' @title Get Survival.
+#' @title Cox Model for Calculating Hazard Ratios From Clinical End-points
 #'
 #' @description Run a Cox model to calculate hazard ratio with confidence intervals.
 #'
@@ -64,6 +64,9 @@
 #'                             this_subtype = "Uro",
 #'                             surv_time = "surv_css_time",
 #'                             surv_event = "surv_css_event")
+#'                             
+#' #view data
+#' head(sjodahl_surv)
 #'
 get_survival = function(these_predictions = NULL,
                         these_samples_metadata = NULL,

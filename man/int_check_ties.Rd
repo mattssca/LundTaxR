@@ -2,7 +2,7 @@
 % Please edit documentation in R/int_check_ties.R
 \name{int_check_ties}
 \alias{int_check_ties}
-\title{Check Ties.}
+\title{Check Ties Between prediction Scores}
 \usage{
 int_check_ties(first, last)
 }

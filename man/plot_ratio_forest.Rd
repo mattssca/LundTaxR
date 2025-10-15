@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_ratio_forest.R
 \name{plot_ratio_forest}
 \alias{plot_ratio_forest}
-\title{Forest Plot}
+\title{Visualize Signature Scores (Cox or GLM) in a Forest Plot}
 \usage{
 plot_ratio_forest(
   these_predictions = NULL,

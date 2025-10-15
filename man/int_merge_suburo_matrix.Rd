@@ -2,7 +2,7 @@
 % Please edit documentation in R/int_merge_suburo_matrix.R
 \name{int_merge_suburo_matrix}
 \alias{int_merge_suburo_matrix}
-\title{Merge subUro Matrix.}
+\title{Merge Uro Subtype Matrix}
 \usage{
 int_merge_suburo_matrix(
   score_matrix1,

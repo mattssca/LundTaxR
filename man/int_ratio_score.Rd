@@ -2,7 +2,7 @@
 % Please edit documentation in R/int_ratio_score.R
 \name{int_ratio_score}
 \alias{int_ratio_score}
-\title{Calculate Scores.}
+\title{Calculate Signature Ratio Scores}
 \usage{
 int_ratio_score(
   this_data = NULL,

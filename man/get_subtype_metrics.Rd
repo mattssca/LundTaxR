@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_subtype_metrics.R
 \name{get_subtype_metrics}
 \alias{get_subtype_metrics}
-\title{Get Sample Metrics}
+\title{Get Summarizing Subtype Metrics}
 \usage{
 get_subtype_metrics(
   this_metadata = NULL,

@@ -94,6 +94,9 @@ sjodahl_classes = classify_samples(this_data = sjodahl_2017,
                                    adjust = TRUE, 
                                    impute = TRUE, 
                                    include_data = TRUE, 
-                                   verbose = TRUE)
+                                   verbose = FALSE)
+                                   
+#view data
+summary(sjodahl_classes)                                    
 
 }

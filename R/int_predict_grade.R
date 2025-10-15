@@ -1,4 +1,4 @@
-#' @title Predict Grade
+#' @title Predict Tumor Grade
 #'
 #' @description Function for predicting grade using random forest and the bundled classifiers.
 #'

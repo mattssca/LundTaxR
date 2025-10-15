@@ -2,7 +2,7 @@
 % Please edit documentation in R/int_calc_score.R
 \name{int_calc_score}
 \alias{int_calc_score}
-\title{Calculate Scores.}
+\title{Calculate Immune and Infiltration Scores}
 \usage{
 int_calc_score(
   this_data = NULL,

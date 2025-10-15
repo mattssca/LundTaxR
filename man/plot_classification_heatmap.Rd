@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_classification_heatmap.R
 \name{plot_classification_heatmap}
 \alias{plot_classification_heatmap}
-\title{Plot Classification Heatmap}
+\title{Visualize Output from the LundTaxR Classifier in a Heatmap}
 \usage{
 plot_classification_heatmap(
   these_predictions = NULL,

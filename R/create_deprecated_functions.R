@@ -16,10 +16,10 @@
 #' # No examples provided
 #' }
 #' 
-create_deprecated_function <- function(old_name, 
-                                       new_name, 
-                                       package_name, 
-                                       when = "2.0.0") {
+create_deprecated_function = function(old_name, 
+                                      new_name, 
+                                      package_name, 
+                                      when = "2.0.0") {
   function(...) {
     warning(sprintf(
       "\nFunction '%s()' was deprecated in %s v%s.\n%s\n%s\n",

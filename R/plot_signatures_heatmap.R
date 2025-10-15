@@ -1,4 +1,4 @@
-#' @title Plot Signature Scores Heatmap.
+#' @title Subtype-dependent Visualization of Signature Scores in a Heatmap
 #'
 #' @description Build a heatmap with signature scores retrieved with the [LundTaxR::classify_samples()] function.
 #'

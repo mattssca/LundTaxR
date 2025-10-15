@@ -1,4 +1,4 @@
-#' @title Merge subUro Matrix.
+#' @title Merge Uro Subtype Matrix
 #'
 #' @description Merge prediction score matrices from two classifiers.
 #'

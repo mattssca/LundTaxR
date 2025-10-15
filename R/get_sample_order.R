@@ -1,4 +1,4 @@
-#' @title Get Sample Order.
+#' @title Get Sample Order based on Proliferation Score.
 #'
 #' @description Return a sample order based on the late/early ratio (proliferation score).
 #'

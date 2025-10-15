@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_subscore_box.R
 \name{plot_subscore_box}
 \alias{plot_subscore_box}
-\title{Plot Stacked Barplot Subtype Score}
+\title{Visualize Subtype Prediction Scores in a Sorted/ranked/stacked Barplot}
 \usage{
 plot_subscore_box(
   these_predictions,

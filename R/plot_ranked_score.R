@@ -1,4 +1,4 @@
-#' @title Plot Ranked Score
+#' @title Plot Ranked Signature Scores in Subtypes
 #'
 #' @description Return a point plot with ranked scores for a set variable.
 #'

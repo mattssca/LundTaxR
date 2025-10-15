@@ -1,4 +1,4 @@
-#' @title Calculate Scores.
+#' @title Calculate Signature Ratio Scores
 #'
 #' @description Calculate proliferation and progression scores.
 #'

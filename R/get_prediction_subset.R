@@ -1,4 +1,4 @@
-#' @title Get Prediction Subsets
+#' @title Subset a List With Prediction Results
 #'
 #' @description This function subsets the data frames and named vectors in a list based on a set of 
 #' sample IDs.
@@ -46,7 +46,11 @@
 #'                                      samples_rownames = FALSE)
 #' #view data
 #' head(data_subset$data)
+#' 
+#' #view subtype scores
 #' head(data_subset$subtype_scores)
+#' 
+#' #view prediction classes
 #' head(data_subset$predictions_5classes)
 #'
 get_prediction_subset = function(these_predictions = NULL,

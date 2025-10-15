@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_sample_order.R
 \name{get_sample_order}
 \alias{get_sample_order}
-\title{Get Sample Order.}
+\title{Get Sample Order based on Proliferation Score.}
 \usage{
 get_sample_order(expr_data = NULL, return_this = "sample_order")
 }

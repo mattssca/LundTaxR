@@ -1,4 +1,4 @@
-#' @title Plot Stacked Barplot Subtype Score
+#' @title Visualize Subtype Prediction Scores in a Sorted/ranked/stacked Barplot
 #'
 #' @description Visualize subtype prediction score within a set subtype in a stacked barplot.
 #'

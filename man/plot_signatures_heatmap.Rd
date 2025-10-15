@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_signatures_heatmap.R
 \name{plot_signatures_heatmap}
 \alias{plot_signatures_heatmap}
-\title{Plot Signature Scores Heatmap.}
+\title{Subtype-dependent Visualization of Signature Scores in a Heatmap}
 \usage{
 plot_signatures_heatmap(
   these_predictions = NULL,

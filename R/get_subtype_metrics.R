@@ -1,4 +1,4 @@
-#' @title Get Sample Metrics
+#' @title Get Summarizing Subtype Metrics
 #'
 #' @description This function tables a metadata column based on subtype classification.
 #' 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_subscore_violin.R
 \name{plot_subscore_violin}
 \alias{plot_subscore_violin}
-\title{Violin Plot Subtype Scores}
+\title{Visualize Subtype Prediction Scores in A Violin-style plot}
 \usage{
 plot_subscore_violin(
   these_predictions,

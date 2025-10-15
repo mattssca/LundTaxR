@@ -2,7 +2,7 @@
 % Please edit documentation in R/int_predict_grade.R
 \name{int_predict_grade}
 \alias{int_predict_grade}
-\title{Predict Grade}
+\title{Predict Tumor Grade}
 \usage{
 int_predict_grade(
   this_data = NULL,

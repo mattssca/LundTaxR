@@ -1,4 +1,4 @@
-#' @title Plot Subtype Forest
+#' @title Subtype Forest Plot
 #'
 #' @description Create a subtype aware forest plot, with a set clinical end-point.
 #'

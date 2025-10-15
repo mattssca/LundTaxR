@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_prediction_subset.R
 \name{get_prediction_subset}
 \alias{get_prediction_subset}
-\title{Get Prediction Subsets}
+\title{Subset a List With Prediction Results}
 \usage{
 get_prediction_subset(
   these_predictions = NULL,
@@ -60,7 +60,11 @@ data_subset <- get_prediction_subset(these_predictions = sjodahl_classes,
                                      samples_rownames = FALSE)
 #view data
 head(data_subset$data)
+
+#view subtype scores
 head(data_subset$subtype_scores)
+
+#view prediction classes
 head(data_subset$predictions_5classes)
 
 }

@@ -1,4 +1,4 @@
-#' @title Check Ties.
+#' @title Check Ties Between prediction Scores
 #'
 #' @description Check score ties between predictions scores.
 #'

@@ -1,4 +1,4 @@
-#' @title Forest Plot
+#' @title Visualize Signature Scores (Cox or GLM) in a Forest Plot
 #'
 #' @description Construct a forest plot using Cox model or generalized linnear model for a set of 
 #' signature scores.

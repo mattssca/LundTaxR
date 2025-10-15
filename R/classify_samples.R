@@ -64,7 +64,10 @@
 #'                                    adjust = TRUE, 
 #'                                    impute = TRUE, 
 #'                                    include_data = TRUE, 
-#'                                    verbose = TRUE)
+#'                                    verbose = FALSE)
+#'                                    
+#' #view data
+#' summary(sjodahl_classes)                                    
 #'
 classify_samples = function(this_data = NULL,
                             gene_id = "hgnc_symbol",

@@ -1,4 +1,4 @@
-#' @title Violin Plot Subtype Scores
+#' @title Visualize Subtype Prediction Scores in A Violin-style plot
 #'
 #' @description Visualize subtype prediction score for a set subtype in a violin plot.
 #'

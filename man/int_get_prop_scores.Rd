@@ -2,7 +2,7 @@
 % Please edit documentation in R/int_get_prop_scores.R
 \name{int_get_prop_scores}
 \alias{int_get_prop_scores}
-\title{Get Proportional Scores}
+\title{Get Proportional Signature Scores}
 \usage{
 int_get_prop_scores(these_predictions = NULL)
 }

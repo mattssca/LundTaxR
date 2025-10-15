@@ -1,4 +1,4 @@
-#' @title Plot Classification Heatmap
+#' @title Visualize Output from the LundTaxR Classifier in a Heatmap
 #'
 #' @description Plot heatmap with classification results.
 #'

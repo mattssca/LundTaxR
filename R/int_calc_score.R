@@ -1,4 +1,4 @@
-#' @title Calculate Scores.
+#' @title Calculate Immune and Infiltration Scores
 #'
 #' @description Calculate immune and infiltration scores.
 #'

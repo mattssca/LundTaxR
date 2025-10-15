@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_survival.R
 \name{get_survival}
 \alias{get_survival}
-\title{Get Survival.}
+\title{Cox Model for Calculating Hazard Ratios From Clinical End-points}
 \usage{
 get_survival(
   these_predictions = NULL,
@@ -95,5 +95,8 @@ sjodahl_surv = get_survival(these_predictions = sjodahl_classes,
                             this_subtype = "Uro",
                             surv_time = "surv_css_time",
                             surv_event = "surv_css_event")
+                            
+#view data
+head(sjodahl_surv)
 
 }

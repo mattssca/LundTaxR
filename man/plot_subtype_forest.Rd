@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_subtype_forest.R
 \name{plot_subtype_forest}
 \alias{plot_subtype_forest}
-\title{Plot Subtype Forest}
+\title{Subtype Forest Plot}
 \usage{
 plot_subtype_forest(
   these_predictions = NULL,

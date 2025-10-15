@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_ranked_score.R
 \name{plot_ranked_score}
 \alias{plot_ranked_score}
-\title{Plot Ranked Score}
+\title{Plot Ranked Signature Scores in Subtypes}
 \usage{
 plot_ranked_score(
   these_predictions = NULL,

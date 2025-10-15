@@ -1,4 +1,4 @@
-#' @title Get Proportional Scores
+#' @title Get Proportional Signature Scores
 #' 
 #' @description Internal function called by `plot_hm_scores` when `proportional_scores = TRUE`.
 #' Not meant for out-of-package usage.

@@ -2,10 +2,15 @@ url: https://mattssca.github.io/LundTaxR
 
 template:
   bootstrap: 5
+  bootswatch: minty  
 
 home:
   title: "LundTaxR"
   description: "Lund Taxonomy molecular subtype classifier for bladder cancer"
+  strip_header: true 
+  logo:
+    width: 120px
+    height: 120px
 
 navbar:
   structure:
