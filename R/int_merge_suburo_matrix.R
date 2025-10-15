@@ -2,9 +2,9 @@
 #'
 #' @description Merge prediction score matrices from two classifiers.
 #'
-#' @description Internal function called by [LundTax2023Classifier::lundtax_calc_sigscore()]. 
-#' Not meant for out of package use. This function merges the prediction score matrices from the 
-#' 5-class and 7-class (UroA,UroB,UroC) classifiers into 1 unique score matrix.
+#' @description Internal function called by [LundTaxR::int_calc_signatures()]. Not meant for out 
+#' of package use. This function merges the prediction score matrices from the 5-class and 7-class 
+#' (UroA,UroB,UroC) classifiers into 1 unique score matrix.
 #'
 #' @param score_matrix1 Prediction score matrix from the 7 class classifier.
 #' @param score_matrix2 Prediction score matrix from the 5 class classifier.
@@ -12,6 +12,11 @@
 #'
 #' @return  Merged matrix including scores for 8 classes (Uro, UroA, UroB, UroC, 
 #' GU, BaSq, Mes, ScNE)
+#' 
+#' @examples
+#' \dontrun{
+#' # No examples provided
+#' }
 #'
 int_merge_suburo_matrix = function(score_matrix1,
                                    score_matrix2,

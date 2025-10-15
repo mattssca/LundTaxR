@@ -1,32 +1,53 @@
-#' Plot Subtype Forest
+#' @title Plot Subtype Forest
 #'
-#' This function creates a forest plot for multiple subtypes based on Cox proportional hazards models. It also includes a table with the number of samples and progression events for each subtype.
+#' @description Create a subtype aware forest plot, with a set clinical end-point.
 #'
-#' @param these_predictions Required parameter if `this_metadata` is not provided. Should be output from [LundTaxR::classify_samples()].
-#' @param these_samples_metadata Required parameter if `these_predictions` is not provided or to provide survival data. Metadata associated with the prediction output.
-#' @param this_metadata Deprecated parameter. Use `these_samples_metadata` instead.
-#' @param this_subtype A character vector specifying the subtypes to be included in the plot. Default is c("UroA", "UroB", "UroC", "Uro", "GU", "BaSq", "Mes", "ScNE").
+#' @details This function creates a forest plot for multiple subtypes based on Cox proportional 
+#' hazards models. It also includes a table with the number of samples and progression events for 
+#' each subtype.
+#'
+#' @param these_predictions Required parameter if `this_metadata` is not provided. Should be output 
+#' from [LundTaxR::classify_samples()].
+#' @param these_samples_metadata Required parameter if `these_predictions` is not provided or to 
+#' provide survival data. Metadata associated with the prediction output.
+#' @param this_subtype A character vector specifying the subtypes to be included in the plot. 
+#' Default is c("UroA", "UroB", "UroC", "Uro", "GU", "BaSq", "Mes", "ScNE").
 #' @param subtype_class Can be one of the following; 5_class or 7_class. Default is 5_class.
 #' @param surv_event A string specifying the column name for the survival event.
 #' @param surv_time A string specifying the column name for the survival time.
-#' @param sample_id_col Optional parameter. Allows the user to manually specify the name of a column with sample ID.
-#' @param row_to_col Optional parameter, set to TRUE to convert row names in metadata to a new column called sample_id. Default is FALSE.
+#' @param sample_id_col Optional parameter. Allows the user to manually specify the name of a column
+#' with sample ID.
+#' @param row_to_col Optional parameter, set to TRUE to convert row names in metadata to a new 
+#' column called sample_id. Default is FALSE.
 #' @param plot_title A string specifying the title of the plot.
 #' @param plot_subtitle A string specifying the subtitle of the plot.
 #' @param plot_caption A string specifying the caption of the plot.
 #' @param plot_width A numeric value specifying the width of the plot. Default is 7.
 #' @param plot_height A numeric value specifying the height of the plot. Default is 7.
-#' @param out_format A string specifying the output format of the plot ("png" or "pdf"). Default is "png".
+#' @param out_format A string specifying the output format of the plot ("png" or "pdf"). Default is 
+#' "png".
+#' @param significant_p Numeric parameter for flagging significant p values. Default is 0.05.
+#' @param sig_color Color for annotating significant signatures. Default is red.
 #' @param out_path A string specifying the output path for saving the plot.
 #' @param file_name A string specifying the file name for the saved plot.
+#' @param return_data Set to TRUE to return plot data, default is FALSE.
 #' 
-#' @return A combined plot object if `out_path` is NULL. Otherwise, the plot is saved to the specified path.
+#' @return A combined plot object if `out_path` is NULL. Otherwise, the plot is saved to the 
+#' specified path.
 #' 
 #' @import dplyr survival ggplot2 patchwork
 #' @importFrom cowplot plot_grid
+#' 
 #' @export
 #' 
 #' @examples
+#' #run classifier
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = FALSE)
 #' #UroA
 #' plot_subtype_forest(these_samples_metadata = sjodahl_2017_meta,
 #'                     these_predictions = sjodahl_classes,
@@ -51,10 +72,12 @@
 #'                                   return_data = TRUE,
 #'                                   surv_event = "surv_css_event",
 #'                                   surv_time = "surv_css_time")
+#'                                   
+#' #view data
+#' head(forest_data)
 #' 
 plot_subtype_forest = function(these_predictions = NULL,
                                these_samples_metadata = NULL,
-                               this_metadata = NULL,
                                this_subtype = NULL,
                                subtype_class = "5_class",
                                surv_event = NULL,
@@ -80,13 +103,7 @@ plot_subtype_forest = function(these_predictions = NULL,
       this_subtype = c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE")
     }
   }
-  
-  #handle deprecated parameter
-  if (!is.null(this_metadata) && is.null(these_samples_metadata)) {
-    warning("Parameter 'this_metadata' is deprecated. Use 'these_samples_metadata' instead.")
-    these_samples_metadata <- this_metadata
-  }
-  
+
   #check required parameters
   if (is.null(these_predictions) && is.null(these_samples_metadata)) {
     stop("Either 'these_predictions' or 'these_samples_metadata' must be provided.")

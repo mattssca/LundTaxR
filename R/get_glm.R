@@ -4,26 +4,30 @@
 #' prediction scores.
 #'
 #' @details This function takes a data frame with prediction data `these_predictions` and executes 
-#' statistical tests to find significant prediction scores based on a categorical variable (i.e response,
-#' tumour grade, etc.) from a provided metadata table. Currently, the function expects the incoming 
-#' data to be the score output from [LundTaxR::classify_samples()], together with metadata
-#' information of interest (e.g two level categorical) and subtype classification information. The user
-#' have the option to point the function to the categorical variable with `categorical_factor`. The return
-#' can be further subset by subtype by using the `this_subtype` variable, should be one of the valid
-#' subtypes within the specified class.
+#' statistical tests to find significant prediction scores based on a categorical variable (i.e 
+#' response,tumour grade, etc.) from a provided metadata table. Currently, the function expects the 
+#' incoming data to be the score output from [LundTaxR::classify_samples()], together with metadata
+#' information of interest (e.g two level categorical) and subtype classification information. The 
+#' user have the option to point the function to the categorical variable with `categorical_factor`.
+#' The return can be further subset by subtype by using the `this_subtype` variable, should be one 
+#' of the valid subtypes within the specified class.
 #'
-#' @param these_predictions Required parameter. A data frame with predictions scores from `classify_samples`.
+#' @param these_predictions Required parameter. A data frame with predictions scores from 
+#' `classify_samples`.
 #' @param these_samples_metadata Required, a data frame with metadata associated with the prediction 
 #' calls, Note, the function will subset the return to samples are included in this object.
 #' @param subtype_class Can be one of the following; 5_class or 7_class. Default is 5_class.
-#' @param this_subtype Optional parameter. Allows the user to subset the return to a specific subtype
-#' within the selected class. If not specified, the function will return a data frame with subtype 
-#' information for all the subtypes within the specified class.
+#' @param this_subtype Optional parameter. Allows the user to subset the return to a specific 
+#' subtype within the selected class. If not specified, the function will return a data frame with 
+#' subtype information for all the subtypes within the specified class.
 #' @param scale Optional parameter. A numeric value to scale the numeric scores. If provided, all 
 #' numeric scores will be multiplied by this value.
-#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is TRUE
-#' @param n_bins Optional parameter. The number of bins to use when binning numeric scores. Default is 10.
-#' @param categorical_factor Required parameter. Specify the two level categorical variable you want to test for.
+#' @param bin_scores Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. 
+#' Default is TRUE
+#' @param n_bins Optional parameter. The number of bins to use when binning numeric scores. Default 
+#' is 10.
+#' @param categorical_factor Required parameter. Specify the two level categorical variable you want
+#' to test for.
 #' @param predictor_columns Optional, should be a vector with column names, either from the provided 
 #' metadata or signature score object, to be tested for. If not provided, the function will subset 
 #' data to the signature scores returned with `classify_samples`.
@@ -31,8 +35,8 @@
 #' predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).
 #' @param row_to_col Boolean parameter. Set to TRUE to transform row names of the metadata to a new 
 #' column called sample_id. Default is FALSE.
-#' @param sample_id_col Parameter dictating the column name with sample IDs, the function expects this
-#' column to be sample_id but the user can override this if they know the name for this column.
+#' @param sample_id_col Parameter dictating the column name with sample IDs, the function expects 
+#' this column to be sample_id but the user can override this if they know the name for this column.
 #'
 #' @return A data frame with statistical scores for the selected samples/subtypes.
 #'
@@ -42,20 +46,31 @@
 #' @export
 #'
 #' @examples
-#' #load packages
-#' library(dplyr, stats)
-#' 
-#' #get prediction calls
-#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
-#'                                      impute = TRUE)
-#'
+#' #run classifier
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = FALSE)
+#'                                    
 #' #run general linear models
-#' sjodahl_glm = get_glm(these_predictions = sjodahl_predicted,
-#'                       these_samples_metadata = sjodahl_2017_meta,
-#'                       subtype_class = "5_class",
-#'                       this_subtype = "Uro",
-#'                       categorical_factor = "adj_chemo")
+#' sjodahl_glm_uro = get_glm(these_predictions = sjodahl_classes,
+#'                           these_samples_metadata = sjodahl_2017_meta,
+#'                           subtype_class = "5_class",
+#'                           this_subtype = "Uro",
+#'                           categorical_factor = "adj_chemo")
 #'
+#' sjodahl_glm_all = get_glm(these_predictions = sjodahl_classes,
+#'                           these_samples_metadata = sjodahl_2017_meta,
+#'                           subtype_class = "5_class",
+#'                           this_subtype = NULL,
+#'                           bin_scores = FALSE,
+#'                           categorical_factor = "adj_chemo")
+#'
+#' #view data
+#' head(sjodahl_glm_uro)
+#' 
 get_glm = function(these_predictions = NULL,
                    these_samples_metadata = NULL,
                    subtype_class = "5_class",

@@ -2,8 +2,8 @@
 #'
 #' @description Plot heatmap with classification results.
 #'
-#' @details This function plots a heatmap including genes and signatures of 
-#' interest, with prediction results and scores on top.
+#' @details This function plots a heatmap including genes and signatures of interest, with 
+#' prediction results and scores on top.
 #' 
 #' @param these_predictions Required parameter, should be the output from 
 #' [LundTaxR::classify_samples()].
@@ -14,8 +14,9 @@
 #' hgnc_symbol (default) or ensembl_gene_id.
 #' @param subtype_annotation Can be one of the following; "5 _class" (default) or "7_class" 
 #' annotation.
-#' @param this_sample_order Optional, set sample order. Default, samples are split by subtype, and order within 
-#' each subtype. By default, samples are order by late/early cell cycle ratio (low to high).
+#' @param this_sample_order Optional, set sample order. Default, samples are split by subtype, and 
+#' order within each subtype. By default, samples are order by late/early cell cycle ratio (low to 
+#' high).
 #' @param norm Boolean parameter. Set to TRUE (default) to normalize the data into Z-scaled values.
 #' @param plot_scores Boolean parameter. Set to TRUE (default) to plot prediction scores for each 
 #' class.
@@ -47,18 +48,21 @@
 #' @export 
 #'
 #' @examples
-#' \dontrun{ 
-#' #example 1 including data in results object
-#' #run predictor on the bundled expression data
-#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017,
-#'                                         include_data = TRUE)
-#'
-#' #example 2 - 5 class annotation and Without prediction scores
-#' plot_classification_heatmap(these_predictions = sjodahl_predicted, 
+#' #run classifier
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = FALSE)
+#'                                    
+#' #plot
+#' plot_classification_heatmap(these_predictions = sjodahl_classes, 
 #'                             subtype_annotation = "5_class",
-#'                             ann_height = 0.5,
-#'                             plot_scores = FALSE)
-#'}
+#'                             plot_scores = FALSE,
+#'                             plot_title = "Classification Results (Sjodahl 2017)", 
+#'                             show_ann_legend = TRUE,
+#'                             ann_height = 0.5)
 #'
 plot_classification_heatmap = function(these_predictions = NULL,
                                        this_data = NULL,

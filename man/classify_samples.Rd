@@ -26,47 +26,53 @@ classify_samples(
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}. Accepted values are;
 hgnc_symbol (default) or ensembl_gene_id.}
 
-\item{threshold_progression}{Threshold to flag a sample as high risk of progression, default is 0.58.}
+\item{threshold_progression}{Threshold to flag a sample as high risk of progression, default is
+0.58.}
 
-\item{log_transform}{Boolean parameter. If TRUE, the function log transforms the incoming expression
-values. Default is FALSE.}
+\item{log_transform}{Boolean parameter. If TRUE, the function log transforms the incoming
+expression values. Default is FALSE.}
 
-\item{adjust}{Boolean parameter. If TRUE (default), the function will proceed with adjusting the scores based
-on stable genes. If FALSE, no adjustment will be made and the original score values will be retained.}
+\item{adjust}{Boolean parameter. If TRUE (default), the function will proceed with adjusting the
+scores based on stable genes. If FALSE, no adjustment will be made and the original score values
+will be retained.}
 
 \item{adj_factor}{Only applicable if adjust is set to TRUE. Allows users to apply a proportional
-adjustment to the normalized scores, enabling finer control over the final output values.
-After dividing each score by the mean expression of stable genes, the result is multiplied by this factor.}
+adjustment to the normalized scores, enabling finer control over the final output values. After
+dividing each score by the mean expression of stable genes, the result is multiplied by this
+factor.}
 
 \item{impute}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Boolean. To determine if missed genes and NA
-values should be imputed or not. The non missed rules will be used to determine the closest samples
-in the training binary matrix (i.e. which is stored in the classifier object). For each sample,
-the mode value for nearest samples in the training data will be assigned to the missed rules. Default is TRUE}
+values should be imputed or not. The non missed rules will be used to determine the closest
+samples in the training binary matrix (i.e. which is stored in the classifier object). For each
+sample, the mode value for nearest samples in the training data will be assigned to the missed
+rules. Default is TRUE}
 
-\item{impute_reject}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. A number between 0 and 1 indicating the
-threshold of the missed rules in the sample. Based on this threshold the sample will be rejected
-(i.e. skipped if higher than the impute_reject threshold) and the missed rules will not be imputed
-in this sample. Default is 0.67. NOTE, The results object will not have any results for this sample.}
+\item{impute_reject}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. A number between 0 and 1 indicating
+the threshold of the missed rules in the sample. Based on this threshold the sample will be
+rejected (i.e. skipped if higher than the impute_reject threshold) and the missed rules will not
+be imputed in this sample. Default is 0.67. NOTE, The results object will not have any results
+for this sample.}
 
-\item{impute_kNN}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Integer determines the number of the nearest
-samples in the training data to be used in the imputation. Default is 5. It is not recommended to
-use large number (i.e. >10).}
+\item{impute_kNN}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Integer determines the number of the
+nearest samples in the training data to be used in the imputation. Default is 5. It is not
+recommended to use large number (i.e. >10).}
 
-\item{subtype_only}{Boolean parameter. Set to TRUE to return subtypes and nothing else. Default is FALSE.}
+\item{subtype_only}{Boolean parameter. Set to TRUE to return subtypes and nothing else. Default
+is FALSE.}
 
 \item{include_data}{Boolean parameter. Set to TRUE to include data in output, FALSE is default.}
 
-\item{include_pred_scores}{Boolean parameter. Set to TRUE (default) to include
-prediction scores for each sample and class in output.}
+\item{include_pred_scores}{Boolean parameter. Set to TRUE (default) to include prediction scores
+for each sample and class in output.}
 
-\item{verbose}{A logical value indicating whether processing messages will be
-printed or not. Default is TRUE.}
+\item{verbose}{A logical value indicating whether processing messages will be printed or not.
+Default is TRUE.}
 }
 \value{
-Returns a list object including: Data (optional, not included by default),
-Prediction scores for all classes (optional, included by default), Predicted LundTax
-class for 7-class system, Predicted LundTax class for 5-class system, as well a data frame with
-missing genes information.
+Returns a list object including: Data (optional, not included by default), Prediction
+scores for all classes (optional, included by default), Predicted LundTax class for 7-class
+system, Predicted LundTax class for 5-class system, as well a data frame with missing genes
+information.
 }
 \description{
 Predict Lund Taxonomy subtypes based on rule-based Random Forest classifiers.
@@ -79,7 +85,15 @@ the second classifier. This function internally calls
 \code{\link[=int_calc_signatures]{int_calc_signatures()}} for retrieving signature scores.
 }
 \examples{
-sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
-                                     impute = TRUE)
+#load your gene expression data, genes as rows, samples as columns
+data("sjodahl_2017")
+
+#classify samples
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE, 
+                                   verbose = TRUE)
 
 }

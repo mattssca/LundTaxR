@@ -38,8 +38,9 @@ hgnc_symbol (default) or ensembl_gene_id.}
 \item{subtype_annotation}{Can be one of the following; "5 _class" (default) or "7_class"
 annotation.}
 
-\item{this_sample_order}{Optional, set sample order. Default, samples are split by subtype, and order within
-each subtype. By default, samples are order by late/early cell cycle ratio (low to high).}
+\item{this_sample_order}{Optional, set sample order. Default, samples are split by subtype, and
+order within each subtype. By default, samples are order by late/early cell cycle ratio (low to
+high).}
 
 \item{norm}{Boolean parameter. Set to TRUE (default) to normalize the data into Z-scaled values.}
 
@@ -81,21 +82,24 @@ Draws heatmap and silently returns the sample order.
 Plot heatmap with classification results.
 }
 \details{
-This function plots a heatmap including genes and signatures of
-interest, with prediction results and scores on top.
+This function plots a heatmap including genes and signatures of interest, with
+prediction results and scores on top.
 }
 \examples{
-\dontrun{ 
-#example 1 including data in results object
-#run predictor on the bundled expression data
-sjodahl_predicted = classify_samples(this_data = sjodahl_2017,
-                                        include_data = TRUE)
-
-#example 2 - 5 class annotation and Without prediction scores
-plot_classification_heatmap(these_predictions = sjodahl_predicted, 
+#run classifier
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE, 
+                                   verbose = FALSE)
+                                   
+#plot
+plot_classification_heatmap(these_predictions = sjodahl_classes, 
                             subtype_annotation = "5_class",
-                            ann_height = 0.5,
-                            plot_scores = FALSE)
-}
+                            plot_scores = FALSE,
+                            plot_title = "Classification Results (Sjodahl 2017)", 
+                            show_ann_legend = TRUE,
+                            ann_height = 0.5)
 
 }

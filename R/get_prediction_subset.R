@@ -1,11 +1,13 @@
 #' @title Get Prediction Subsets
 #'
-#' @description This function subsets the data frames and named vectors in a list based on a set of sample IDs.
+#' @description This function subsets the data frames and named vectors in a list based on a set of 
+#' sample IDs.
 #' 
 #' @details This function is designed to subset various components of a predictions list based on a 
 #' set of sample IDs. If `these_sample_ids` is not provided, the function will attempt to extract 
 #' sample IDs from `these_samples_metadata`. The function handles different structures within the 
-#' list, including data frames and named vectors, ensuring that only the specified samples are retained.
+#' list, including data frames and named vectors, ensuring that only the specified samples are 
+#' retained.
 #'
 #' @param these_predictions A list containing data frames and named vectors to be subset.
 #' @param these_sample_ids A vector of sample IDs to subset the data. If NULL, sample IDs will be 
@@ -15,27 +17,42 @@
 #' @param samples_rownames A logical value indicating whether the sample IDs are stored in the row 
 #' names of `these_samples_metadata`. Default is TRUE.
 #'
-#' @return A list with the same structure as `these_predictions`, but subsetted to the specified sample IDs.
+#' @return A list with the same structure as `these_predictions`, but subset to the specified 
+#' sample IDs.
 #' 
 #' @import dplyr tibble
 #' 
 #' @export
 #'
 #' @examples
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = FALSE)
+#'                                    
+#' #get some sample subsets
 #' my_samples = head(sjodahl_2017_meta$sample_id)
 #' my_meta = head(sjodahl_2017_meta)
 #'
-#' subsetted_data <- get_prediction_subset(these_predictions = sjodahl_classes, 
-#'                                         these_sample_ids = my_samples)
+#' #use sample IDs
+#' data_subset <- get_prediction_subset(these_predictions = sjodahl_classes, 
+#'                                      these_sample_ids = my_samples)
 #'
-#' subsetted_data <- get_prediction_subset(these_predictions = sjodahl_classes, 
-#'                                         these_samples_metadata = my_meta,
-#'                                         samples_rownames = FALSE)
+#' #use a metadata subset 
+#' data_subset <- get_prediction_subset(these_predictions = sjodahl_classes, 
+#'                                      these_samples_metadata = my_meta,
+#'                                      samples_rownames = FALSE)
+#' #view data
+#' head(data_subset$data)
+#' head(data_subset$subtype_scores)
+#' head(data_subset$predictions_5classes)
 #'
-get_prediction_subset <- function(these_predictions = NULL,
-                                  these_sample_ids = NULL,
-                                  these_samples_metadata = NULL,
-                                  samples_rownames = FALSE){
+get_prediction_subset = function(these_predictions = NULL,
+                                 these_sample_ids = NULL,
+                                 these_samples_metadata = NULL,
+                                 samples_rownames = FALSE){
 
   if(!is.null(these_samples_metadata) && is.null(these_sample_ids)){
     message("Metadata provided, the function will subset to the sample IDs in this object...")

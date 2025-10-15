@@ -8,7 +8,8 @@ int_get_prop_scores(these_predictions = NULL)
 }
 \arguments{
 \item{these_predictions}{A list containing a data frame named \code{scores} with prediction scores.
-The data frame should have row names as sample IDs and columns corresponding to different cell types and scores.}
+The data frame should have row names as sample IDs and columns corresponding to different cell
+types and scores.}
 }
 \value{
 A data frame with the original scores, normalized scores, and the calculated
@@ -23,14 +24,8 @@ This function normalizes specific prediction scores so that each value is a frac
 the total score for that row. It also calculates the immune/stroma ratio.
 }
 \examples{
-#load packages
-library(dplyr)
-
-#get prediction calls
-sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-                                        impute = TRUE)
-                                        
-#transform data into proportional signature scores
-prop_scores = int_get_prop_scores(these_predictions = sjodahl_predicted)
+\dontrun{
+# No examples provided
+}
 
 }

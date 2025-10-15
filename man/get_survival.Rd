@@ -32,13 +32,15 @@ calls, Note, the function will subset the return to samples are included in this
 \item{scale}{Optional parameter. A numeric value to scale the numeric scores. If provided, all
 numeric scores will be multiplied by this value.}
 
-\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is TRUE}
+\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins.
+Default is TRUE}
 
-\item{n_bins}{Optional parameter. The number of bins to use when binning numeric scores. Default is 10.}
+\item{n_bins}{Optional parameter. The number of bins to use when binning numeric scores. Default
+is 10.}
 
-\item{this_subtype}{Optional parameter. Allows the user to subset the return to a specific subtype
-within the selected class. If not specified, the function will return a data frame with subtype
-information for all the subtypes within the specified class.}
+\item{this_subtype}{Optional parameter. Allows the user to subset the return to a specific
+subtype within the selected class. If not specified, the function will return a data frame with
+subtype information for all the subtypes within the specified class.}
 
 \item{predictor_columns}{Optional, should be a vector with column names, either from the provided
 metadata or signature score object, to be tested for. If not provided, the function will subset
@@ -47,17 +49,17 @@ data to the signature scores returned with \code{classify_samples}.}
 \item{exclude_columns}{Optional argument, specify columns you wish to exclude from the standard
 predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).}
 
-\item{surv_time}{Required parameter, should be the name of the column in the metadata with survival
-time. Should be of value numeric.}
+\item{surv_time}{Required parameter, should be the name of the column in the metadata with
+survival time. Should be of value numeric.}
 
-\item{surv_event}{Required parameter, should be the name of the column in the metadata with survival
-event. Should be of value factor, with two levels.}
+\item{surv_event}{Required parameter, should be the name of the column in the metadata with
+survival event. Should be of value factor, with two levels.}
 
 \item{row_to_col}{Boolean parameter. Set to TRUE to transform row names of the metadata to a new
 column called sample_id. Default is FALSE.}
 
-\item{sample_id_col}{Parameter dictating the column name with sample IDs, the function expects this
-column to be sample_id but the user can override this if they know the name for this column.}
+\item{sample_id_col}{Parameter dictating the column name with sample IDs, the function expects
+this column to be sample_id but the user can override this if they know the name for this column.}
 }
 \value{
 A data frame with statistical scores for the selected samples/subtypes.
@@ -67,29 +69,31 @@ Run a Cox model to calculate hazard ratio with confidence intervals.
 }
 \details{
 This function takes a data frame with prediction data \code{these_predictions} and executes
-a cox model to retrieve hazard ratio with confidence intervals based on a categorical variable (e.g response,
-tumor grade, etc.) from a provided metadata table. The function expects the incoming
-data to be the output from \code{\link[=classify_samples]{classify_samples()}}, together with metadata
-information of interest (i.e two level categorical) and subtype classification information. The user
-have the option to point the function to the categorical variables with \code{predictor_columns}. The return
-can be further subset by subtype by using the \code{this_subtype} variable, should be one of the valid
-subtypes within the specified class. The user is required to provide the funciton with correct
-column names in the metadata for survival time and survival event (see \code{surv_time} and \code{surv_event}).
+a cox model to retrieve hazard ratio with confidence intervals based on a categorical variable
+(e.g response, tumor grade, etc.) from a provided metadata table. The function expects the
+incoming data to be the output from \code{\link[=classify_samples]{classify_samples()}}, together with metadata
+information of interest (i.e two level categorical) and subtype classification information. The
+user have the option to point the function to the categorical variables with \code{predictor_columns}.
+The return can be further subset by subtype by using the \code{this_subtype} variable, should be one
+of the valid subtypes within the specified class. The user is required to provide the funciton
+with correct column names in the metadata for survival time and survival event (see \code{surv_time}
+and \code{surv_event}).
 }
 \examples{
-#load packages
-library(dplyr, stats survival)
-
-#get prediction calls
-sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
-                                     impute = TRUE)
-
+#run classifier
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE, 
+                                   verbose = FALSE)
+                                  
 #run general linear models
-sjodahl_surv = get_survival(these_predictions = sjodahl_predicted,
-                           these_samples_metadata = sjodahl_2017_meta,
-                           subtype_class = "5_class",
-                           this_subtype = "Uro",
-                           surv_time = "surv_css_time",
-                           surv_event = "surv_css_event")
+sjodahl_surv = get_survival(these_predictions = sjodahl_classes,
+                            these_samples_metadata = sjodahl_2017_meta,
+                            subtype_class = "5_class",
+                            this_subtype = "Uro",
+                            surv_time = "surv_css_time",
+                            surv_event = "surv_css_event")
 
 }

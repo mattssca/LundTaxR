@@ -2,23 +2,28 @@
 #'
 #' @description Calculate proliferation and progression scores.
 #'
-#' @details Internal function called by [LundTax2023Classifier::lundtax_calc_sigscore()]. 
+#' @details Internal function called by [LundTaxR::int_calc_signatures()]. 
 #' Not meant for out of package use. Takes a data frame of matrix with expression values and 
 #' calculates scores based on gene expression.
 #'
 #' @param this_data Required parameter. Data frame or matrix with expression values.
-#' @param variable Required parameter. Input should be one of the following; 
-#' proliferation, or progression.
-#' @param gene_id Specify the type of gene identifier used in `this_data`. 
-#' Accepted values are; hgnc_symbol (default) or ensembl_gene_id.
-#' @param verbose A logical value indicating whether processing messages will be 
-#' printed or not. Default is TRUE.
+#' @param variable Required parameter. Input should be one of the following; proliferation, or 
+#' progression.
+#' @param gene_id Specify the type of gene identifier used in `this_data`. Accepted values are; 
+#' hgnc_symbol (default) or ensembl_gene_id.
+#' @param verbose A logical value indicating whether processing messages will be printed or not. 
+#' Default is TRUE.
 #' 
-#' @return A list with two objects. 1, A data frame with scores for the selected variable. 
-#' 2, A data frame indicating what genes from the incoming data are missing, based on the expected 
-#' genes for signature calculations.
+#' @return A list with two objects. 1, A data frame with scores for the selected variable. 2, A data
+#' frame indicating what genes from the incoming data are missing, based on the expected genes for 
+#' signature calculations.
 #' 
 #' @import dplyr
+#' 
+#' @examples
+#' \dontrun{
+#' # No examples provided
+#' }
 #'
 int_ratio_score = function(this_data = NULL,
                            variable = NULL,

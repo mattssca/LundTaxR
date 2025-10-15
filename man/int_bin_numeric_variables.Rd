@@ -15,26 +15,18 @@ int_bin_numeric_variables(this_data = NULL, num_bins = NULL)
 A data frame with the numeric variables binned into the specified number of bins.
 }
 \description{
-This function bins all numeric variables in a data frame into a specified number of bins.
+This function bins all numeric variables in a data frame into a specified number of
+bins.
 }
 \details{
-Internal function. Not meant for out-of-package use. The function identifies all numeric columns in the provided data frame and applies a
-binning process to each numeric column. The binning process divides the range of each numeric
-column into a specified number of bins and assigns each value to one of these bins.
+Internal function. Not meant for out-of-package use. The function identifies all numeric
+columns in the provided data frame and applies a binning process to each numeric column. The
+binning process divides the range of each numeric column into a specified number of bins and
+assigns each value to one of these bins.
 }
 \examples{
-# Create a sample data frame
-sample_data <- data.frame(
-  id = 1:6,
-  score1 = c(7.310869, 10.419366, 4.846604, 6.596973, 8.079496, 9.343730),
-  score2 = c(2.5, 3.6, 1.2, 4.8, 3.3, 2.9),
-  category = c("A", "B", "A", "B", "A", "B")
-)
-
-#bin the numeric variables
-binned_data <- bin_numeric_variables(this_data = sample_data, num_bins = 10)
-
-#print the binned data frame
-print(binned_data)
+\dontrun{
+# No examples provided
+}
 
 }

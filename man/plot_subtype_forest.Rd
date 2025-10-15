@@ -7,7 +7,6 @@
 plot_subtype_forest(
   these_predictions = NULL,
   these_samples_metadata = NULL,
-  this_metadata = NULL,
   this_subtype = NULL,
   subtype_class = "5_class",
   surv_event = NULL,
@@ -28,23 +27,30 @@ plot_subtype_forest(
 )
 }
 \arguments{
-\item{these_predictions}{Required parameter if \code{this_metadata} is not provided. Should be output from \code{\link[=classify_samples]{classify_samples()}}.}
+\item{these_predictions}{Required parameter if \code{this_metadata} is not provided. Should be output
+from \code{\link[=classify_samples]{classify_samples()}}.}
 
-\item{these_samples_metadata}{Required parameter if \code{these_predictions} is not provided or to provide survival data. Metadata associated with the prediction output.}
+\item{these_samples_metadata}{Required parameter if \code{these_predictions} is not provided or to
+provide survival data. Metadata associated with the prediction output.}
 
-\item{this_metadata}{Deprecated parameter. Use \code{these_samples_metadata} instead.}
-
-\item{this_subtype}{A character vector specifying the subtypes to be included in the plot. Default is c("UroA", "UroB", "UroC", "Uro", "GU", "BaSq", "Mes", "ScNE").}
+\item{this_subtype}{A character vector specifying the subtypes to be included in the plot.
+Default is c("UroA", "UroB", "UroC", "Uro", "GU", "BaSq", "Mes", "ScNE").}
 
 \item{subtype_class}{Can be one of the following; 5_class or 7_class. Default is 5_class.}
 
 \item{surv_event}{A string specifying the column name for the survival event.}
 
+\item{sig_color}{Color for annotating significant signatures. Default is red.}
+
+\item{significant_p}{Numeric parameter for flagging significant p values. Default is 0.05.}
+
 \item{surv_time}{A string specifying the column name for the survival time.}
 
-\item{sample_id_col}{Optional parameter. Allows the user to manually specify the name of a column with sample ID.}
+\item{sample_id_col}{Optional parameter. Allows the user to manually specify the name of a column
+with sample ID.}
 
-\item{row_to_col}{Optional parameter, set to TRUE to convert row names in metadata to a new column called sample_id. Default is FALSE.}
+\item{row_to_col}{Optional parameter, set to TRUE to convert row names in metadata to a new
+column called sample_id. Default is FALSE.}
 
 \item{plot_title}{A string specifying the title of the plot.}
 
@@ -56,19 +62,35 @@ plot_subtype_forest(
 
 \item{plot_height}{A numeric value specifying the height of the plot. Default is 7.}
 
-\item{out_format}{A string specifying the output format of the plot ("png" or "pdf"). Default is "png".}
+\item{out_format}{A string specifying the output format of the plot ("png" or "pdf"). Default is
+"png".}
 
 \item{out_path}{A string specifying the output path for saving the plot.}
 
 \item{file_name}{A string specifying the file name for the saved plot.}
+
+\item{return_data}{Set to TRUE to return plot data, default is FALSE.}
 }
 \value{
-A combined plot object if \code{out_path} is NULL. Otherwise, the plot is saved to the specified path.
+A combined plot object if \code{out_path} is NULL. Otherwise, the plot is saved to the
+specified path.
 }
 \description{
-This function creates a forest plot for multiple subtypes based on Cox proportional hazards models. It also includes a table with the number of samples and progression events for each subtype.
+Create a subtype aware forest plot, with a set clinical end-point.
+}
+\details{
+This function creates a forest plot for multiple subtypes based on Cox proportional
+hazards models. It also includes a table with the number of samples and progression events for
+each subtype.
 }
 \examples{
+#run classifier
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE, 
+                                   verbose = FALSE)
 #UroA
 plot_subtype_forest(these_samples_metadata = sjodahl_2017_meta,
                     these_predictions = sjodahl_classes,
@@ -93,5 +115,8 @@ forest_data = plot_subtype_forest(these_samples_metadata = sjodahl_2017_meta,
                                   return_data = TRUE,
                                   surv_event = "surv_css_event",
                                   surv_time = "surv_css_time")
+                                  
+#view data
+head(forest_data)
 
 }

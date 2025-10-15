@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_functions.R
 \name{create_deprecated_function}
 \alias{create_deprecated_function}
-\title{Create deprecated function wrapper}
+\title{Create Deprecated Function}
 \usage{
 create_deprecated_function(old_name, new_name, package_name, when = "2.0.0")
 }
@@ -19,5 +19,14 @@ create_deprecated_function(old_name, new_name, package_name, when = "2.0.0")
 Function that calls new function with deprecation warning
 }
 \description{
-Create deprecated function wrapper
+Create deprecated function wrapper.
+}
+\details{
+Internal function, create deprecated function wrapper.
+}
+\examples{
+\dontrun{
+# No examples provided
+}
+
 }

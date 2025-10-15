@@ -4,31 +4,33 @@
 #'
 #' @details Take the output from `classify_samples` and return a violin plot where each violin 
 #' represent the distribution of the, for that class, subtype prediction score. Set the subtype of 
-#' desire with `this_subtype`. The subtype can be one of the subtypes included in the LundTax subtype 
-#' classification nomenclature. Parameters starting with the plot prefix are available for the user 
-#' to gain more control of the returned plot. The user can also return the wrangled data used in the 
-#' plot by setting `return_data = TRUE`.
+#' desire with `this_subtype`. The subtype can be one of the subtypes included in the LundTax 
+#' subtype classification nomenclature. Parameters starting with the plot prefix are available for 
+#' the user to gain more control of the returned plot. The user can also return the wrangled data 
+#' used in the plot by setting `return_data = TRUE`.
 #'
-#' @param these_predictions Required parameter, should be the output from 
+#' @param these_predictions Required parameter, should be the output from
 #' [LundTaxR::classify_samples()].
-#' @param this_subtype Required parameter. Should be one of the set subtype classes from the
-#'  LundTax nomenclature.
+#' @param this_subtype Required parameter. Should be one of the set subtype classes from the LundTax
+#' nomenclature.
 #' @param out_path Optional, set path to export plot.
 #' @param out_format Required parameter if `out_path` is specified. Can be "png" (default) or "pdf".
-#' The user can further specify the dimensions of the returned plot with `plot_width` and `plot_height`.
-#' @param plot_width This parameter controls the width in inches. 
-#' Default is 4 (1200 pixels at 300 PPI).
-#' @param plot_height This parameter controls the height in inches. 
-#' Default is 4 (1200 pixels at 300 PPI).
+#' The user can further specify the dimensions of the returned plot with `plot_width` and 
+#' `plot_height`.
+#' @param plot_width This parameter controls the width in inches. Default is 4 (1200 pixels at 300 
+#' PPI).
+#' @param plot_height This parameter controls the height in inches. Default is 4 (1200 pixels at 300
+#' PPI).
 #' @param plot_adjust A multiplicate bandwidth adjustment. This makes it possible to adjust the 
 #' bandwidth while still using the a bandwidth estimator. For example, adjust = 1/2 means use half 
 #' of the default bandwidth.
-#' @param plot_scale if "area" (default), all violins have the same area (before trimming the tails). 
-#' If "count", areas are scaled proportionally to the number of observations. If "width", all 
-#' violins have the same maximum width.
-#' @param plot_trim If TRUE (default), trim the tails of the violins to the range of the data. If
+#' @param plot_scale if "area" (default), all violins have the same area (before trimming the 
+#' tails). If "count", areas are scaled proportionally to the number of observations. If "width", 
+#' all violins have the same maximum width.
+#' @param plot_trim If TRUE (default), trim the tails of the violins to the range of the data. If 
 #' FALSE, don't trim the tails.
-#' @param return_data Set to TRUE to return tidy data used by the plotting function. Default is FALSE.
+#' @param return_data Set to TRUE to return tidy data used by the plotting function. Default is 
+#' FALSE.
 #'
 #' @return Nothing.
 #' 
@@ -38,13 +40,35 @@
 #' @export
 #'
 #' @examples
-#' my_predictions = classify_samples(these_predictions = sjodahl_2017, 
-#'                                   gene_id = "hgnc_symbol", 
-#'                                   impute = TRUE, 
-#'                                   adjust = TRUE)
-#'                                      
-#' uro_scores = plot_subscore_violin(these_predictions = my_predictions, 
-#'                                   this_subtype = "Uro")
+#' #run predictor
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = FALSE)
+#'                                   
+#' #plot GU
+#' plot_subscore_violin(these_predictions = sjodahl_classes, 
+#'                      this_subtype = "GU", 
+#'                      plot_adjust = 2,
+#'                      plot_trim = FALSE)
+#'
+#'
+#' #plot UroA
+#' plot_subscore_violin(these_predictions = sjodahl_classes, 
+#'                      this_subtype = "UroA", 
+#'                      plot_adjust = 3,
+#'                      plot_scale = "width",
+#'                      plot_trim = TRUE, return_data = FALSE)
+#'
+#' #return data
+#' plot_data = plot_subscore_violin(these_predictions = sjodahl_classes, 
+#'                                  this_subtype = "UroA", 
+#'                                  return_data = TRUE)
+#'
+#' #view data                                  
+#' head(plot_data)
 #'                                   
 plot_subscore_violin = function(these_predictions, 
                                 this_subtype,

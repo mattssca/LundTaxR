@@ -9,7 +9,6 @@ plot_ratio_forest(
   these_samples_metadata = NULL,
   this_data = NULL,
   stat_plot,
-  all_subs = FALSE,
   this_subtype = NULL,
   subtype_class = "5_class",
   scale = NULL,
@@ -42,26 +41,30 @@ plot_ratio_forest(
 \item{these_predictions}{Required parameter if \code{this_data} is not provided. Should be output from
 \code{\link[=classify_samples]{classify_samples()}}.}
 
-\item{these_samples_metadata}{Required parameter if \code{this_data}is not provided. Metadata associated
-with he prediction output. Also possible for the user to provide a metadata subset with samples
-of interest, the return will be restricted to the samples within the specified group}
+\item{these_samples_metadata}{Required parameter if \code{this_data}is not provided. Metadata
+associated with he prediction output. Also possible for the user to provide a metadata subset
+with samples of interest, the return will be restricted to the samples within the specified group}
 
 \item{this_data}{Required parameter if \code{these_predictions} and \code{these_samples_metadata} is not
-provided. Should be the output from \code{get_survival} or \code{get_glm}, depending on the plot type set with \code{stat_plot}.}
+provided. Should be the output from \code{get_survival} or \code{get_glm}, depending on the plot type set
+with \code{stat_plot}.}
 
 \item{stat_plot}{Required parameter. Sets the plot type, for hazard ratio, set to \code{hazard_ratio}.
 For odds ratio, set to \code{odds_ratio}.}
 
-\item{this_subtype}{Optional Specify subtype of interest. Leave as NULL to not separate statistics on subtype.}
+\item{this_subtype}{Optional Specify subtype of interest. Leave as NULL to not separate
+statistics on subtype.}
 
 \item{subtype_class}{Can be one of the following; 5_class or 7_class. Default is 5_class.}
 
 \item{scale}{Optional parameter. A numeric value to scale the numeric scores. If provided, all
 numeric scores will be multiplied by this value.}
 
-\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is TRUE}
+\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins.
+Default is TRUE}
 
-\item{n_bins}{Optional parameter. The number of bins to use when binning numeric scores. Default is 10.}
+\item{n_bins}{Optional parameter. The number of bins to use when binning numeric scores. Default
+is 10.}
 
 \item{surv_time}{Required parameter if \code{stat_plot} is set to \code{hazard_ratio}, should be the name
 of the column in the metadata with survival time. Should be of value numeric.}
@@ -69,9 +72,9 @@ of the column in the metadata with survival time. Should be of value numeric.}
 \item{surv_event}{Required parameter if \code{stat_plot} is set to \code{hazard_ratio}, should be the name
 of the column in the metadata with survival event. Should be of value factor, with two levels.}
 
-\item{categorical_factor}{Required parameter if \code{this_glm}is not provided. This should be the categorical
-variable that is intended for testing. In addition, this should also be a variable of type factor,
-with exactly 2 levels.}
+\item{categorical_factor}{Required parameter if \code{this_glm}is not provided. This should be the
+categorical variable that is intended for testing. In addition, this should also be a variable of
+type factor, with exactly 2 levels.}
 
 \item{predictor_columns}{Optional, should be a vector with column names, either from the provided
 metadata or signature score object, to be tested for. If not provided, the function will subset
@@ -82,28 +85,37 @@ predictor columns. Note, this parameter is only validated if predictor_columns i
 
 \item{significant_p}{Numeric parameter for flagging significant p values. Default is 0.05.}
 
-\item{sample_id_col}{Optional parameter. Allows the user to manually specify the name of a column with sample ID.}
+\item{col_bon}{Boolean parameter, if set to TRUE the p values will be bonferroni adjusted.
+Default is FALSE.}
 
-\item{row_to_col}{Optional parameter, set to TRUE to convert row names in metadata to a new column
-called sample_id. Default is FALSE.}
+\item{sig_color}{Color for annotating significant signatures. Default is red.}
+
+\item{sample_id_col}{Optional parameter. Allows the user to manually specify the name of a column
+with sample ID.}
+
+\item{row_to_col}{Optional parameter, set to TRUE to convert row names in metadata to a new
+column called sample_id. Default is FALSE.}
 
 \item{out_path}{Optional, set path to export plot.}
 
 \item{out_format}{Required parameter if \code{out_path} is specified. Can be "png" (default) or "pdf".
-The user can further specify the dimensions of the returned plot with \code{plot_width} and \code{plot_height}.}
+The user can further specify the dimensions of the returned plot with \code{plot_width} and
+\code{plot_height}.}
 
 \item{file_name}{Optional, if plot is being saved to disk, specify the file name for the file.}
 
-\item{plot_title}{Title for plot.}
+\item{plot_title}{Optional parameter, set title for the plot. Default is "My Plot".}
 
-\item{plot_subtitle}{Caption for plot.}
+\item{plot_subtitle}{Optional parameter, set subtitle for the plot. Default is "".}
 
-\item{plot_width}{This parameter controls the width in inches.  Default is 8 (2400 pixels at 300 PPI).}
+\item{plot_width}{This parameter controls the width in inches.  Default is 8 (2400 pixels at 300
+PPI).}
 
-\item{plot_height}{This parameter controls the height in inches. Default is 8 (2400 pixels at 300 PPI).}
+\item{plot_height}{This parameter controls the height in inches. Default is 8 (2400 pixels at 300
+PPI).}
 
-\item{plot_order}{Optional parameter for setting the order of scores in the returned plot.
-Only applies if \code{arrange_plot} is set to TRUE.}
+\item{plot_order}{Optional parameter for setting the order of scores in the returned plot. Only
+applies if \code{arrange_plot} is set to TRUE.}
 
 \item{plot_arrange}{Boolean parameter, if set to TRUE the user can specify the order of the score
 levels on the y axis. Default is FALSE.}
@@ -122,26 +134,28 @@ signature scores.
 Depending on the user defines \code{stat_plot}, this function internally calls \code{get_survival}
 or \code{get_glm}, which internally calls \code{int_prediction_wrangler}. The user can also provide the
 plotting data with \code{this_data} directly. If \code{plot_data} is set to \code{odds_ratio} the function will
-visualize odds ratio for one selected categorical variable. The user sets this variable with \code{categorical_factor}.
-This should be a valid column name from either the metadata provided with \code{these_samples_metadata}
-or from the signature score data subset. The user can then set what numerical columns that are to
-be tested for association. This is controlled with \code{predictor_columns}. The input for this
-parameter should match column names corresponding to numeric variables in the metadata or signature
-score data subset. Alternatively, the function can also visualize hazard ratios calculated with
-\code{get_surv}. To do so, set \code{plot_data = "hazard_ratio"}. If so, the user also needs to point the
-function to the corresponding survival columns in the provided metadata. This is done with \code{surv_time}
-and \code{surv_event}. To return a plot for just one subtype, specify the subtype and class with
+visualize odds ratio for one selected categorical variable. The user sets this variable with
+\code{categorical_factor}.This should be a valid column name from either the metadata provided with
+\code{these_samples_metadata} or from the signature score data subset. The user can then set what
+numerical columns that are to be tested for association. This is controlled with
+\code{predictor_columns}. The input for this parameter should match column names corresponding to
+numeric variables in the metadata or signature score data subset. Alternatively, the function can
+also visualize hazard ratios calculated with \code{get_surv}. To do so, set
+\code{plot_data = "hazard_ratio"}. If so, the user also needs to point the function to the
+corresponding survival columns in the provided metadata. This is done with \code{surv_time} and
+\code{surv_event}. To return a plot for just one subtype, specify the subtype and class with
 \code{this_subtype} and \code{subtype_class}. To return a plot for more than one subtype, it is recommended
 to provide the plot data directly with \code{this_data}.
 }
 \examples{
-#load pacakges
-library(dplyr, ggplot2)
-
-#get prediction calls
-sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
-                                     impute = TRUE)
-
+#run predictor
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE, 
+                                   verbose = FALSE)
+                                   
 #hazard ratio                                      
 plot_ratio_forest(these_predictions = sjodahl_classes,
                   these_samples_metadata = sjodahl_2017_meta,
@@ -152,9 +166,9 @@ plot_ratio_forest(these_predictions = sjodahl_classes,
                   plot_subtitle = "n Samples: 267",
                   plot_title = "All 7 class samples",
                   subtype_class = "7_class", 
-                  this_subtype = "GU",
+                  this_subtype = NULL,
                   return_data = FALSE,
-                  plot_arrange = FALSE,
+                  plot_arrange = TRUE,
                   surv_time = "surv_css_time",
                   surv_event = "surv_css_event")
 
@@ -173,5 +187,17 @@ plot_ratio_forest(these_predictions = sjodahl_classes,
                   predictor_columns = c("progression_score", 
                                         "proliferation_score", 
                                         "monocytic_lineage"))
+#return plot data
+ratio_data = plot_ratio_forest(these_predictions = sjodahl_classes,
+                               these_samples_metadata = sjodahl_2017_meta,
+                               stat_plot = "odds_ratio",
+                               subtype_class = "5_class",
+                               col_bon = FALSE,
+                               return_data = TRUE, 
+                               this_subtype = "Uro",
+                               categorical_factor = "adj_chemo")
+                               
+#view data
+head(ratio_data)
 
 }

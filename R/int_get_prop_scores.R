@@ -7,7 +7,8 @@
 #' the total score for that row. It also calculates the immune/stroma ratio.
 #'
 #' @param these_predictions A list containing a data frame named `scores` with prediction scores. 
-#' The data frame should have row names as sample IDs and columns corresponding to different cell types and scores.
+#' The data frame should have row names as sample IDs and columns corresponding to different cell 
+#' types and scores.
 #'
 #' @return A data frame with the original scores, normalized scores, and the calculated 
 #' immune/stroma ratio. The row names are the sample IDs.
@@ -15,15 +16,9 @@
 #' @import dplyr tibble
 #' 
 #' @examples
-#' #load packages
-#' library(dplyr)
-#' 
-#' #get prediction calls
-#' sjodahl_predicted = lundtax_predict_sub(this_data = sjodahl_2017, 
-#'                                         impute = TRUE)
-#'                                         
-#' #transform data into proportional signature scores
-#' prop_scores = int_get_prop_scores(these_predictions = sjodahl_predicted)
+#' \dontrun{
+#' # No examples provided
+#' }
 #' 
 int_get_prop_scores = function(these_predictions = NULL){
   

@@ -4,7 +4,7 @@ Version: 2.0.0
 Date: 2026-10-10
 Maintainer: Adam Mattsson <adam.mattsson@med.lu.se>
 Authors@R: c(
-    person("Elena", "Aramendía", , "elena.aramendia_cotillas@med.lu.se", role = c("aut", "cre")),
+    person("Elena", "Aramendía", , "elena.aramendia_cotillas@med.lu.se", role = c("aut")),
     person("Pontus", "Eriksson", , "pontus.eriksson@med.lu.se", role = c("aut")),
     person("Adam", "Mattsson", , "adam.mattsson@med.lu.se", role = c("aut", "cre")))
 Description: LundTaxR implements a robust Random Forest-based classifier for molecular subtyping of 
@@ -25,6 +25,7 @@ Depends:
 Imports: 
     circlize,
     ComplexHeatmap,
+    cowplot,
     dplyr,
     ggplot2,
     ggpubr,
@@ -33,6 +34,7 @@ Imports:
     gridExtra,
     multiclassPairs,
     openxlsx,
+    patchwork,
     reshape2,
     survival,
     tibble

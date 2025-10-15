@@ -4,21 +4,23 @@
 #'
 #' @details Take the output from `classify_samples` and return a stacked barplot plot representing 
 #' the distribution of the, for that class, subtype prediction score. Set the subtype of 
-#' desire with `this_subtype`. The subtype can be one of the subtypes included in the LundTax subtype 
-#' classification nomenclature.
+#' desire with `this_subtype`. The subtype can be one of the subtypes included in the LundTax 
+#' subtype classification nomenclature.
 #'
 #' @param these_predictions Required parameter, should be the output from 
 #' [LundTaxR::classify_samples()].
-#' @param this_subtype Required parameter. Should be one of the set subtype classes from the
-#'  LundTax nomenclature.
+#' @param this_subtype Required parameter. Should be one of the set subtype classes from the 
+#' LundTax nomenclature.
 #' @param out_path Optional, set path to export plot.
 #' @param out_format Required parameter if `out_path` is specified. Can be "png" (default) or "pdf".
-#' The user can further specify the dimensions of the returned plot with `plot_width` and `plot_height`.
-#' @param plot_width This parameter controls the width in inches. 
-#' Default is 4 (1200 pixels at 300 PPI).
-#' @param plot_height This parameter controls the height in inches. 
-#' Default is 4 (1200 pixels at 300 PPI).
-#' @param return_data Set to TRUE to return tidy data used by the plotting function. Default is FALSE.
+#' The user can further specify the dimensions of the returned plot with `plot_width` and 
+#' `plot_height`.
+#' @param plot_width This parameter controls the width in inches. Default is 4 (1200 pixels at 300 
+#' PPI).
+#' @param plot_height This parameter controls the height in inches. Default is 4 (1200 pixels at 300
+#' PPI).
+#' @param return_data Set to TRUE to return tidy data used by the plotting function. Default is 
+#' FALSE.
 #'
 #' @return Nothing.
 #' 
@@ -28,13 +30,28 @@
 #' @export
 #'
 #' @examples
-#' my_predictions = classify_samples(these_predictions = sjodahl_2017, 
-#'                                   gene_id = "hgnc_symbol", 
-#'                                   impute = TRUE, 
-#'                                   adjust = TRUE)
-#'                                      
-#' uro_scores = plot_subscore_box(these_predictions = my_predictions, 
-#'                                this_subtype = "Uro")
+#' #run predictor
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = FALSE)
+#' #plot Uro scores
+#' plot_subscore_box(these_predictions = sjodahl_classes, 
+#'                   this_subtype = "Uro")
+#' 
+#' #plot UroA scores
+#' plot_subscore_box(these_predictions = sjodahl_classes, 
+#'                   this_subtype = "UroA")
+#' 
+#' #return data
+#' plot_data = plot_subscore_box(these_predictions = sjodahl_classes, 
+#'                               this_subtype = "Uro", 
+#'                               return_data = TRUE)
+#'
+#' #view data
+#' head(plot_data)
 #'
 plot_subscore_box = function(these_predictions, 
                              this_subtype,

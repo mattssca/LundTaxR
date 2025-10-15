@@ -24,57 +24,43 @@ plot_signatures_heatmap(
 )
 }
 \arguments{
-\item{these_predictions}{A list with a data frame object called scores. Returned with
-\code{\link[=classify_samples]{classify_samples()}}.}
+\item{these_predictions}{A list with a data frame object called scores. Returned with \code{\link[=classify_samples]{classify_samples()}}.}
 
 \item{proportional_scores}{Set to TRUE to transform signature scores into proportions, default is FALSE.}
 
-\item{out_path}{Optional, set path to export plot. If not provided, tidy version of incoming
-scores in data frame format will be returned (\code{return_scores} will be auto-defaulted to TRUE).}
+\item{out_path}{Optional, set path to export plot. If not provided, tidy version of incoming scores in data frame format will be returned (\code{return_scores} will be auto-defaulted to TRUE).}
 
-\item{out_format}{Required parameter if \code{out_path} is specified. Can be "png" (default) or "pdf".
-The user can further specify the dimensions of the returned plot with \code{plot_width} and \code{plot_height}.}
+\item{out_format}{Required parameter if \code{out_path} is specified. Can be "png" (default) or "pdf". The user can further specify the dimensions of the returned plot with \code{plot_width} and \code{plot_height}.}
 
 \item{return_scores}{Set to TRUE to return prediction scores in a tidy format. Default is FALSE.}
 
-\item{to_xlsx}{Boolean parameter, set to TRUE to export score data frame in xlsx format. Default
-is FALSE.
-If set to TRUE, the spreadsheet will be saved to the same path as the heatmap.}
+\item{to_xlsx}{Boolean parameter, set to TRUE to export score data frame in xlsx format. Default is FALSE. If set to TRUE, the spreadsheet will be saved to the same path as the heatmap.}
 
-\item{plot_title}{Required parameter. Heatmap title, will also be pasted to the exported file(s) as
-well as a new column in the scores data frame under cohort.}
+\item{plot_title}{Required parameter. Heatmap title, will also be pasted to the exported file(s) as well as a new column in the scores data frame under cohort.}
 
-\item{hm_split}{Optional parameter for controlling how the data is split into different groups.
-If not provided, the function will split on what is specified within \code{subtype_annotation}.}
+\item{hm_split}{Optional parameter for controlling how the data is split into different groups. If not provided, the function will split on what is specified within \code{subtype_annotation}.}
 
-\item{subtype_annotation}{Can be one of the following; "5_class" (default) or "7_class"
-annotation.}
+\item{subtype_annotation}{Can be one of the following; "5_class" (default) or "7_class" annotation.}
 
 \item{hm_cluster}{Boolean parameter, set to TRUE to cluster the rows (default is FALSE).}
 
-\item{plot_anno_legend}{Expects a vector with TRUE/FALSE (7 in total), thsi decides what legends
-will be on the final heatmap. Default is to only show the legend for the subtypes.}
+\item{plot_anno_legend}{Expects a vector with TRUE/FALSE (7 in total), thsi decides what legends will be on the final heatmap. Default is to only show the legend for the subtypes.}
 
 \item{plot_hm_legend}{Boolean parameter. Set to TRUE to show heatmap legend. Default is FALSE.}
 
-\item{plot_width}{This parameter controls the width in inches.
-Default is 14(4200 pixels at 300 PPI).}
+\item{plot_width}{This parameter controls the width in inches. Default is 14(4200 pixels at 300 PPI).}
 
-\item{plot_height}{This parameter controls the height in inches.
-Default is 6(1800 pixels at 300 PPI)}
+\item{plot_height}{This parameter controls the height in inches. Default is 6(1800 pixels at 300 PPI)}
 
-\item{plot_font_size}{Optional parameter to control the size of the font in the generated heatmap.
-Note, the title of the plot will always be twice that of the set value here (default = 12).}
+\item{plot_font_size}{Optional parameter to control the size of the font in the generated heatmap. Note, the title of the plot will always be twice that of the set value here (default = 12).}
 
 \item{verbose}{Set to TRUE for debugging purposes. Default is FALSE.}
 }
 \value{
-Data frame with prediction score for each sample and class, if return_scores = TRUE.
-Otherwise, nothing.
+Data frame with prediction score for each sample and class, if return_scores = TRUE. Otherwise, nothing.
 }
 \description{
-Build a heatmap with signature scores retrieved with the
-\code{\link[=classify_samples]{classify_samples()}} function.
+Build a heatmap with signature scores retrieved with the \code{\link[=classify_samples]{classify_samples()}} function.
 }
 \details{
 Construct and export (pdf or png) a highly customizable heatmap visualizing prediction
@@ -84,12 +70,26 @@ prediction scores in a tidy format. To do so, set \code{return_scores = TRUE}. F
 on how to use the function, see parameter descriptions and examples.
 }
 \examples{
-my_predictions = classify_samples(these_predictions = sjodahl_2017, 
-                                  gene_id = "hgnc_symbol", 
-                                  impute = TRUE, 
-                                  adjust = TRUE)
+#run classifier
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE, 
+                                   verbose = FALSE)
 
-plot_signatures_heatmap(these_predictions = my_predictions,
-                        plot_title = "Sjodahl 2017")
+#plot 5 class
+plot_signatures_heatmap(these_predictions = sjodahl_classes, 
+                        plot_title = "Signature Scores (Sjodahl 2017)",
+                        return_scores = FALSE, 
+                        plot_anno_legend = FALSE,
+                        subtype_annotation = "5_class")
+                        
+#plot 7 class
+plot_signatures_heatmap(these_predictions = sjodahl_classes, 
+                        plot_title = "Signature Scores (Sjodahl 2017)",
+                        return_scores = FALSE, 
+                        plot_anno_legend = FALSE,
+                        subtype_annotation = "7_class")
 
 }

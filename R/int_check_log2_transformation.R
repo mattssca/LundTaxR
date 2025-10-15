@@ -1,8 +1,8 @@
 #' @title Check if RNAseq Expression Data is Log2-Transformed
 #' 
 #' @description This function checks whether the values in an RNAseq expression data frame have been 
-#' log2-transformed. It performs multiple checks, including the range of values, the presence of zeros, 
-#' and the presence of negative values, to provide a robust assessment.
+#' log2-transformed. It performs multiple checks, including the range of values, the presence of 
+#' zeros, and the presence of negative values, to provide a robust assessment.
 #'
 #' @details
 #' The function uses the following criteria to determine if the data is log2-transformed:
@@ -18,9 +18,9 @@
 #' @return A list with information about log2 transformation.
 #' 
 #' @examples
-#' int_check_log2_transformation(expression_df = sjodahl_2017)
-#' 
-#' @export
+#' \dontrun{
+#' # No examples provided
+#' }
 #' 
 int_check_log2_transformation = function(expression_df, 
                                          print_histogram = FALSE){

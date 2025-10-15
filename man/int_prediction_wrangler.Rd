@@ -23,9 +23,9 @@ int_prediction_wrangler(
 \arguments{
 \item{these_predictions}{Required. Output from \code{\link[=classify_samples]{classify_samples()}}.}
 
-\item{these_samples_metadata}{Required. Metadata associated with he prediction output. Also possible
-for the user to provide a metadata subset with samples of interest, the return will be restricted
-to the samples within the specified group.}
+\item{these_samples_metadata}{Required. Metadata associated with he prediction output. Also
+possible for the user to provide a metadata subset with samples of interest, the return will be
+restricted to the samples within the specified group.}
 
 \item{sample_id_col}{Optional parameter dictating the column name with sample IDs, the function
 expects this column to be sample_id but the user can override this if they know the name for this
@@ -36,23 +36,28 @@ column called sample_id. Default is FALSE.}
 
 \item{subtype_class}{Can be one of the following; 5_class or 7_class. Default is 5_class.}
 
-\item{categorical_factor}{Required parameter. This should be the categorical variable that is intended
-for testing. In addition, this should also be a variable of type factor, with exactly 2 levels.}
+\item{categorical_factor}{Required parameter. This should be the categorical variable that is
+intended for testing. In addition, this should also be a variable of type factor, with exactly 2
+levels.}
 
 \item{scale}{Optional parameter. A numeric value to scale the numeric scores. If provided, all
 numeric scores will be multiplied by this value.}
 
-\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins. Default is FALSE.}
+\item{bin_scores}{Boolean parameter. Set to TRUE to bin the numeric scores into discrete bins.
+Default is FALSE.}
 
-\item{n_bins}{Optional parameter. The number of bins to use when binning numeric scores. Default is 10.}
+\item{n_bins}{Optional parameter. The number of bins to use when binning numeric scores. Default
+is 10.}
 
-\item{surv_time}{Optional, should be the column name for the survival time (numeric) in the metadata.}
+\item{surv_time}{Optional, should be the column name for the survival time (numeric) in the
+metadata.}
 
-\item{surv_event}{Optional, should be the column name for survival event (factor) in the metadata.}
+\item{surv_event}{Optional, should be the column name for survival event (factor) in the
+metadata.}
 
-\item{this_subtype}{Optional parameter. Allows the user to subset the return to a specific subtype
-within the selected class. If not specified, the function will return a data frame based on all
-subtypes in the spcified class.}
+\item{this_subtype}{Optional parameter. Allows the user to subset the return to a specific
+subtype within the selected class. If not specified, the function will return a data frame based
+on all subtypes in the specified class.}
 
 \item{return_all}{Boolean parameter, set to TRUE to return all metadata columns. Default is FALSE.}
 }
@@ -69,18 +74,8 @@ associated metadata and pre-processing it so that statistical tests can be execu
 For more info, see the documentation of \code{get_glm_scores}.
 }
 \examples{
-#load packages
-library(dplyr)
-
-#get prediction calls
-sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
-                                     impute = TRUE)
-  
-#run helper                                  
-my_out = int_prediction_wrangler(these_predictions = sjodahl_predicted, 
-                                 these_samples_metadata = sjodahl_2017_meta, 
-                                 subtype_class = "5_class", 
-                                 this_subtype = "Uro", 
-                                 categorical_factor = "adj_chemo")
+\dontrun{
+# No examples provided
+}
                           
 }

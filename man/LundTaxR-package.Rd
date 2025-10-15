@@ -13,10 +13,11 @@ is classified as one of the 5 main classes (Uro, GU, BaSq, Mes or ScNE), and the
 Uro are subclassified into UroA, UroB or UroC by a second predictor
 }
 \author{
-\strong{Maintainer}: Elena Aramendía \email{elena.aramendia_cotillas@med.lu.se}
+\strong{Maintainer}: Adam Mattsson \email{adam.mattsson@med.lu.se}
 
 Authors:
 \itemize{
+  \item Elena Aramendía \email{elena.aramendia_cotillas@med.lu.se}
   \item Pontus Eriksson \email{pontus.eriksson@med.lu.se}
 }
 

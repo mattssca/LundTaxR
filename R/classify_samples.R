@@ -11,36 +11,42 @@
 #' @param this_data Required parameter. Data frame or matrix with expression values.
 #' @param gene_id Specify the type of gene identifier used in `this_data`. Accepted values are; 
 #' hgnc_symbol (default) or ensembl_gene_id.
-#' @param threshold_progression Threshold to flag a sample as high risk of progression, default is 0.58.
-#' @param log_transform Boolean parameter. If TRUE, the function log transforms the incoming expression
-#' values. Default is FALSE.
-#' @param adjust Boolean parameter. If TRUE (default), the function will proceed with adjusting the scores based
-#' on stable genes. If FALSE, no adjustment will be made and the original score values will be retained. 
+#' @param threshold_progression Threshold to flag a sample as high risk of progression, default is 
+#' 0.58.
+#' @param log_transform Boolean parameter. If TRUE, the function log transforms the incoming 
+#' expression values. Default is FALSE.
+#' @param adjust Boolean parameter. If TRUE (default), the function will proceed with adjusting the 
+#' scores based on stable genes. If FALSE, no adjustment will be made and the original score values 
+#' will be retained. 
 #' @param adj_factor Only applicable if adjust is set to TRUE. Allows users to apply a proportional 
-#' adjustment to the normalized scores, enabling finer control over the final output values. 
-#' After dividing each score by the mean expression of stable genes, the result is multiplied by this factor. 
+#' adjustment to the normalized scores, enabling finer control over the final output values. After 
+#' dividing each score by the mean expression of stable genes, the result is multiplied by this 
+#' factor. 
 #' @param impute From [multiclassPairs::predict_RF()]. Boolean. To determine if missed genes and NA 
-#' values should be imputed or not. The non missed rules will be used to determine the closest samples
-#' in the training binary matrix (i.e. which is stored in the classifier object). For each sample, 
-#' the mode value for nearest samples in the training data will be assigned to the missed rules. Default is TRUE
-#' @param impute_kNN From [multiclassPairs::predict_RF()]. Integer determines the number of the nearest
-#' samples in the training data to be used in the imputation. Default is 5. It is not recommended to
-#'  use large number (i.e. >10).
-#' @param impute_reject From [multiclassPairs::predict_RF()]. A number between 0 and 1 indicating the 
-#' threshold of the missed rules in the sample. Based on this threshold the sample will be rejected 
-#' (i.e. skipped if higher than the impute_reject threshold) and the missed rules will not be imputed 
-#' in this sample. Default is 0.67. NOTE, The results object will not have any results for this sample.
-#' @param verbose A logical value indicating whether processing messages will be 
-#' printed or not. Default is TRUE.
-#' @param subtype_only Boolean parameter. Set to TRUE to return subtypes and nothing else. Default is FALSE.
+#' values should be imputed or not. The non missed rules will be used to determine the closest 
+#' samples in the training binary matrix (i.e. which is stored in the classifier object). For each 
+#' sample, the mode value for nearest samples in the training data will be assigned to the missed 
+#' rules. Default is TRUE
+#' @param impute_kNN From [multiclassPairs::predict_RF()]. Integer determines the number of the 
+#' nearest samples in the training data to be used in the imputation. Default is 5. It is not 
+#' recommended to use large number (i.e. >10).
+#' @param impute_reject From [multiclassPairs::predict_RF()]. A number between 0 and 1 indicating 
+#' the threshold of the missed rules in the sample. Based on this threshold the sample will be 
+#' rejected (i.e. skipped if higher than the impute_reject threshold) and the missed rules will not 
+#' be imputed in this sample. Default is 0.67. NOTE, The results object will not have any results 
+#' for this sample.
+#' @param verbose A logical value indicating whether processing messages will be printed or not. 
+#' Default is TRUE.
+#' @param subtype_only Boolean parameter. Set to TRUE to return subtypes and nothing else. Default 
+#' is FALSE.
 #' @param include_data Boolean parameter. Set to TRUE to include data in output, FALSE is default.
-#' @param include_pred_scores Boolean parameter. Set to TRUE (default) to include 
-#' prediction scores for each sample and class in output.
+#' @param include_pred_scores Boolean parameter. Set to TRUE (default) to include prediction scores 
+#' for each sample and class in output.
 #'
-#' @return Returns a list object including: Data (optional, not included by default), 
-#' Prediction scores for all classes (optional, included by default), Predicted LundTax 
-#' class for 7-class system, Predicted LundTax class for 5-class system, as well a data frame with 
-#' missing genes information.
+#' @return Returns a list object including: Data (optional, not included by default), Prediction 
+#' scores for all classes (optional, included by default), Predicted LundTax class for 7-class 
+#' system, Predicted LundTax class for 5-class system, as well a data frame with missing genes 
+#' information.
 #'
 #' @import dplyr
 #' @importFrom stats setNames median na.omit quantile
@@ -49,8 +55,16 @@
 #' @export
 #' 
 #' @examples
-#' sjodahl_predicted = classify_samples(this_data = sjodahl_2017, 
-#'                                      impute = TRUE)
+#' #load your gene expression data, genes as rows, samples as columns
+#' data("sjodahl_2017")
+#'
+#' #classify samples
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = TRUE)
 #'
 classify_samples = function(this_data = NULL,
                             gene_id = "hgnc_symbol",

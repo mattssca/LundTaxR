@@ -7,33 +7,35 @@
 get_sample_order(expr_data = NULL, return_this = "sample_order")
 }
 \arguments{
-\item{expr_data}{Required parameter, should be the output from
-\code{\link[=classify_samples]{classify_samples()}}. Note, this function required the \code{classify_samples}
-to be run with \code{include_data = TRUE} argument.}
+\item{expr_data}{Required parameter, should be the output from \code{\link[=classify_samples]{classify_samples()}}.
+Note, this function required the \code{classify_samples} to be run with \code{include_data = TRUE}
+argument.}
 
 \item{return_this}{Set to "late_early" to return late/early ratio. Set to "sample_order" to
 return the sample order based on late/early ratio (default).}
 }
 \value{
-Rreturns the sample order.
+Returns the sample order.
 }
 \description{
 Return a sample order based on the late/early ratio (proliferation score).
 }
 \details{
-Modified version of the heatmap function, this function only returns the
-order of samples to be used for downstream plotting functions. The order is dictated by the early
-late ratio. and the sample order can readily be sued elsewhere, if needed.
+Modified version of the heatmap function \code{\link[=plot_classification_heatmap]{plot_classification_heatmap()}},
+this function only returns the order of samples to be used for downstream plotting functions.
+The order is dictated by the early late ratio. and the sample order can readily be sued
+elsewhere, if needed.
 }
 \examples{
-#get predictions with data
-my_predictions = classify_samples(this_data = sjodahl_2017,
-                                  include_data = TRUE, 
-                                  gene_id = "hgnc_symbol", 
-                                  impute = TRUE, 
-                                  adjust = TRUE)
-                                     
-#run function                                    
-get_sample_order(expr_data = my_predictions$data)
+#run classifier
+sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+                                   log_transform = FALSE, 
+                                   adjust = TRUE, 
+                                   impute = TRUE, 
+                                   include_data = TRUE, 
+                                   verbose = FALSE)
+       
+#get sample order                            
+get_sample_order(expr_data = sjodahl_classes$data)
 
 }

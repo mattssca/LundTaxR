@@ -12,10 +12,11 @@
 #' }
 #'
 #' @param this_metadata A data frame containing metadata with a `sample_id` column.
-#' @param this_metadata_variable A string specifying the column name in the metadata to be summarized.
+#' @param this_metadata_variable A string specifying the column name in the metadata to be 
+#' summarized.
 #' @param these_predictions A named vector of predictions with sample IDs as names.
-#' @param factor_level The level of the factor/value in `this_metadata_variable` to count (optional).
-#' If not provided, will return counts for all levels.
+#' @param factor_level The level of the factor/value in `this_metadata_variable` to count 
+#' (optional). If not provided, will return counts for all levels.
 #' @param subtype_class The classification system, default is 5 class.
 #'
 #' @return A data frame with the number of samples and counts for each subtype.
@@ -27,28 +28,31 @@
 #' @export
 #'
 #' @examples
-#' my_predictions = classify_samples(this_data = sjodahl_2017, 
-#'                                   gene_id = "hgnc_symbol", 
-#'                                   impute = TRUE, 
-#'                                   adjust = TRUE)
-#'
-#' #count progression events (factor level 1)
-#' get_subtype_metrics(these_predictions = my_predictions, 
+#' #run classifier
+#' sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
+#'                                    log_transform = FALSE, 
+#'                                    adjust = TRUE, 
+#'                                    impute = TRUE, 
+#'                                    include_data = TRUE, 
+#'                                    verbose = FALSE)
+#'               
+#' #check progression events in each subtype                    
+#' get_subtype_metrics(these_predictions = sjodahl_classes, 
 #'                     this_metadata = sjodahl_2017_meta, 
 #'                     this_metadata_variable = "surv_os_event", 
 #'                     factor_level = 1)
 #'
-#' #count specific gender (e.g., "Male")
-#' get_subtype_metrics(these_predictions = my_predictions, 
+#' #check number of males in each subtype
+#' get_subtype_metrics(these_predictions = sjodahl_classes, 
 #'                     this_metadata = sjodahl_2017_meta, 
-#'                     this_metadata_variable = "gender",
+#'                     this_metadata_variable = "gender", 
 #'                     factor_level = "Male")
 #'
-get_subtype_metrics <- function(this_metadata = NULL,
-                                this_metadata_variable = NULL,
-                                these_predictions = NULL,
-                                factor_level = NULL,
-                                subtype_class = "5_class") {
+get_subtype_metrics = function(this_metadata = NULL,
+                               this_metadata_variable = NULL,
+                               these_predictions = NULL,
+                               factor_level = NULL,
+                               subtype_class = "5_class") {
   
   #check if sample_id is present in metadata
   if (!"sample_id" %in% colnames(this_metadata)) {
