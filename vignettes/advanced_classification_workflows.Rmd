@@ -1,0 +1,347 @@
+---
+title: "Advanced Classification Workflows"
+author: "Adam Mattsson"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    fig_width: 8
+    fig_height: 6
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Advanced Classification Workflows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "figures/",
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE
+)
+
+# Load required packages
+library(LundTaxR)
+library(knitr)
+library(dplyr)
+library(ComplexHeatmap)
+```
+
+# Introduction
+
+This vignette demonstrates advanced usage patterns for the main classifier in LundTaxR, building upon the concepts introduced in the "Getting Started" guide. If you're new to LundTaxR, we recommend starting with the basic tutorial first:
+
+```r
+vignette("getting_started_with_LundTaxR", package = "LundTaxR")
+```
+
+## Who This Guide Is For
+
+This advanced guide is designed for researchers and bioinformaticians who want to:
+
+- Fine-tune classification parameters for optimal performance on their datasets
+- Understand the impact of preprocessing and imputation settings
+- Explore confidence scoring and progression risk thresholding
+- Build reproducible analytical pipelines for publication-quality research
+
+## What You'll Learn
+
+- Parameter optimization: Fine-tuning classification thresholds and confidence scores
+- Custom classifier settings: Adapting the algorithm for specific data characteristics
+- Performance evaluation: Assessing and improving classification accuracy
+- Handling edge cases: Dealing with ambiguous or low-quality samples
+
+## Prerequisites
+
+- Solid understanding of R programming and data manipulation
+- Experience with molecular profiling data (RNA-seq, microarrays)
+- Completed the "Getting Started with LundTaxR" tutorial
+
+# 1. Advanced Classifier Configuration
+
+The `classify_samples()` function offers numerous parameters that allow you to fine-tune the classification process for optimal performance on your specific datasets. Understanding these parameters and their interactions is crucial for achieving reliable and reproducible results.
+
+## 1.1 Classification Thresholds and Confidence Scoring
+
+The LundTaxR classifier uses a two-stage approach: first classifying samples into 5 main classes (Uro, GU, BaSq, Mes, ScNE), then further subdividing Uro samples into UroA, UroB, and UroC subtypes.
+
+```{r basic-classification}
+# Load example data
+data("sjodahl_2017")
+
+# Basic classification with default parameters
+basic_results <- classify_samples(
+  this_data = sjodahl_2017,
+  verbose = TRUE
+)
+
+# Examine the prediction confidence scores
+head(basic_results$subtype_scores)
+```
+
+The `prediction_delta` column shows the confidence of each classification - the difference between the highest and second-highest prediction scores. Higher delta values indicate more confident predictions.
+
+```{r confidence-analysis}
+# Analyze prediction confidence
+confidence_summary <- data.frame(
+  sample = names(basic_results$predictions_7classes),
+  subtype_7c = basic_results$predictions_7classes,
+  subtype_5c = basic_results$predictions_5classes,
+  confidence = basic_results$subtype_scores[, "prediction_delta"]
+)
+
+# Identify low-confidence predictions
+low_confidence <- confidence_summary[confidence_summary$confidence < 0.05, ]
+print(paste("Samples with low confidence (delta < 0.05):", nrow(low_confidence)))
+
+# Distribution of confidence scores by subtype
+library(dplyr)
+confidence_by_subtype <- confidence_summary %>%
+  group_by(subtype_7c) %>%
+  summarise(
+    mean_confidence = mean(confidence, na.rm = TRUE),
+    median_confidence = median(confidence, na.rm = TRUE),
+    min_confidence = min(confidence, na.rm = TRUE),
+    .groups = 'drop'
+  )
+print(confidence_by_subtype)
+```
+
+## 1.2 Data Preprocessing Parameters
+
+### Log Transformation Control
+
+LundTaxR automatically detects whether your data is log-transformed, but you can override this behavior. **Note: Log transformation primarily affects signature score calculations, not the classifier predictions themselves.**
+
+**⚠️ CRITICAL: Signature score calculations require log2-transformed values.** If your input data is already log2-transformed and you set `log_transform = TRUE`, the signature scores will be calculated on double-logged data, leading to incorrect results. Conversely, if your data is raw (non-logged) and you set `log_transform = FALSE`, signature scores will be calculated on untransformed data, which is also incorrect.
+
+```{r log-transform-examples}
+# Example with already log-transformed data (like sjodahl_2017)
+# Setting log_transform = TRUE would cause double-logging
+double_logged_results <- classify_samples(
+  this_data = sjodahl_2017,
+  log_transform = TRUE,  # INCORRECT: causes double log2 transformation
+  verbose = FALSE
+)
+
+# Correct approach for already log-transformed data
+correct_results <- classify_samples(
+  this_data = sjodahl_2017,
+  log_transform = FALSE, # CORRECT: data is already log2-transformed
+  verbose = FALSE
+)
+
+# Compare classifier predictions (should be identical)
+identical(basic_results$predictions_7classes, correct_results$predictions_7classes)
+identical(basic_results$predictions_7classes, double_logged_results$predictions_7classes)
+
+# Compare signature scores - double logging severely distorts scores
+score_comparison <- data.frame(
+  sample = rownames(basic_results$scores)[1:5], # Show first 5 samples
+  correct_immune = correct_results$scores$immune141_up[1:5],
+  double_logged_immune = double_logged_results$scores$immune141_up[1:5],
+  ratio = correct_results$scores$immune141_up[1:5] / double_logged_results$scores$immune141_up[1:5]
+)
+print(score_comparison)
+
+# The impact is substantial
+cat("Mean immune score - Correct:", round(mean(correct_results$scores$immune141_up), 3), "\n")
+cat("Mean immune score - Double-logged:", round(mean(double_logged_results$scores$immune141_up), 3), "\n")
+```
+
+**Best Practice Guidelines:**
+- **For raw count data (RNA-seq, microarray)**: Set `log_transform = TRUE`
+- **For already log-transformed data**: Set `log_transform = FALSE` 
+- **When uncertain**: Let LundTaxR auto-detect (recommended default behavior)
+- **Always validate**: Check that signature score ranges are reasonable for your data type
+
+### Score Adjustment and Normalization
+
+The adjustment parameters are crucial for **signature score calculations** but do not affect the classifier predictions. These parameters control how signature scores are normalized based on stable reference genes:
+
+```{r adjustment-examples}
+# Classification without score adjustment
+no_adjustment <- classify_samples(
+  this_data = sjodahl_2017,
+  adjust = FALSE,  # Skip normalization step for signatures
+  verbose = FALSE
+)
+
+# Custom adjustment factor (default is 5.1431)
+custom_adjustment <- classify_samples(
+  this_data = sjodahl_2017,
+  adjust = TRUE,
+  adj_factor = 3.0,  # Lower factor = more conservative signature scores
+  verbose = FALSE
+)
+
+# Classifier predictions remain identical
+identical(basic_results$predictions_7classes, no_adjustment$predictions_7classes)
+identical(basic_results$predictions_7classes, custom_adjustment$predictions_7classes)
+
+# But signature scores differ significantly
+signature_comparison <- data.frame(
+  sample = rownames(basic_results$scores),
+  default_luminal = basic_results$scores$b_cells,
+  no_adj_luminal = no_adjustment$scores$b_cells,
+  custom_adj_luminal = custom_adjustment$scores$b_cells
+)
+
+# Summary statistics show the impact on signature scores
+summary(signature_comparison[, -1])
+```
+
+## 1.3 Missing Data Handling and Sample Rejection
+
+The LundTaxR classifier **always assigns a subtype** to every sample, but the imputation parameters control how missing gene expression data is handled during the classification process:
+
+```{r imputation-examples}
+# Strict imputation settings (conservative approach)
+strict_imputation <- classify_samples(
+  this_data = sjodahl_2017,
+  impute = TRUE,
+  impute_kNN = 3,        # Use only 3 nearest neighbors
+  impute_reject = 0.4,   # Reject samples with >40% missing classification rules
+  verbose = FALSE
+)
+
+# Lenient imputation settings
+lenient_imputation <- classify_samples(
+  this_data = sjodahl_2017,
+  impute = TRUE,
+  impute_kNN = 10,       # Use 10 nearest neighbors
+  impute_reject = 0.8,   # Accept samples with up to 80% missing classification rules
+  verbose = FALSE
+)
+
+# All approaches classify the same number of samples
+comparison <- data.frame(
+  method = c("Default", "Strict", "Lenient"),
+  samples_classified = c(
+    length(basic_results$predictions_7classes),
+    length(strict_imputation$predictions_7classes),
+    length(lenient_imputation$predictions_7classes)
+  ),
+  samples_input = rep(ncol(sjodahl_2017), 3)
+)
+print(comparison)
+```
+
+**Key Point**: The `impute_reject` threshold determines when a sample has too much missing data for reliable classification, but in practice, the classifier will still assign a subtype.
+
+## 1.4 Performance Optimization
+
+For large datasets or when you only need classification results, you can optimize performance:
+
+```{r performance-optimization}
+# Minimal output - only subtypes (fastest)
+minimal_results <- classify_samples(
+  this_data = sjodahl_2017,
+  subtype_only = TRUE,      # Skip signature score calculations
+  include_data = FALSE,     # Don't include input data in output
+  include_pred_scores = FALSE,  # Skip prediction score matrix
+  verbose = FALSE
+)
+
+# Check what's returned
+str(minimal_results)
+
+# Timing comparison for large datasets
+system.time({
+  full_analysis <- classify_samples(sjodahl_2017, verbose = FALSE)
+})
+
+system.time({
+  minimal_analysis <- classify_samples(
+    sjodahl_2017, 
+    subtype_only = TRUE, 
+    include_pred_scores = FALSE,
+    verbose = FALSE
+  )
+})
+```
+
+## 1.5 Custom Progression Risk Thresholds
+
+The classifier includes a progression risk score that can be customized based on your clinical context:
+
+```{r advanced_classification_workflow_progression_threshold}
+# Conservative progression threshold
+conservative_prog <- classify_samples(
+  this_data = sjodahl_2017,
+  threshold_progression = 0.7,  # Higher threshold (more specific)
+  verbose = FALSE
+)
+
+# Sensitive progression threshold  
+sensitive_prog <- classify_samples(
+  this_data = sjodahl_2017,
+  threshold_progression = 0.5,  # Lower threshold (more sensitive)
+  verbose = FALSE
+)
+
+# Compare progression classifications
+prog_comparison <- data.frame(
+  sample = names(basic_results$predictions_7classes),
+  default_prog = basic_results$scores$progression_risk,
+  conservative_prog = conservative_prog$scores$progression_risk,
+  sensitive_prog = sensitive_prog$scores$progression_risk
+)
+
+# Convert to matrix for heatmap
+prog_mat <- as.matrix(prog_comparison[, c("default_prog", "conservative_prog", "sensitive_prog")])
+rownames(prog_mat) <- prog_comparison$sample
+
+# Map HR/LR to colors
+prog_colors <- c("HR" = "#D7263D", "LR" = "#1B998B")
+Heatmap(
+  prog_mat,
+  name = "Progression",
+  col = prog_colors,
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  show_row_names = FALSE,
+  column_title = "Progression Risk Calls (Threshold Comparison)",
+  row_title = "Samples"
+)
+```
+
+## 1.6 Quality Control and Validation
+
+Always examine the missing genes information and prediction quality:
+
+```{r quality-control}
+# Examine missing genes
+missing_info <- basic_results$na_genes
+print(paste("Genes missing from input data:", nrow(missing_info)))
+if(nrow(missing_info) > 0) {
+  head(missing_info)
+}
+
+# Identify samples with potential quality issues
+quality_flags <- data.frame(
+  sample = names(basic_results$predictions_7classes),
+  confidence = basic_results$subtype_scores[, "prediction_delta"],
+  quality_flag = basic_results$subtype_scores[, "prediction_delta"] < 0.05
+)
+
+flagged_samples <- quality_flags[quality_flags$quality_flag, ]
+if(nrow(flagged_samples) > 0) {
+  print("Samples flagged for low confidence:")
+  head(flagged_samples)
+}
+```
+
+## Key Takeaways
+
+- **Start with default parameters** and adjust based on your data characteristics
+- **Monitor prediction confidence** using the `prediction_delta` scores
+- **Validate imputation settings** with your dataset's missing data patterns
+- **Consider performance optimization** for large-scale analyses
+- **Always examine quality control metrics** before downstream analysis

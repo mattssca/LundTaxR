@@ -27,6 +27,21 @@ tutorials:
     contents:
     - getting_started_with_LundTaxR
 
+  - title: "Advanced Classification Workflows"
+    desc: "Advanced techniques for molecular subtype classification"
+    contents:
+    - advanced_classification_workflows
+
+  - title: "Data Retrieval and Utility Workflows"
+    desc: "Functions for data extraction and utility operations"
+    contents:
+    - data_retrieval_and_utility_workflows
+  
+  - title: "Survival and Statistical Analysis Workflows"
+    desc: "Functions for survival analysis and statistical modeling"
+    contents:
+    - survival_and_statistical_analysis_workflows
+
 reference:
   - title: "Package Overview"
     desc: "Package documentation and information"

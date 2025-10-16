@@ -1,0 +1,137 @@
+---
+title: "Survival and Statistical Analysis Workflows"
+author: "Adam Mattsson"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    fig_width: 8
+    fig_height: 6
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Survival and Statistical Analysis Workflows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "figures/",
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE
+)
+library(LundTaxR)
+library(dplyr)
+library(survival)
+library(knitr)
+```
+
+# Introduction
+
+This vignette demonstrates how to perform robust survival and statistical analyses using LundTaxR, focusing on two key functions: `get_glm` and `get_survival`. These functions streamline the process of running general linear models and Cox proportional hazards models on your molecular subtype and signature score data, integrating seamlessly with your sample metadata. Both functions handle common preprocessing steps internally, such as binning numeric variables and wrangling prediction outputs, so you can focus on interpreting results.
+
+---
+
+## 1. General Linear Model Analysis with `get_glm`
+
+The `get_glm` function enables you to test associations between molecular signature scores (or other predictors) and categorical variables of interest (such as response, grade, gender, or region). It supports both Mann-Whitney tests and general linear regression, and can be customized to focus on specific subtypes or predictor sets.
+
+### Example 1: Testing Signature Scores by Gender
+
+```{r glm-example-gender}
+results <- classify_samples(
+  this_data = sjodahl_2017,
+  include_data = TRUE,
+  verbose = FALSE
+)
+
+# Run GLM comparing signature scores by gender
+glm_results_gender <- get_glm(
+  these_predictions = results,
+  these_samples_metadata = sjodahl_2017_meta,
+  subtype_class = "5_class",
+  categorical_factor = "gender"
+)
+knitr::kable(head(glm_results_gender))
+```
+
+### Example 2: Restricting to a Specific Subtype (e.g., GU)
+
+```{r glm-example-subtype}
+glm_results_gu <- get_glm(
+  these_predictions = results,
+  these_samples_metadata = sjodahl_2017_meta,
+  subtype_class = "5_class",
+  this_subtype = "GU",
+  categorical_factor = "gender"
+)
+knitr::kable(head(glm_results_gu))
+```
+
+### Example 3: Custom Predictor Columns and Scaling
+
+```{r glm-example-custom}
+glm_results_custom <- get_glm(
+  these_predictions = results,
+  these_samples_metadata = sjodahl_2017_meta,
+  subtype_class = "5_class",
+  categorical_factor = "gender",
+  predictor_columns = c("b_cells", "proliferation_score"),
+  scale = 100
+)
+knitr::kable(head(glm_results_custom))
+```
+
+## 2. Survival Analysis with `get_survival`
+
+The `get_survival` function provides a convenient interface for running Cox proportional hazards models, allowing you to estimate hazard ratios for molecular signatures or subtypes with respect to clinical outcomes. The function expects survival time and event columns in your metadata, and can be customized for different subtypes or predictor sets.
+
+### Example 1: Cox Model for Overall Survival
+
+```{r survival-example-os}
+surv_results_os <- get_survival(
+  these_predictions = results,
+  these_samples_metadata = sjodahl_2017_meta,
+  subtype_class = "5_class",
+  surv_time = "surv_os_time",
+  surv_event = "surv_os_event"
+)
+knitr::kable(head(surv_results_os))
+```
+
+### Example 2: Subtype-Specific Survival Analysis (e.g., Uro)
+
+```{r survival-example-uro}
+surv_results_uro <- get_survival(
+  these_predictions = results,
+  these_samples_metadata = sjodahl_2017_meta,
+  subtype_class = "5_class",
+  this_subtype = "Uro",
+  surv_time = "surv_os_time",
+  surv_event = "surv_os_event"
+)
+knitr::kable(head(surv_results_uro))
+```
+
+### Example 3: Custom Predictor Columns and Binning
+
+```{r survival-example-custom}
+surv_results_custom <- get_survival(
+  these_predictions = results,
+  these_samples_metadata = sjodahl_2017_meta,
+  subtype_class = "5_class",
+  surv_time = "surv_os_time",
+  surv_event = "surv_os_event",
+  predictor_columns = "proliferation_score",
+  n_bins = 5
+)
+knitr::kable(head(surv_results_custom))
+```
+
+
+By leveraging `get_glm` and `get_survival`, you can efficiently perform statistical and survival analyses on your LundTaxR classification results, supporting robust clinical and translational research workflows.

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Adam Mattsson" />
+
+<meta name="date" content="2025-10-16" />
+
+<title>Advanced Classification Workflows</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Advanced Classification Workflows</h1>
+<h4 class="author">Adam Mattsson</h4>
+<h4 class="date">2025-10-16</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a>
+<ul>
+<li><a href="#who-this-guide-is-for" id="toc-who-this-guide-is-for"><span class="toc-section-number">1.1</span> Who This Guide Is For</a></li>
+<li><a href="#what-youll-learn" id="toc-what-youll-learn"><span class="toc-section-number">1.2</span> What You’ll Learn</a></li>
+<li><a href="#prerequisites" id="toc-prerequisites"><span class="toc-section-number">1.3</span> Prerequisites</a></li>
+</ul></li>
+<li><a href="#advanced-classifier-configuration" id="toc-advanced-classifier-configuration"><span class="toc-section-number">2</span> 1. Advanced Classifier
+Configuration</a>
+<ul>
+<li><a href="#classification-thresholds-and-confidence-scoring" id="toc-classification-thresholds-and-confidence-scoring"><span class="toc-section-number">2.1</span> 1.1 Classification Thresholds and
+Confidence Scoring</a></li>
+<li><a href="#data-preprocessing-parameters" id="toc-data-preprocessing-parameters"><span class="toc-section-number">2.2</span> 1.2 Data Preprocessing
+Parameters</a>
+<ul>
+<li><a href="#log-transformation-control" id="toc-log-transformation-control"><span class="toc-section-number">2.2.1</span> Log Transformation
+Control</a></li>
+<li><a href="#score-adjustment-and-normalization" id="toc-score-adjustment-and-normalization"><span class="toc-section-number">2.2.2</span> Score Adjustment and
+Normalization</a></li>
+</ul></li>
+<li><a href="#missing-data-handling-and-sample-rejection" id="toc-missing-data-handling-and-sample-rejection"><span class="toc-section-number">2.3</span> 1.3 Missing Data Handling and
+Sample Rejection</a></li>
+<li><a href="#performance-optimization" id="toc-performance-optimization"><span class="toc-section-number">2.4</span> 1.4 Performance
+Optimization</a></li>
+<li><a href="#custom-progression-risk-thresholds" id="toc-custom-progression-risk-thresholds"><span class="toc-section-number">2.5</span> 1.5 Custom Progression Risk
+Thresholds</a></li>
+<li><a href="#quality-control-and-validation" id="toc-quality-control-and-validation"><span class="toc-section-number">2.6</span> 1.6 Quality Control and
+Validation</a></li>
+<li><a href="#key-takeaways" id="toc-key-takeaways"><span class="toc-section-number">2.7</span> Key Takeaways</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>This vignette demonstrates advanced usage patterns for the main
+classifier in LundTaxR, building upon the concepts introduced in the
+“Getting Started” guide. If you’re new to LundTaxR, we recommend
+starting with the basic tutorial first:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">&quot;getting_started_with_LundTaxR&quot;</span>, <span class="at">package =</span> <span class="st">&quot;LundTaxR&quot;</span>)</span></code></pre></div>
+<div id="who-this-guide-is-for" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Who This Guide Is
+For</h2>
+<p>This advanced guide is designed for researchers and bioinformaticians
+who want to:</p>
+<ul>
+<li>Fine-tune classification parameters for optimal performance on their
+datasets</li>
+<li>Understand the impact of preprocessing and imputation settings</li>
+<li>Explore confidence scoring and progression risk thresholding</li>
+<li>Build reproducible analytical pipelines for publication-quality
+research</li>
+</ul>
+</div>
+<div id="what-youll-learn" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> What You’ll
+Learn</h2>
+<ul>
+<li>Parameter optimization: Fine-tuning classification thresholds and
+confidence scores</li>
+<li>Custom classifier settings: Adapting the algorithm for specific data
+characteristics</li>
+<li>Performance evaluation: Assessing and improving classification
+accuracy</li>
+<li>Handling edge cases: Dealing with ambiguous or low-quality
+samples</li>
+</ul>
+</div>
+<div id="prerequisites" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Prerequisites</h2>
+<ul>
+<li>Solid understanding of R programming and data manipulation</li>
+<li>Experience with molecular profiling data (RNA-seq, microarrays)</li>
+<li>Completed the “Getting Started with LundTaxR” tutorial</li>
+</ul>
+</div>
+</div>
+<div id="advanced-classifier-configuration" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> 1. Advanced Classifier
+Configuration</h1>
+<p>The <code>classify_samples()</code> function offers numerous
+parameters that allow you to fine-tune the classification process for
+optimal performance on your specific datasets. Understanding these
+parameters and their interactions is crucial for achieving reliable and
+reproducible results.</p>
+<div id="classification-thresholds-and-confidence-scoring" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 1.1 Classification
+Thresholds and Confidence Scoring</h2>
+<p>The LundTaxR classifier uses a two-stage approach: first classifying
+samples into 5 main classes (Uro, GU, BaSq, Mes, ScNE), then further
+subdividing Uro samples into UroA, UroB, and UroC subtypes.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Load example data</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;sjodahl_2017&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Basic classification with default parameters</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>basic_results <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The data is likely log2-transformed. The range and distribution are consistent with log2-transformed data.&quot;</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;NUSAP1&quot;   &quot;PRC1&quot;     &quot;FAM72D&quot;   &quot;FAM72A&quot;   &quot;RNASEH2A&quot; &quot;POLA2&quot;   </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; [1] &quot;CCDC150&quot;       &quot;TATDN2&quot;        &quot;FAM72A&quot;        &quot;FAM72B&quot;       </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; [5] &quot;ZNF706&quot;        &quot;ESPL1&quot;         &quot;LOXL2&quot;         &quot;PCDHB3&quot;       </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; [9] &quot;ZNF670-ZNF695&quot;</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;UBE2D3&quot;  &quot;TSPYL1&quot;  &quot;EEF1B2&quot;  &quot;LY75&quot;    &quot;RPL26&quot;   &quot;EEF1A1&quot;  &quot;ZNF816&quot; </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt;  [8] &quot;TMBIM4&quot;  &quot;RPL27A&quot;  &quot;PFDN5&quot;   &quot;RPS27&quot;   &quot;RPS3A&quot;   &quot;EIF4B&quot;   &quot;TPT1&quot;   </span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; [15] &quot;SLC35A1&quot; &quot;RPL13A&quot;  &quot;LDHB&quot;    &quot;EEF1G&quot;   &quot;BORCS7&quot; </span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; [1] &quot;KIR2DL3&quot; &quot;KLRK1&quot;   &quot;FCGR3B&quot; </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;FYB&quot;      &quot;EVI2B&quot;    &quot;IL2RG&quot;    &quot;MAFB&quot;     &quot;HLA-DPA1&quot; &quot;HLA-DPB1&quot;</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;IFI30&quot;    &quot;PVRIG&quot;    &quot;HLA-E&quot;    &quot;PTPRCAP&quot;  &quot;HLA-B&quot;    &quot;HLA-DMA&quot; </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; [13] &quot;KLRK1&quot;    &quot;HLA-DRA&quot;  &quot;HLA-F&quot;    &quot;HLA-G&quot;    &quot;CD302&quot;    &quot;FCGR2A&quot;  </span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; [19] &quot;WISP1&quot;    &quot;GPR124&quot;   &quot;LPPR4&quot;    &quot;GIMAP5&quot;   &quot;LMOD1&quot;    &quot;MXRA5&quot;   </span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; [25] &quot;CH25H&quot;    &quot;COL14A1&quot;  &quot;CD248&quot;    &quot;IL18R1&quot;   &quot;TXNDC3&quot;   &quot;ODZ4&quot;</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co"># Examine the prediction confidence scores</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="fu">head</span>(basic_results<span class="sc">$</span>subtype_scores)</span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt;          Uro   UroA   UroB   UroC     GU   BaSq    Mes   ScNE prediction_delta</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; 1.CEL 0.9924 0.9350 0.0048 0.0602 0.0072 0.0004 0.0000 0.0000           0.0574</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; 2.CEL 0.0016     NA     NA     NA 0.0052 0.0054 0.9804 0.0074           0.9730</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; 3.CEL 0.0682     NA     NA     NA 0.7754 0.0834 0.0390 0.0340           0.6920</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt; 4.CEL 0.9930 0.9334 0.0028 0.0638 0.0066 0.0004 0.0000 0.0000           0.0596</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt; 5.CEL 0.9808 0.0058 0.9878 0.0064 0.0076 0.0090 0.0006 0.0020           0.0070</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt; 6.CEL 0.0082     NA     NA     NA 0.9890 0.0002 0.0004 0.0022           0.9808</span></span></code></pre></div>
+<p>The <code>prediction_delta</code> column shows the confidence of each
+classification - the difference between the highest and second-highest
+prediction scores. Higher delta values indicate more confident
+predictions.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Analyze prediction confidence</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>confidence_summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">sample =</span> <span class="fu">names</span>(basic_results<span class="sc">$</span>predictions_7classes),</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">subtype_7c =</span> basic_results<span class="sc">$</span>predictions_7classes,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">subtype_5c =</span> basic_results<span class="sc">$</span>predictions_5classes,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="at">confidence =</span> basic_results<span class="sc">$</span>subtype_scores[, <span class="st">&quot;prediction_delta&quot;</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># Identify low-confidence predictions</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>low_confidence <span class="ot">&lt;-</span> confidence_summary[confidence_summary<span class="sc">$</span>confidence <span class="sc">&lt;</span> <span class="fl">0.05</span>, ]</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Samples with low confidence (delta &lt; 0.05):&quot;</span>, <span class="fu">nrow</span>(low_confidence)))</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Samples with low confidence (delta &lt; 0.05): 55&quot;</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co"># Distribution of confidence scores by subtype</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>confidence_by_subtype <span class="ot">&lt;-</span> confidence_summary <span class="sc">%&gt;%</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="fu">group_by</span>(subtype_7c) <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>    <span class="at">mean_confidence =</span> <span class="fu">mean</span>(confidence, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>    <span class="at">median_confidence =</span> <span class="fu">median</span>(confidence, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>    <span class="at">min_confidence =</span> <span class="fu">min</span>(confidence, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&#39;drop&#39;</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>  )</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="fu">print</span>(confidence_by_subtype)</span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 4</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt;   subtype_7c mean_confidence median_confidence min_confidence</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                &lt;dbl&gt;             &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; 1 BaSq                0.942             0.984         0.650  </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; 2 GU                  0.878             0.926         0.573  </span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; 3 Mes                 0.901             0.956         0.647  </span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; 4 ScNE                0.897             0.894         0.685  </span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; 5 UroA                0.0881            0.0406        0      </span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; 6 UroB                0.119             0.0882        0.00340</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; 7 UroC                0.129             0.0759        0.00260</span></span></code></pre></div>
+</div>
+<div id="data-preprocessing-parameters" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> 1.2 Data
+Preprocessing Parameters</h2>
+<div id="log-transformation-control" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Log Transformation
+Control</h3>
+<p>LundTaxR automatically detects whether your data is log-transformed,
+but you can override this behavior. <strong>Note: Log transformation
+primarily affects signature score calculations, not the classifier
+predictions themselves.</strong></p>
+<p><strong>⚠️ CRITICAL: Signature score calculations require
+log2-transformed values.</strong> If your input data is already
+log2-transformed and you set <code>log_transform = TRUE</code>, the
+signature scores will be calculated on double-logged data, leading to
+incorrect results. Conversely, if your data is raw (non-logged) and you
+set <code>log_transform = FALSE</code>, signature scores will be
+calculated on untransformed data, which is also incorrect.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Example with already log-transformed data (like sjodahl_2017)</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># Setting log_transform = TRUE would cause double-logging</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>double_logged_results <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">log_transform =</span> <span class="cn">TRUE</span>,  <span class="co"># INCORRECT: causes double log2 transformation</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co"># Correct approach for already log-transformed data</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>correct_results <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  <span class="at">log_transform =</span> <span class="cn">FALSE</span>, <span class="co"># CORRECT: data is already log2-transformed</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>)</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co"># Compare classifier predictions (should be identical)</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="fu">identical</span>(basic_results<span class="sc">$</span>predictions_7classes, correct_results<span class="sc">$</span>predictions_7classes)</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="fu">identical</span>(basic_results<span class="sc">$</span>predictions_7classes, double_logged_results<span class="sc">$</span>predictions_7classes)</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co"># Compare signature scores - double logging severely distorts scores</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>score_comparison <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>  <span class="at">sample =</span> <span class="fu">rownames</span>(basic_results<span class="sc">$</span>scores)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="co"># Show first 5 samples</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>  <span class="at">correct_immune =</span> correct_results<span class="sc">$</span>scores<span class="sc">$</span>immune141_up[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>],</span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>  <span class="at">double_logged_immune =</span> double_logged_results<span class="sc">$</span>scores<span class="sc">$</span>immune141_up[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>],</span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>  <span class="at">ratio =</span> correct_results<span class="sc">$</span>scores<span class="sc">$</span>immune141_up[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="sc">/</span> double_logged_results<span class="sc">$</span>scores<span class="sc">$</span>immune141_up[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>)</span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="fu">print</span>(score_comparison)</span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="co">#&gt;   sample correct_immune double_logged_immune     ratio</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">#&gt; 1  1.CEL       4.274890             4.722811 0.9051578</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="co">#&gt; 2  2.CEL       5.356312             5.208732 1.0283332</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co">#&gt; 3  3.CEL       5.500902             5.273202 1.0431805</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co">#&gt; 4  4.CEL       4.366632             4.772984 0.9148641</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt; 5  5.CEL       4.527595             4.850548 0.9334192</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co"># The impact is substantial</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean immune score - Correct:&quot;</span>, <span class="fu">round</span>(<span class="fu">mean</span>(correct_results<span class="sc">$</span>scores<span class="sc">$</span>immune141_up), <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; Mean immune score - Correct: 4.875</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean immune score - Double-logged:&quot;</span>, <span class="fu">round</span>(<span class="fu">mean</span>(double_logged_results<span class="sc">$</span>scores<span class="sc">$</span>immune141_up), <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt; Mean immune score - Double-logged: 5.002</span></span></code></pre></div>
+<p><strong>Best Practice Guidelines:</strong> - <strong>For raw count
+data (RNA-seq, microarray)</strong>: Set
+<code>log_transform = TRUE</code> - <strong>For already log-transformed
+data</strong>: Set <code>log_transform = FALSE</code> - <strong>When
+uncertain</strong>: Let LundTaxR auto-detect (recommended default
+behavior) - <strong>Always validate</strong>: Check that signature score
+ranges are reasonable for your data type</p>
+</div>
+<div id="score-adjustment-and-normalization" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Score Adjustment
+and Normalization</h3>
+<p>The adjustment parameters are crucial for <strong>signature score
+calculations</strong> but do not affect the classifier predictions.
+These parameters control how signature scores are normalized based on
+stable reference genes:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Classification without score adjustment</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>no_adjustment <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">adjust =</span> <span class="cn">FALSE</span>,  <span class="co"># Skip normalization step for signatures</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co"># Custom adjustment factor (default is 5.1431)</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>custom_adjustment <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="at">adjust =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  <span class="at">adj_factor =</span> <span class="fl">3.0</span>,  <span class="co"># Lower factor = more conservative signature scores</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>)</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co"># Classifier predictions remain identical</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="fu">identical</span>(basic_results<span class="sc">$</span>predictions_7classes, no_adjustment<span class="sc">$</span>predictions_7classes)</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="fu">identical</span>(basic_results<span class="sc">$</span>predictions_7classes, custom_adjustment<span class="sc">$</span>predictions_7classes)</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co"># But signature scores differ significantly</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>signature_comparison <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a>  <span class="at">sample =</span> <span class="fu">rownames</span>(basic_results<span class="sc">$</span>scores),</span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>  <span class="at">default_luminal =</span> basic_results<span class="sc">$</span>scores<span class="sc">$</span>b_cells,</span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a>  <span class="at">no_adj_luminal =</span> no_adjustment<span class="sc">$</span>scores<span class="sc">$</span>b_cells,</span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a>  <span class="at">custom_adj_luminal =</span> custom_adjustment<span class="sc">$</span>scores<span class="sc">$</span>b_cells</span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a>)</span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co"># Summary statistics show the impact on signature scores</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="fu">summary</span>(signature_comparison[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt;  default_luminal no_adj_luminal  custom_adj_luminal</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt;  Min.   :3.069   Min.   :4.336   Min.   :1.790     </span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:3.431   1st Qu.:4.678   1st Qu.:2.001     </span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt;  Median :3.616   Median :4.836   Median :2.109     </span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt;  Mean   :3.655   Mean   :4.897   Mean   :2.132     </span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:3.829   3rd Qu.:5.033   3rd Qu.:2.233     </span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt;  Max.   :4.683   Max.   :6.147   Max.   :2.732</span></span></code></pre></div>
+</div>
+</div>
+<div id="missing-data-handling-and-sample-rejection" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> 1.3 Missing Data
+Handling and Sample Rejection</h2>
+<p>The LundTaxR classifier <strong>always assigns a subtype</strong> to
+every sample, but the imputation parameters control how missing gene
+expression data is handled during the classification process:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Strict imputation settings (conservative approach)</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>strict_imputation <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">impute =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">impute_kNN =</span> <span class="dv">3</span>,        <span class="co"># Use only 3 nearest neighbors</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">impute_reject =</span> <span class="fl">0.4</span>,   <span class="co"># Reject samples with &gt;40% missing classification rules</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>)</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co"># Lenient imputation settings</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>lenient_imputation <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="at">impute =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  <span class="at">impute_kNN =</span> <span class="dv">10</span>,       <span class="co"># Use 10 nearest neighbors</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  <span class="at">impute_reject =</span> <span class="fl">0.8</span>,   <span class="co"># Accept samples with up to 80% missing classification rules</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>)</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co"># All approaches classify the same number of samples</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>comparison <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;Default&quot;</span>, <span class="st">&quot;Strict&quot;</span>, <span class="st">&quot;Lenient&quot;</span>),</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>  <span class="at">samples_classified =</span> <span class="fu">c</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>    <span class="fu">length</span>(basic_results<span class="sc">$</span>predictions_7classes),</span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>    <span class="fu">length</span>(strict_imputation<span class="sc">$</span>predictions_7classes),</span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>    <span class="fu">length</span>(lenient_imputation<span class="sc">$</span>predictions_7classes)</span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a>  ),</span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>  <span class="at">samples_input =</span> <span class="fu">rep</span>(<span class="fu">ncol</span>(sjodahl_2017), <span class="dv">3</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a>)</span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="fu">print</span>(comparison)</span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt;    method samples_classified samples_input</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt; 1 Default                267           267</span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt; 2  Strict                267           267</span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt; 3 Lenient                267           267</span></span></code></pre></div>
+<p><strong>Key Point</strong>: The <code>impute_reject</code> threshold
+determines when a sample has too much missing data for reliable
+classification, but in practice, the classifier will still assign a
+subtype.</p>
+</div>
+<div id="performance-optimization" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> 1.4 Performance
+Optimization</h2>
+<p>For large datasets or when you only need classification results, you
+can optimize performance:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Minimal output - only subtypes (fastest)</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>minimal_results <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">subtype_only =</span> <span class="cn">TRUE</span>,      <span class="co"># Skip signature score calculations</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">include_data =</span> <span class="cn">FALSE</span>,     <span class="co"># Don&#39;t include input data in output</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">include_pred_scores =</span> <span class="cn">FALSE</span>,  <span class="co"># Skip prediction score matrix</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co"># Check what&#39;s returned</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="fu">str</span>(minimal_results)</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; List of 2</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  $ predictions_7classes: Named chr [1:267] &quot;UroA&quot; &quot;Mes&quot; &quot;GU&quot; &quot;UroA&quot; ...</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:267] &quot;1.CEL&quot; &quot;2.CEL&quot; &quot;3.CEL&quot; &quot;4.CEL&quot; ...</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;  $ predictions_5classes: Named chr [1:267] &quot;Uro&quot; &quot;Mes&quot; &quot;GU&quot; &quot;Uro&quot; ...</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:267] &quot;1.CEL&quot; &quot;2.CEL&quot; &quot;3.CEL&quot; &quot;4.CEL&quot; ...</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co"># Timing comparison for large datasets</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>  full_analysis <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(sjodahl_2017, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>})</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt;   3.597   0.204   3.369</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>  minimal_analysis <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>    sjodahl_2017, </span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>    <span class="at">subtype_only =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>    <span class="at">include_pred_scores =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a>  )</span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>})</span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt;   0.682   0.089   0.400</span></span></code></pre></div>
+</div>
+<div id="custom-progression-risk-thresholds" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> 1.5 Custom
+Progression Risk Thresholds</h2>
+<p>The classifier includes a progression risk score that can be
+customized based on your clinical context:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Conservative progression threshold</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>conservative_prog <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">threshold_progression =</span> <span class="fl">0.7</span>,  <span class="co"># Higher threshold (more specific)</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># Sensitive progression threshold  </span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>sensitive_prog <span class="ot">&lt;-</span> <span class="fu">classify_samples</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="at">this_data =</span> sjodahl_2017,</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="at">threshold_progression =</span> <span class="fl">0.5</span>,  <span class="co"># Lower threshold (more sensitive)</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>)</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co"># Compare progression classifications</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>prog_comparison <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  <span class="at">sample =</span> <span class="fu">names</span>(basic_results<span class="sc">$</span>predictions_7classes),</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>  <span class="at">default_prog =</span> basic_results<span class="sc">$</span>scores<span class="sc">$</span>progression_risk,</span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>  <span class="at">conservative_prog =</span> conservative_prog<span class="sc">$</span>scores<span class="sc">$</span>progression_risk,</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>  <span class="at">sensitive_prog =</span> sensitive_prog<span class="sc">$</span>scores<span class="sc">$</span>progression_risk</span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>)</span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co"># Convert to matrix for heatmap</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>prog_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(prog_comparison[, <span class="fu">c</span>(<span class="st">&quot;default_prog&quot;</span>, <span class="st">&quot;conservative_prog&quot;</span>, <span class="st">&quot;sensitive_prog&quot;</span>)])</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="fu">rownames</span>(prog_mat) <span class="ot">&lt;-</span> prog_comparison<span class="sc">$</span>sample</span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co"># Map HR/LR to colors</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>prog_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;HR&quot;</span> <span class="ot">=</span> <span class="st">&quot;#D7263D&quot;</span>, <span class="st">&quot;LR&quot;</span> <span class="ot">=</span> <span class="st">&quot;#1B998B&quot;</span>)</span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="fu">Heatmap</span>(</span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a>  prog_mat,</span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">&quot;Progression&quot;</span>,</span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a>  <span class="at">col =</span> prog_colors,</span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>  <span class="at">cluster_rows =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a>  <span class="at">cluster_columns =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a>  <span class="at">show_row_names =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a>  <span class="at">column_title =</span> <span class="st">&quot;Progression Risk Calls (Threshold Comparison)&quot;</span>,</span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a>  <span class="at">row_title =</span> <span class="st">&quot;Samples&quot;</span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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69q1a+ACTWzVJXBcIiKAAAIIIIAAAghUpwDrAIRbr4G7AN1+++3WqVMne/31110OH3roIWvbtq2NGjXKGjdubB06dLBnn302rwZAuEUlNQTiI0AXoPjUNSUNV4AuQOF6kxoCCJRGIHAXoClTpljfvn1tueWWM/X7f/XVV2233XZzF//KWo8ePWzy5MmlySVHRQABBBBAAAEEEEAAgaIIBH4C0KxZM5s9e7ZL9OWXX7ZFixZZ7969k5mYOHGibb/99sn3vEAAgegEuEsZnT0pI4AAAgggUO4CgZ8A6OL+6aeftuuvv96GDh3qZv7RE4E5c+bY8ccfb1OnTnXjAcq9wOQPAQQQQAABBBBAAIE4CwRuAJxwwgnWpUsXO+aYY2zGjBluEHCrVq1s5MiRdtttt9m///1v22+//eJsSdkRQAABBBBAAAEEECh7gcCzAPklmTVrlq200krWvHlzt+nrr792awBoKtB8A7MA5StGfASCCTAIOJgTsRDIV4DudfmKER+BYALMAhTMqVix8m4A+An/8ccf7qVmACo00AAoVI79EEAAAQQQQACB6hGgARBuXeZ19f7rr7/ahRdeaI8//rh9/vnn9uCDD9qyyy7rZgTSAmEaKExAAAEEEEAAAQQQQKBYArrpfMYZZyQP16hRI9cTpWfPntarV6/k9kp/oQl1HnnkETfrZqkn1gncAPj9999tq622couACfyLL75wzqqUSy+91IYPH24ffvihLbPMMoH96aYQmIqICCCAAAJlIEAXoDKoBLIQO4ElS5bY5ZdfnrXcJ554ol1xxRVZP6u0jR999JEr5yqrrFLymTUDdwG64IIL7Morr7Rx48ZZx44dbYUVVnCDfwcMGOBWAN5xxx3dgGCtDBw00AUoqBTxEEAAAQQQQACB6hWorQvQwoULXS8TXRh//PHHppvS77zzjukaVOHHH3+0li1bpuHoBnVqN/VEImHalutG9eLFi3N+5h8485jarmnxmzRp4kdJ+1nbMbMd63//+5999913bqxt69atAx/Lj1hben4c/2fgWYC0AvCgQYPcxb+/s/9z6623NjUAtBIwAQEEEEAAAQQQQACBYgs0bNjQVlxxRdPEM3vuuadtuummpsaB7px/9dVX1q5dOzvssMOsc+fOLt77779vc+fOtb/97W/uMzUStt12W9N2P/zwww+21157uQaEjnvLLbe4uMcee6yLokVvO3XqZEcffbTrdqSu8Arq/dK2bVs3Lf7mm29ub731ltuu//S0omvXri7+hhtu6KbP9z8cO3as6+KjG+nKr9L+/vvv3cfPP/+8qZfNQw895Ec3XX8rz1qIV42Cww8/3NRQUHjggQfcMTRFvxbkVVf89dZbz92YTx4gx4vADYAFCxbYL7/8kuMw5jLz888/5/ycDxBAAAEEEEAAAQQQKFRAd9snTJhg//3vf+2SSy6xd999193l32ijjWzp0qXuQlpT02u2SvWh18W3LuDVr143q3Uj++2333Y3rb/99luXjeOOO85GjBhhu+yyi+mi/9xzz3XH8a95dW07efJkd5N77733dhfjuvA+7bTT3E1xNQTUiNh9993ddbK6w59yyimucfLUU0+5xsh1113netDoKcRRRx1lX375pd13333uGKNGjXI9bJQZPdlQY0DX3ApqqPTp08c++OADd+G/ySab2K233moHHXSQ+9yPf+qpp9o+++zjjv3ZZ5+59F2EWv4LPAZArRuhXnbZZa4FknpMDVp44403bODAgambeY0AAggggAACCCCAQFEEdKGt8ah+UBefa6+91t0d929Cq5uQLqrVLUfXpm+++aYbKKzFbBXatGnjGg+33367W8NKE9vozvkTTzzhfmqaey1wq4v11HDHHXfYzjvv7Dap14vCNddcYx06dDCNUdBFuMbD+l2RdOd+zTXXdE8OdEdfeVUDRhfoeq08qtHxzTffuDy5A2b8d/fdd5sm4NFTCT3ZUNAd/meeecamTZuWjH3IIYfY6aef7vJ80003JcfpJiNkeRH4CYBaM02bNrV11lnHwaif0auvvuoW/9LjirXXXtuGDBmSJQk2IYAAAggggAACCCBQPwEtQKuLYV0Y64JeF9NHHnlk2kE32GCDZJ98v6tP6ow62223nYv/6aef2rx589xF+V/+8hd38a8PNttss7Tj+W90990PWhNLQTfH1TVHF/8KurOvpwSHHnqomy3zvPPOsx122MF0fI1dUKNEDY8WLVq4cmgB3dVXX9100Z4t6M6/Qq78+/uooaHQoEEDN0ZX1+h1hcANAPWLevHFF93jFLV4fvvtN1OfI7WY1O9I/ZaEQEAAAQQQQAABBBBAoNgCuruuO+HqyqO+8/6Fb2o6/kK12qaxAArqNuQH/3X79u1djxY1GKZMmeIaA4qjm9vZQupU9927d3dR3nvvPTcAefr06e6C/6STTnJ34U8++WSbMWOGu0b+61//6u7IayIdBT090IQ6r732mp111lmuUXDmmWdatov22vKvG/J+SC2zxkkECcFi/f8jqaWjxylqNb3wwgtu1h+91oAG9b8iIIAAAggggAACCCAQlUDqBfAWW2zhusyou80///lPNxjX7zL0j3/8w2VRfffVhUe9WdSVxh/km5l/rT3gB/XLV9CFuy7mdZGv8QaaIv/RRx91rzU9qQb5+k8UNJBY4w50Ua8ZMzWQVw0JNWrUjSjb7ET9+vVz29W9Z9iwYW7Wo6lTp7quQ5qRsz4h8BgAPxE9Xlh33XXdP38bPxFAAAEEEEAAAQQQKCcB3bXXHf0DDzzQ7r33XtfdRxfq6objPz3QhbXGFjz33HNuPaurrrrKjjjiiGSXoGzl0axCuvuvrjvaT9fFN998s7vw1/E1aFj9/jV7j3rQqIu8Zu/Rxf79999v6hqkrkK66NcTAS2mmy2o64962ujJghobaoT079/fpZUtfj7bcq4DoGmT1Icpn6BBwPkMBGYdgHx0iYsAAggggAACCFSnQG3rABSjxJpZZ/78+W6GoNTj6cJdDYU99tjDTeupLu16ff7557suOqlxM1/ryYFm7dHA42xBn2lGIt08zwyaZUiDgVO772TGSX2vRooaEEHjp+6b7XXOJwDqi6RFFvIJaukQEEAgegFW2Y6+DshBdQqwEnB11iulqn4BXThnu3jWRfrZZ5/tpvTUugKvvPKKqRuRugbVFXRHPtfFv/bVOgG5Qr7jZtWQKGbI2QBQpj///POcaWnhBT26SO1rlTMyHyCAAAIIIIAAAgggUGYC6quvKT/Hjx/vZvFRlxz1gNH4gWoOObsAZSu0Zv4544wzXOtII6b1yESDG/bdd183NWi2fWrbRheg2nT4DAEEEEAAAQQQiIdAqbsAxUMxeClzPgHIPIRGLvfu3ds0+rhv375uZTWtQKbll0844QS3GpsWScg2ijnzWLxHAAEEEEAAAQQQQACBaAQCNwC0ZPGcOXPcyGatQpYatCSzGgWaBilIn6nUfXmNAAIIIIAAAggggAAC4QkEXgdAc6geffTRbj7VzOztuuuutueee7qpkDI/4z0CCCCAAAIIIIAAAgiUj0DgJwCtW7d20yfVlvV8u/8wU0ltmnyGAAIIIFBuAswCVG41Qn7iIrBgyqd5F7XJGt70nA0bWKOWLfLet9p3CNwA0CIG+++/v1t9TCOkU4PmTNUTgjFjxqRu5jUCCCCAAAIIIIAAAvUSmDd6nM3o/6+8j9Gya2fr8OSNee8Xhx0CNwB+/PFHW3XVVd3yxT169HDzpQpIswFNmDDBzYOaupKZFj149tln42BIGRFAAAEEEEAAAQQQqBiBwA2Ajz/+2M3537FjR5s3b5676PdLqW0Kta0b4MdN/cmj1FQNXiOAAAIIIIAAAgiUWkA3rPv372+bbLJJWlJ33nmnW7xL41qnTZtmt99+e9rnbdq0cWNh99lnn4qf9TJwA+DCCy80/SMggAACCCCAAAIIIFCpAtddd5117ty5RgPgiSeesA033NBNbKOb2ldeeaUNHTo0WcwPPvjALrvsMrvlllvsxRdfNPV2qdQQuAFQqQUk3wjEUYAB9nGsdcochgBPrsNQJg0EykOgUaNGdv7556dlZuLEidatWzd7//33rUuXLmmfVdKbvBoAM2bMsBdeeMG0KJiWTc4MO++8s+lf0MBFSlAp4iGAAAIIlIMAf7fKoRbIQzUKzKqQQq2xxhruzn/jxnldQpdd6QLnXo89unbtaosXL85ZiCZNmuTVAMh5ID5AAAEEEEAAAQQQQKBEAjfccEONyWp0rasuQH5YunSpPfbYY+6tbnx/8803pnECO+ywg2288cZ+tIr8GbgBcO+991q7du3sySeftE6dOlmzZs1qFLhhw8Drirl9eZRag5ANCCCAAAIIIIBA/AROvSjUMrdt29bat2+flmbz5s3T3qsBoPECS5YssalTp5re63q4b9++afEq8U3gBoD6PO21117WvXv3SiwneUYAAQQQQAABBBBAwAkMHDjQ9ttvvzSNt99+O+29uvm8+uqrbptmwOzVq5cbALzHHntU9ABgFSjwLfttttnGXnrppTQY3iCAAAIIIIAAAgggUO0CrVq1skcffdTGjh1rqeteVWq5Az8BOP300+3ll19286YOGDDAPQnInP6odevWtsIKKwS2YDBVYCoiIoAAAggggAACVStQCYOA11lnHbvkkkvsuOOOc08PNt1004qtj8ANAPV7Un8pjQHQv2xBLaJzzz0320dZtzEGICsLGxFAAAEEEEAAgXgJhDwGoFDcI4880h544AE79NBD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IIAAAgggEKkADYBI+UkcAQQQQAABBBBAAIFwBRqHmxypIYBAGAL9hvYJIxnSQCB2AsOHjYxdmSkwAghUnwArAVdfnVIiBBBAAAEEEECgogRYCTjc6qILULjepIYAAggggAACCCCAQKQCkT4BiLTkJI4AAggggAACCCCAQAwFeAIQw0qnyAgggAACCCCAAALxFaABEN+6p+QIIIAAAggggAACMRSgARDDSqfICCCAAAIIIIAAAvEVoAEQ37qn5AgggAACCCCAAAIxFGAdgBhWetAiv/rqq3bUUUdljd6gQQNr3ry5tW3b1vbYY4+c8bLuzEYEYi4wdOhQe/rpp7MqNGzY0JZbbjlbZ5117Mgjj7SePXtmjcdGBBCoKcB3q6YJWxDIJsATgGwqbHMCq6++urVr184+/vhjW7Roke20007uXyKRcNs6dOhgjRo1smOOOcZOOOEE1BBAIKDAVlttZXPmzLFp06bZSiutZHvuuad1797dvvrqK/vxxx9t/fXXd9+xXXbZxV566aWARyUaAgjw3eIcQCCYANOABnOKZayZM2dap06d7J577rH99tsvabB06VLXENBnN9xwg40aNcp23313++mnn6xVq1bJeLxAAIHsAjfeeKOdc845NnXqVGvTpk0y0pdffmkbbLCBPf/887b99tvbEUccYbNmzbKRI1l9NonECwRqEeC7VQsOHyGQIsATgBQMXqYLjB492tq3b5928a8Y6qKgO/6PP/6426F3796uK9Bbb72VfgDeIYBAVoGnnnrKdZtLvfhXxLXWWsv69+9vTzzxhPueHXjggTZhwgTTUzcCAgjULcB3q24jYiAgARoAnAc5BdS/X3ckf/755xpx3nvvPTcGQB8sWbLEfv/9d2vdunWNeGxAAIGaAupa98EHH9T4QBf6kyZNSn635s+fbyussIJpzA0BAQTqFuC7VbcRMRCQAA0AzoOcAjvvvLOpu89BBx3kBiz++uuv9ssvv9jw4cPtuuuus7333tsWL15sZ599ti2zzDK2+eab5zwWHyCAwJ8C6vOvQcBnnXWW6cmZGtGzZ8+2f//73zZlyhQ3JkBd8C655BLTEzYCAggEE+C7FcyJWAjo0TIBgZwC77zzTsLrlqD+Bwmv64/7qdcDBgxIeHf9E97Fi9t+9dVX5zwGHyCAQE2Ba6+9NtG4ceO079ayyy6buOmm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tR49elRyEcg7AmUpwHerLKuFTIUoQAMgRGySQgABBBBAAAEEEEAgagEaAFHXAOkjgAACCCCAAAIIIBCiAA2AELFJCgEEEEAAAQQQQACBqAVoAERdA6SPAAIIIIAAAggggECIAjQAQsQmKQQQQAABBBBAAAEEohagARB1DZA+AggggAACCCCAAAIhCtAACBGbpBBAAAEEEEAAAQQQiFqABkDUNVDG6S9YsMBmz56dNYf6bOzYsVk/YyMCCCCAAAIIIIBA+QrQACjfuok8Zy+//LLtueeeWfMxceJE22GHHeynn35yn99777227rrrZo3LRgQQyC0wZ84ce//9912EhQsXpkVcZ5117P7770/bxhsEEAgmwHcrmBOx4inQIOGFeBadUmcT+P333+3ggw+2X3/91b7//nubMWOGbb311mlRdcpoFUVd/M+dO9caNGiQ9jlvEECgboEXX3zRjj32WPddWnvttW3mzJm26aab2plnnmkDBgyo+wDEQACBrAJ8t7KysBGBNAGeAKRx8KZZs2a22267WZMmTaxx48bu4l6vU/8pzjbbbGNPPPEEF/+cMggUIDBp0iTr27evderUyU466aTkEXr06GEDBw600aNHJ7fxAgEEggvw3QpuRcx4C/AEIN71X2vp33rrLdf94Nprr601Hh8igEB+AoMHD7bFixe779eoUaPs8MMPd08AdJTDDjvMmjdvbtdcc01+ByU2AggY3y1OAgSCCfAEIJhTLGN1797duPiPZdVT6BILTJ8+3Xr27Jk1lW7dutm4ceOyfsZGBBCoXYDvVu0+fIqAL9DYf8FPBCTw3nvv2WuvvRYYQ32YCQggkJ+ABswPHz7cjjzyyBo7Pvzww6YxAQQEEMhfgO9W/mbsEU8BGgDxrPecpR4zZoydfvrpOT/P/IAGQKYI7xGoW2DIkCHWq1cvGzRokHXs2NGWLl3q+v3fc889ptm3RowYUfdBiIEAAjUE+G7VIGEDAlkFGAOQlYWNCCCAQGkF7rjjDjvllFPs559/TibUokULO++88+zkk09ObuMFAgjkJ8B3Kz8vYsdTgAZAPOudUiOAQBkIzJs3z95991374osvbNVVV7XNNtvM2rVrVwY5IwsIVLYA363Krj9yX3oBGgClN67YFCZMmFBndyB1GSIggEB+AprhZ7nllnPz/esnAQEEiiPAd6s4jhyl+gWYBaj667jgEjZt2tTdldSdSf9fy5YtbdasWfbGG2/YlltuWfCx2RGBOAssWLDADQDW9+qQQw6xsWPHGmsyxvmMoOzFEuC7VSxJjlPtAjwBqPYaLkH5dKFyzDHH2I8//mgPPfRQCVLgkAhUv4BW0n700Uftvvvus/Hjx5tmL1FjQCtxMwtQ9dc/JSydAN+t0tly5OoRoAFQPXUZaklmzpxpf/nLX2zu3Lm27LLLhpo2iSFQbQKffvqpPfDAA65BMGXKFDc4+OKLL662YlIeBEIX4LsVOjkJVogAXYAqpKLKLZvfffedLVmyxDTQioAAAvUT+P33323RokVuOtAGDRpYkyZN6ndA9kYAASfAd4sTAYHsAjwByO7CVk9Ad/mfeeaZNAtd9Ovx6m233WatW7c23a0kIIBA/gLffPON60J3//3326RJk2zDDTe0wYMH20EHHeTG3OR/RPZAAAEJ8N3iPECgbgEWAqvbKLYxJk+e7LoiZAJoIHCXLl1Msy0QEEAgf4FzzjnHLrjgAtN3af/997cbb7zRttpqq/wPxB4IIJAmwHcrjYM3COQU4AlATho+QAABBEojcN1119kKK6xg/fv3Ny3+RUAAgeII8N0qjiNHqX4BGgDVX8clK6FWMFU3IAICCNQtcO+999rixYttyJAh9txzz9mHH36Ycyd1B9pnn31yfs4HCCDwpwDfrT8teIVAUAEaAEGlYhpv9OjRdsMNN9gPP/zgBv2KQeMAfvvtN5s+fbotXLgwpjIUG4H8BHr16mXz5893a2gceeSR9vDDD+c8gC7+77rrrpyf8wECCPwpwHfrTwteIRBUgAZAUKkYxtOCXxtssIFbsbRTp0721ltv2a677moff/yxu/i/4oor7MQTT4yhDEVGAAEEEEAAAQQqV4BBwJVbdyXP+euvv+6mJdQ8yrrr37ZtW9OjVg1c1B3Mzz77rOR5IAEEqlFAT9Q01efyyy9fo3izZ8+2OXPm2KabblrjMzYggEDtAny3avfhUwR8AdYB8CX4WUNAFyJbbrmlW+irVatWbmrCN9980zRPuWZa0FSg6tNMQACB/AROOukku/nmm7PudOGFF5o+JyCAQP4CfLfyN2OPeArwBCCe9R6o1Ouss459/vnnybgamDhu3Djbeeedk4N/v/rqK1M8AgII1C7wxhtv2H/+8x8X6YMPPjA1pseMGZO2kxrUijdw4MC07bxBAIHcAny3ctvwCQK5BHgCkEuG7W5e8rlz59ohhxximvFH85SrC5AuXi699FLXJah9+/ZIIYBAAAE9TVtjjTVc15+GDRtao0aN3Gt1BfL/6UnbwQcfbHoKQEAAgWACfLeCORELgVQBBgGnavC6hsBjjz1mxxxzjL3yyiu24oorukaAngroAubcc8+1s846q8Y+bEAAgdoFNIB+rbXWsgEDBtQekU8RQCAvAb5beXEROcYCNABiXPnZin7qqae6qQo19eeXX35pEydOtL59+7q7lbpjqScCL774om2xxRa27rrrZjsE2xBAoJ4CrLFRT0B2j5UA6wDEqropbJEEGANQJMhqOcyvv/5q7777riuOFipSV4R99903WTytXspdyyQHLxAoSGDp0qV2+eWXm9bZ0NoAiUTC/fvjjz/sp59+cg3sRx99tKBjsxMCcRNQA0DfIy2y9+yzz9a5xgaL7MXtDKG82QR4ApBNJcbb1OVHAxBXXXVVN///119/bRtttFFOEa0NQEAAgfwEbrrpJjvqqKPcVJ9aTE8za6255pr2zjvvWIsWLdwFzNZbb53fQYmNAAIIIIBAQAGeAASEiks03d1/5JFH3Gw/U6dOdXcjN9lkk7gUn3IiEIqAutHtvffe9tRTT9kdd9zhfo4YMcK+/fZb22mnnWzRokWh5INEEKhWAT1VU8NaQU+zdTNrhx12sGbNmlVrkSkXAnkJ8AQgL654RdYUhdddd5098cQT8So4pUWgxAKaUeuAAw6wo48+2q2w3adPH9MCRrpgufbaa10DXA1xAgII5CegxvNBBx1kq6yyil1zzTVuvQ0tXKmgcWtvv/22m9Aiv6MSG4HqE2Aa0Oqr06KVSHdL/It/9a/U9J8aI6AuCwQEEChcQGtnzJw50x1A62uo37+euCnowoVVth0F/yGQt8BVV13lxtb07NnTrWB/9tln2+677+4mtNAYtgsuuCDvY7IDAtUoQAOgGmu1iGXSQl/77befWw140003tcmTJ9tpp51mJ598sv32229FTIlDIRAfgV133dVuv/1202xbyy+/vHXs2NEuu+wy11VBKwTr4oWAAAL5C7z++utufI3Gsk2YMMG+//57O+GEE9zA+kGDBrknAPkflT0QqD4BGgDVV6dFK5Eepe611142ffp0010VDU5U2Hbbbd3F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" width="100%" /></p>
+</div>
+<div id="quality-control-and-validation" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> 1.6 Quality Control
+and Validation</h2>
+<p>Always examine the missing genes information and prediction
+quality:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Examine missing genes</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>missing_info <span class="ot">&lt;-</span> basic_results<span class="sc">$</span>na_genes</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Genes missing from input data:&quot;</span>, <span class="fu">nrow</span>(missing_info)))</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Genes missing from input data: 67&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nrow</span>(missing_info) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="fu">head</span>(missing_info)</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>}</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt;      genes     signature process</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; 1   NUSAP1 proliferation      up</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; 2     PRC1 proliferation      up</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; 3   FAM72D proliferation      up</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; 4   FAM72A proliferation      up</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; 5 RNASEH2A proliferation      up</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; 6    POLA2 proliferation      up</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co"># Identify samples with potential quality issues</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>quality_flags <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>  <span class="at">sample =</span> <span class="fu">names</span>(basic_results<span class="sc">$</span>predictions_7classes),</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>  <span class="at">confidence =</span> basic_results<span class="sc">$</span>subtype_scores[, <span class="st">&quot;prediction_delta&quot;</span>],</span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>  <span class="at">quality_flag =</span> basic_results<span class="sc">$</span>subtype_scores[, <span class="st">&quot;prediction_delta&quot;</span>] <span class="sc">&lt;</span> <span class="fl">0.05</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>)</span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>flagged_samples <span class="ot">&lt;-</span> quality_flags[quality_flags<span class="sc">$</span>quality_flag, ]</span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nrow</span>(flagged_samples) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;Samples flagged for low confidence:&quot;</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>  <span class="fu">head</span>(flagged_samples)</span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a>}</span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Samples flagged for low confidence:&quot;</span></span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a><span class="co">#&gt;        sample confidence quality_flag</span></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="co">#&gt; 5.CEL   5.CEL     0.0070         TRUE</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="co">#&gt; 7.CEL   7.CEL     0.0226         TRUE</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="co">#&gt; 12.CEL 12.CEL     0.0132         TRUE</span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt; 13.CEL 13.CEL     0.0080         TRUE</span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt; 15.CEL 15.CEL     0.0132         TRUE</span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a><span class="co">#&gt; 20.CEL 20.CEL     0.0472         TRUE</span></span></code></pre></div>
+</div>
+<div id="key-takeaways" class="section level2" number="2.7">
+<h2><span class="header-section-number">2.7</span> Key Takeaways</h2>
+<ul>
+<li><strong>Start with default parameters</strong> and adjust based on
+your data characteristics</li>
+<li><strong>Monitor prediction confidence</strong> using the
+<code>prediction_delta</code> scores</li>
+<li><strong>Validate imputation settings</strong> with your dataset’s
+missing data patterns</li>
+<li><strong>Consider performance optimization</strong> for large-scale
+analyses</li>
+<li><strong>Always examine quality control metrics</strong> before
+downstream analysis</li>
+</ul>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
