@@ -42,6 +42,11 @@ tutorials:
     contents:
     - survival_and_statistical_analysis_workflows
 
+  - title: "Visualization Workflows"
+    desc: "Functions for creating visual representations of data"
+    contents:
+    - visualization_workflows
+
 reference:
   - title: "Package Overview"
     desc: "Package documentation and information"
