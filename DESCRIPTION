@@ -39,10 +39,13 @@ Imports:
     survival,
     tibble
 Suggests: 
-    lifecycle
+    lifecycle,
+    knitr,
+    rmarkdown
 License: GPL (>= 2) + file LICENSE
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+VignetteBuilder: knitr

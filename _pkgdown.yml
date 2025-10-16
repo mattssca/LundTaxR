@@ -14,14 +14,14 @@ home:
 
 navbar:
   structure:
-    left:  [intro, reference, articles, tutorials, news]
+    left:  [intro, reference, tutorials]
     right: [search, github]
   components:
     github:
       icon: fab-github-alt
       href: https://github.com/mattssca/LundTaxR
 
-articles:
+tutorials:
   - title: "Getting Started"
     desc: "Introduction and basic usage"
     contents:

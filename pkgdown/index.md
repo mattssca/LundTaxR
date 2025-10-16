@@ -89,7 +89,7 @@ For a more comprehensive tutorial and usage examples, please refer to the vignet
 
 ```r
 # View main tutorial
-vignette("tutorial", package = "LundTaxR")
+vignette("getting_started_with_LundTaxR_fig_1", package = "LundTaxR")
 
 # Browse all documentation
 help(package = "LundTaxR")

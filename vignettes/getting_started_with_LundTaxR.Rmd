@@ -59,7 +59,7 @@ LundTaxR includes the `sjodahl_2017` dataset - a curated expression matrix from 
 # Quick Start
 ## Run The Classifier
 
-```{r}
+```{r classifier_run}
 # Load the bundled test dataset
 data("sjodahl_2017")
 
@@ -78,7 +78,7 @@ sjodahl_classes <- classify_samples(
 
 The `classify_samples()` function returns a comprehensive list object containing multiple components. Let's explore the different types of results and understand what information is available:
 
-```{r}
+```{r classification_results}
 # Examine the classification results
 summary(sjodahl_classes)
 
@@ -102,7 +102,7 @@ One of LundTaxR's key strengths is its ability to generate sophisticated heatmap
 
 The heatmap automatically orders samples by subtype and within each subtype by prolfieration score, making it easy to identify patterns and validate classifications. You can choose between 5-class (Uro, GU, BaSq, Mes, ScNE) or 7-class (UroA, UroB, UroC, GU, BaSq, Mes, ScNE) annotation systems.
 
-```{r fig.height=10, fig.width=14}
+```{r getting_started_with_LundTaxR_fig_1, fig.height=10, fig.width=14}
 # Create a comprehensive classification heatmap
 plot_classification_heatmap(
   these_predictions = sjodahl_classes,              # Classification results from classify_samples()
@@ -144,7 +144,7 @@ In addition to classification results, LundTaxR provides detailed molecular prof
 
 This visualization is particularly valuable for understanding the tumor microenvironment and biological processes that distinguish different bladder cancer subtypes. The heatmap organizes samples by predicted subtype and displays signature scores as color-coded intensities, making it easy to identify subtype-specific molecular patterns.
 
-```{r fig.height=6, fig.width=10}
+```{r getting_started_with_LundTaxR_fig_2, fig.height=6, fig.width=10}
 # Create a comprehensive molecular signatures heatmap
 plot_signatures_heatmap(
   these_predictions = sjodahl_classes,              # Classification results with signature scores

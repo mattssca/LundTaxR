@@ -103,12 +103,13 @@ For a more comprehensive tutorial and usage examples, please refer to the vignet
 
 ## Documentation
 
+- **Package Website**: [https://mattssca.github.io/LundTaxR/](https://mattssca.github.io/LundTaxR/) - Complete documentation, tutorials, and function reference
 - **Package Documentation**: Access help files with `?function_name`
 - **Vignettes**: Comprehensive tutorials and examples
 
 ```r
 # View main tutorial
-vignette("tutorial", package = "LundTaxR")
+vignette("getting_started_with_LundTaxR_fig_1", package = "LundTaxR")
 
 # Browse all documentation
 help(package = "LundTaxR")
