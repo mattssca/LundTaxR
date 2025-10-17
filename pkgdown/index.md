@@ -1,4 +1,4 @@
-# <img src="man/figures/logo.png" align="right" alt="" width="120" />
+<img src="logo.png" align="right" alt="" width="120" />
 # LundTaxR
 ## Overview
 
