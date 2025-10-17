@@ -2,6 +2,10 @@
 
 <img src="man/figures/logo.png" align="right" height="280" alt="LundTaxR logo" />
 
+<!-- GitHub Actions Badges -->
+[![R-CMD-check](https://github.com/mattssca/LundTaxR/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/mattssca/LundTaxR/actions/workflows/r-cmd-check.yml)
+[![testthat](https://github.com/mattssca/LundTaxR/actions/workflows/testthat.yml/badge.svg)](https://github.com/mattssca/LundTaxR/actions/workflows/testthat.yml)
+[![pkgdown](https://github.com/mattssca/LundTaxR/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/mattssca/LundTaxR/actions/workflows/pkgdown.yaml)
 <!-- R Package Badges -->
 ![R](https://img.shields.io/badge/R-%E2%89%A54.0.0-blue)
 ![License](https://img.shields.io/badge/license-GPL%20(%E2%89%A5%202)-blue)
