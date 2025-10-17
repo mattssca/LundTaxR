@@ -2,6 +2,22 @@
 
 This guide will help you contribute to the LundTaxR project, even if you have little or no experience with git or GitHub. Follow these steps to make changes and submit them for review.
 
+## Review Objects
+These are the following objects that needs review from you:
+
+- [Advanced Classification Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/advanced_classification_workflows.Rmd)
+
+- [Data Retrieval and Utility Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/data_retrieval_and_utility_workflows.Rmd)
+
+- [Getting Started with LundTaxR](https://github.com/mattssca/LundTaxR/blob/main/vignettes/getting_started_with_LundTaxR.Rmd)
+
+- [Survival and Statistical Analysis Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/survival_and_statistical_analysis_workflows.Rmd)
+
+- [Visualization Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/visualization_workflows.Rmd)
+
+- [README](https://github.com/mattssca/LundTaxR/blob/main/README.md)
+
+
 ## 1. Install Git
 - Download and install git from https://git-scm.com/downloads
 - On Windows, you may also want to install [GitHub Desktop](https://desktop.github.com/) for a graphical interface.
@@ -26,7 +42,6 @@ git checkout -b carina-dev
 git checkout -b gottfrid-dev
 
 ```
-
 
 ## 4. Make Your Changes
 - Edit any code, vignettes, or the README as needed.
