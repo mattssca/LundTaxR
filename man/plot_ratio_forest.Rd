@@ -29,7 +29,6 @@ plot_ratio_forest(
   file_name = "my_plot",
   plot_title = "My Plot",
   plot_subtitle = "",
-  plot_caption = "",
   plot_width = 8,
   plot_height = 8,
   plot_order = NULL,

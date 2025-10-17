@@ -1,5 +1,5 @@
 Package: LundTaxR
-Title: Lund Taxonomy molecular subtype classifier for bladder cancer.
+Title: Lund Taxonomy molecular subtype classifier for bladder cancer
 Version: 2.0.0
 Date: 2026-10-10
 Maintainer: Adam Mattsson <adam.mattsson@med.lu.se>
@@ -37,9 +37,9 @@ Imports:
     patchwork,
     reshape2,
     survival,
-    tibble
+    tibble,
+    lifecycle
 Suggests: 
-    lifecycle,
     knitr,
     rmarkdown
 License: GPL (>= 2) + file LICENSE

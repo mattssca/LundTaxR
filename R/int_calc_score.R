@@ -2,7 +2,7 @@
 #'
 #' @description Calculate immune and infiltration scores.
 #'
-#' @details Internal function called by [LundTaxR::int_calcsignatures()]. 
+#' @details Internal function called by [LundTaxR::int_calc_signatures()]. 
 #' Not meant for out of package use. Takes a data frame of matrix with expression values and 
 #' calculates scores based on gene expression.
 #'

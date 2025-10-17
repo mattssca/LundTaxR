@@ -44,7 +44,7 @@ genes for signature calculations.
 Calculate immune and infiltration scores.
 }
 \details{
-Internal function called by \code{\link[=int_calcsignatures]{int_calcsignatures()}}.
+Internal function called by \code{\link[=int_calc_signatures]{int_calc_signatures()}}.
 Not meant for out of package use. Takes a data frame of matrix with expression values and
 calculates scores based on gene expression.
 }

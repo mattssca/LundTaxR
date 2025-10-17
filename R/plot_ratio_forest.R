@@ -159,7 +159,6 @@ plot_ratio_forest = function(these_predictions = NULL,
                              file_name = "my_plot",
                              plot_title = "My Plot",
                              plot_subtitle = "",
-                             plot_caption = "",
                              plot_width = 8,
                              plot_height = 8,
                              plot_order = NULL,
@@ -303,7 +302,7 @@ plot_ratio_forest = function(these_predictions = NULL,
     geom_point(aes(color = significant), size = 3) +
     geom_errorbarh(aes(xmin = conf_2.5, xmax = conf_97.5, color = significant), height = 0.2) +
     geom_vline(xintercept = 1, linetype = "dashed", color = "red") +
-    labs(title = plot_title, subtitle = plot_subtitle,  caption = plot_caption, x = stat_plot, y = "") +
+    labs(title = plot_title, subtitle = plot_subtitle, x = stat_plot, y = "") +
     scale_color_manual(values = c("significant" = sig_color, "not significant" = "black")) +
     theme_bw() +
     theme(legend.position = "bottom")
