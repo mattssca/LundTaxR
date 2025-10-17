@@ -2,7 +2,7 @@
 #'
 #' @description Calculate immune and infiltration scores.
 #'
-#' @details Internal function called by [LundTax2023Classifier::lundtax_calc_sigscore()]. 
+#' @details Internal function called by [LundTaxR::int_calcsignatures()]. 
 #' Not meant for out of package use. Takes a data frame of matrix with expression values and 
 #' calculates scores based on gene expression.
 #'
