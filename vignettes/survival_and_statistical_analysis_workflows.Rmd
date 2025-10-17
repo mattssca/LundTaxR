@@ -1,5 +1,5 @@
----
 title: "Survival and Statistical Analysis Workflows"
+name: survival_and_statistical_analysis_workflows
 author: "Adam Mattsson"
 date: "`r Sys.Date()`"
 output:

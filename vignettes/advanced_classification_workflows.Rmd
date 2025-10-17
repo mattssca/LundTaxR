@@ -1,5 +1,5 @@
----
 title: "Advanced Classification Workflows"
+name: advanced_classification_workflows
 author: "Adam Mattsson"
 date: "`r Sys.Date()`"
 output: 

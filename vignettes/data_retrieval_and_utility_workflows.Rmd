@@ -1,5 +1,5 @@
----
 title: "Data Retrieval and Utility Workflows"
+name: data_retrieval_and_utility_workflows
 author: "Adam Mattsson"
 date: "`r Sys.Date()`"
 output: 

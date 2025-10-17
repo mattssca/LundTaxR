@@ -1,5 +1,5 @@
----
 title: "Visualization Workflows"
+name: visualization_workflows
 author: "Adam Mattsson"
 date: "`r Sys.Date()`"
 output:
