@@ -1,7 +1,6 @@
 <img src="logo.png" align="right" alt="" width="120" />
 # LundTaxR
 ## Overview
-
 The Lund Taxonomy is a single-sample molecular classification system that divides bladder cancer into distinct subtypes with different clinical behaviors and treatment responses. LundTaxR automates this classification process through:
 
 - **Two-stage classification**: First classifies samples into 5 main subtypes (Uro, GU, BaSq, Mes, ScNE), then sub-classifies Uro samples into UroA, UroB, or UroC
