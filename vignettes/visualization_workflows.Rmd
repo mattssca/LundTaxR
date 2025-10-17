@@ -74,6 +74,7 @@ plot_ratio_forest(
   these_predictions = results,
   these_samples_metadata = sjodahl_2017_meta,
   stat_plot = "odds_ratio",
+  plot_title = "Odds Ratio for Gender",
   categorical_factor = "gender",
   predictor_columns = c("b_cells", "proliferation_score"),
   col_bon = TRUE,
@@ -88,6 +89,7 @@ plot_ratio_forest(
   these_predictions = results,
   these_samples_metadata = sjodahl_2017_meta,
   stat_plot = "hazard_ratio",
+  plot_title = "Hazard Ratio for Overall Survival",
   surv_time = "surv_os_time",
   surv_event = "surv_os_event",
   n_bins = 10
