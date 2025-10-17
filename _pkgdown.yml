@@ -18,10 +18,10 @@ navbar:
     right: [search, github]
   components:
     github:
-      icon: fab-github-alt
+      icon: fa-github
       href: https://github.com/mattssca/LundTaxR
 
-articles:
+tutorials:
   - title: "Getting Started with LundTaxR"
     desc: "Introduction and basic usage"
     contents:
