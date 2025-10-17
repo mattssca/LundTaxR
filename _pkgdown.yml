@@ -8,9 +8,7 @@ home:
   title: "LundTaxR"
   description: "Lund Taxonomy molecular subtype classifier for bladder cancer"
   strip_header: true 
-  logo:
-    width: 120px
-    height: 120px
+  logo: pkgdown/logo.png
 
 navbar:
   structure:
