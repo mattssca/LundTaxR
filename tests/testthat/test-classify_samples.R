@@ -239,7 +239,7 @@ test_that("classify_samples returns correct 7-class subtypes", {
   #actual subtypes
   actual_subtypes <- as.data.frame(result$predictions_7classes) %>% 
     tibble::rownames_to_column("sample_id") %>% 
-    deplyr::rename(subtype = `result$predictions_7classes`)
+    dplyr::rename(subtype = `result$predictions_7classes`)
   
   #check that names and values match
   expected_subtypes$subtype <- as.character(expected_subtypes$subtype)
