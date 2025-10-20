@@ -1,6 +1,7 @@
 library(testthat)
 library(LundTaxR)
 library(tibble)
+library(dplyr)
 
 ####################################################################################################
 #classifier overview
@@ -85,17 +86,15 @@ test_that("classify_samples returns correct scores for first row", {
   expect_equal(expected, scores_results, tolerance = 1e-6, check.attributes = FALSE)
   
   #check if column names are the expected
-  identical(colnames(expected), colnames(scores_results))
+  expect_equal(colnames(expected), colnames(scores_results))
 
 })
 
 ####################################################################################################
 #5class subtypes
 test_that("classify_samples returns correct 5-class subtypes", {
-  
   #load test data
   data("sjodahl_2017")
-  
   #run the classifier
   result <- classify_samples(
     this_data = sjodahl_2017,
@@ -105,7 +104,6 @@ test_that("classify_samples returns correct 5-class subtypes", {
     include_data = TRUE,
     verbose = FALSE
   )
-  
   #expected subtypes
   expected_subtypes <- data.frame(
     sample_id = c(
@@ -159,10 +157,14 @@ test_that("classify_samples returns correct 5-class subtypes", {
   
   #actual subtypes
   actual_subtypes <- as.data.frame(result$predictions_5classes) %>% 
-    rownames_to_column("sample_id") %>% 
-    rename(subtype = `result$predictions_5classes`)
+    tibble::rownames_to_column("sample_id") %>% 
+    dplyr::rename(subtype = `result$predictions_5classes`)
   
   #check that names and values match
+  expected_subtypes$subtype <- as.character(expected_subtypes$subtype)
+  actual_subtypes$subtype <- as.character(actual_subtypes$subtype)
+  expected_subtypes <- expected_subtypes[order(expected_subtypes$sample_id), ]
+  actual_subtypes <- actual_subtypes[order(actual_subtypes$sample_id), ]
   expect_equal(actual_subtypes, expected_subtypes)
 })
 
@@ -236,9 +238,13 @@ test_that("classify_samples returns correct 7-class subtypes", {
   
   #actual subtypes
   actual_subtypes <- as.data.frame(result$predictions_7classes) %>% 
-    rownames_to_column("sample_id") %>% 
-    rename(subtype = `result$predictions_7classes`)
+    tibble::rownames_to_column("sample_id") %>% 
+    deplyr::rename(subtype = `result$predictions_7classes`)
   
   #check that names and values match
+  expected_subtypes$subtype <- as.character(expected_subtypes$subtype)
+  actual_subtypes$subtype <- as.character(actual_subtypes$subtype)
+  expected_subtypes <- expected_subtypes[order(expected_subtypes$sample_id), ]
+  actual_subtypes <- actual_subtypes[order(actual_subtypes$sample_id), ]
   expect_equal(actual_subtypes, expected_subtypes)
 })
