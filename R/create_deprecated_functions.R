@@ -50,22 +50,19 @@ for (old_name in names(deprecated_functions)) {
 }
 
 #' @title Deprecated: Use classify_samples() instead
-#' @description \lifecycle{deprecated}
-#' This function has been deprecated in favor of \code{\link{classify_samples}}.
+#' @description This function has been deprecated in favor of \code{\link{classify_samples}}.
 #' @param ... All arguments are passed to \code{\link{classify_samples}}
 #' @export
 lundtax_predict_sub <- get("lundtax_predict_sub")
 
 #' @title Deprecated: Use classify_samples() instead
-#' @description \lifecycle{deprecated}
-#' This function has been deprecated in favor of \code{\link{classify_samples}}.
+#' @description This function has been deprecated in favor of \code{\link{classify_samples}}.
 #' @param ... All arguments are passed to \code{\link{classify_samples}}
 #' @export
 predict_LundTax2023 <- get("predict_LundTax2023")
 
 #' @title Deprecated: Use get_subtype_metrics() instead
-#' @description \lifecycle{deprecated}
-#' This function has been deprecated in favor of \code{\link{get_subtype_metrics}}.
+#' @description This function has been deprecated in favor of \code{\link{get_subtype_metrics}}.
 #' @param ... All arguments are passed to \code{\link{get_subtype_metrics}}
 #' @export
 get_sample_metrics <- get("get_sample_metrics")

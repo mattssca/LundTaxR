@@ -10,6 +10,5 @@ predict_LundTax2023(...)
 \item{...}{All arguments are passed to \code{\link{classify_samples}}}
 }
 \description{
-\lifecycle{deprecated}
 This function has been deprecated in favor of \code{\link{classify_samples}}.
 }

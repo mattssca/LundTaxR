@@ -10,6 +10,5 @@ get_sample_metrics(...)
 \item{...}{All arguments are passed to \code{\link{get_subtype_metrics}}}
 }
 \description{
-\lifecycle{deprecated}
 This function has been deprecated in favor of \code{\link{get_subtype_metrics}}.
 }
