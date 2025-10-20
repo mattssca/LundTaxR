@@ -13,4 +13,4 @@ col_signature_score_formatted
 \description{
 A named character vector mapping internal column names to formatted display names for signature scores.
 }
-\keyword{datasets}
+\keyword{internal}

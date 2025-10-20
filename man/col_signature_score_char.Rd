@@ -13,4 +13,4 @@ col_signature_score_char
 \description{
 A character vector of column names for categorical signature scores used in LundTaxR.
 }
-\keyword{datasets}
+\keyword{internal}

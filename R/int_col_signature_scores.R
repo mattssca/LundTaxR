@@ -2,6 +2,8 @@
 #'
 #' A character vector of column names for numeric signature scores used in LundTaxR.
 #' @export
+#' @keywords internal
+#' 
 col_signature_score_num <- c(
   "proliferation_score", "progression_score", 
   "stromal141_up", "immune141_up", "b_cells", 
@@ -18,6 +20,8 @@ col_signature_score_num <- c(
 #'
 #' A character vector of column names for categorical signature scores used in LundTaxR.
 #' @export
+#' @keywords internal
+#' 
 col_signature_score_char <- c(
   "progression_risk", "molecular_grade_who_1999", "molecular_grade_who_2022"
 )
@@ -26,6 +30,8 @@ col_signature_score_char <- c(
 #'
 #' A character vector of column names for proportion signature scores used in LundTaxR.
 #' @export
+#' @keywords internal
+#' 
 col_signature_score_prop <- c(
   "b_cells_proportion", "t_cells_proportion", 
   "t_cells_cd8_proportion", "nk_cells_proportion", 
@@ -40,6 +46,8 @@ col_signature_score_prop <- c(
 #'
 #' A named character vector mapping internal column names to formatted display names for signature scores.
 #' @export
+#' @keywords internal
+#' 
 col_signature_score_formatted <- c(
   "proliferation_score" = "Proliferation Score",
   "molecular_grade_who_1999_score" = "Mol. grade (WHO1999)",

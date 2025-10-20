@@ -13,4 +13,4 @@ col_signature_score_prop
 \description{
 A character vector of column names for proportion signature scores used in LundTaxR.
 }
-\keyword{datasets}
+\keyword{internal}
