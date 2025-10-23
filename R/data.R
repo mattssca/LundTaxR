@@ -224,3 +224,17 @@ NULL
 #' @usage data(sjodahl_2017_meta)
 #' @format A data frame with 15697 rows (gene expressions) and 267 columns (samples).
 NULL
+
+#' GENCODE v44 Transcript-to-Gene Mapping Table
+#'
+#' A data frame mapping Ensembl transcript IDs and gene IDs to HGNC gene symbols,
+#' based on GENCODE v44.
+#'
+#' @format A data frame with 3 columns:
+#' \describe{
+#'   \item{transcript_id}{Ensembl transcript ID (e.g., "ENST00000426406")}
+#'   \item{gene_id}{Ensembl gene ID (e.g., "ENSG00000284733")}
+#'   \item{gene_name}{HGNC gene symbol (e.g., "OR4F29")}
+#' }
+#' @source \url{https://www.gencodegenes.org/human/release_44.html}
+"tx2gene"

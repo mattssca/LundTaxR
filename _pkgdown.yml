@@ -95,6 +95,7 @@ reference:
     - gene_list
     - signatures
     - lund_colors
+    - tx2gene
     
   - title: "Internal Functions"
     desc: "Internal helper functions (not typically used directly)"

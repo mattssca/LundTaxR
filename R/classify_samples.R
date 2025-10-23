@@ -106,6 +106,11 @@ classify_samples = function(this_data = NULL,
   if(!class(this_data)[1] %in% c("data.frame","matrix")){
     stop("Data must be in dataframe or matrix format...")
   }
+
+  #if input is a matrix, convert to data.frame
+  if(is.matrix(this_data)){
+    this_data <- as.data.frame(this_data)
+  }
   
   #check for duplicated samples
   if(ncol(this_data) != length(unique(colnames(this_data)))){
@@ -119,7 +124,19 @@ classify_samples = function(this_data = NULL,
 
   #stop if ensembl_gene_id is selected
   if(gene_id == "ensembl_gene_id"){
-    stop("ensembl_gene_id is not yet supported, please use hgnc_symbol...")
+    message("Converting ensembl_gene_id to hgnc_symbol...")
+    if(!exists("tx2gene")) {
+      stop("Mapping table 'tx2gene' not found. Please provide a data.frame with columns 'gene_id' and 'gene_name'.")
+    }
+    #map rownames (Ensembl gene IDs) to HGNC symbols
+    hgnc_mapped <- tx2gene$gene_name[match(rownames(this_data), tx2gene$gene_id)]
+    
+    #remove genes that could not be mapped
+    valid <- !is.na(hgnc_mapped) & hgnc_mapped != ""
+    this_data <- this_data[valid, , drop = FALSE]
+    rownames(this_data) <- hgnc_mapped[valid]
+    gene_id <- "hgnc_symbol"
+    if(verbose) message("Converted Ensembl gene IDs to HGNC symbols using tx2gene.")
   }
   
   #log transform
